@@ -1,0 +1,5 @@
+flowchart TB
+    A["1. Reserve N bytes\n(bump the context pointer)"] --> B["2. Write method table pointer\n(this object's exact runtime type)"]
+    B --> C["3. Write sync block index\n(0/default until lock/hash is used)"]
+    C --> D["4. Fields already read as\nzero/null/false — no write needed"]
+    D --> E["5. Constructor body runs\nagainst this exact memory"]

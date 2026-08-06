@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant Alloc as Allocator
+    participant Base as Base constructor
+    participant Derived as Derived constructor
+
+    Alloc->>Alloc: allocate zeroed memory,<br/>write header
+    Alloc->>Base: run Base's field initializers,<br/>then Base's constructor body
+    Base->>Derived: control returns to derived chain
+    Derived->>Derived: run Derived's field initializers,<br/>then Derived's constructor body
+    Derived->>Derived: object fully constructed

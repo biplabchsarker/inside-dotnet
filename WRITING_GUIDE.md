@@ -29,21 +29,21 @@ chapters/NNN-topic-slug/
 
 ## `article.md` structure — the 13-section template
 
-1. **Chapter cover** — reference to `images/NNN-cover.png`, matching [BRAND_GUIDE.md](BRAND_GUIDE.md)
+1. **Chapter cover** — reference to `images/NNN-cover.png`, matching [BRAND_GUIDE.md](BRAND_GUIDE.md), immediately followed by the Hero Cover illustration (`images/NNN-hero.png`)
 2. **Learning Objectives** — 3–5 bullet points, phrased as "By the end of this chapter, you will be able to…"
-3. **Real-world Analogy** — a fresh analogy (never reused from another chapter), that survives being pushed on
+3. **Real-world Analogy** — opens with a **storytelling hook**: 2–4 sentences grounding the concept in a concrete, high-stakes scenario (a real system — banking, healthcare, high-frequency trading, a production incident — not an abstract example), *then* the analogy itself. The analogy is fresh (never reused from another chapter) and survives being pushed on.
 4. **Problem Statement** — why does this concept exist; what breaks or gets harder without it
-5. **Visual Explanation** — 3–5 original diagrams (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md))
-6. **Under the Hood** — the actual CLR/BCL/framework mechanics, precisely and correctly
+5. **Visual Explanation** — the Concept Illustration, then 3–5 original diagrams (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md))
+6. **Under the Hood** — the Deep-Dive Illustration, then the actual CLR/BCL/framework mechanics, precisely and correctly
 7. **Code Example** — see the four-tier code progression below
 8. **Performance Notes** — cost, measurement approach, and any relevant benchmark data
 9. **Common Mistakes / Anti-Patterns** — the ones that actually show up in code review, not trivia
-10. **Architect's Perspective** — three-tier (see below)
+10. **Architect's Perspective** — three-tier (see below); each tier opens with a sharp, italicized one-line question before its explanation (e.g. *"Is this interface earning its dispatch cost, or is it decoration?"*) — this is a signature feature of the series, not decoration
 11. **Interview Questions** — 4–6 senior-level Q&A tied directly to this chapter
 12. **Quiz** — 5 questions with collapsible answers
-13. **Summary & Next Chapter** — key takeaways plus a bridge to the next episode
+13. **Summary & Next Chapter** — key takeaways, a bridge to the next episode, then a "Where you are in the journey" footer: a fenced ASCII box showing `Previous episode → ▶ This episode ◀ you are here → Next episode`
 
-`exercises.md` and `references.md` are separate files but are considered part of the required chapter output.
+`exercises.md` and `references.md` are separate files but are considered part of the required chapter output. `exercises.md` additionally requires a **Challenge** section: a short, concrete "predict the output before running it" code snippet distinct from `quiz.md`'s conceptual questions — it should test a specific, nameable misconception this chapter addresses.
 
 ## Code example — four-tier progression
 
@@ -79,11 +79,13 @@ If a chapter doesn't answer all eight, it is not complete:
 
 A chapter is complete only when:
 
-- [ ] All 13 `article.md` sections are present and non-stub
+- [ ] All 13 `article.md` sections are present and non-stub, including the storytelling hook and the three Architect's Perspective lead-questions
 - [ ] `linkedin.md`, `medium.md`, `devto.md`, `summary.md`, `faq.md`, `interview.md`, `quiz.md`, `exercises.md`, `references.md` all exist with real content
+- [ ] `exercises.md` includes a Challenge section
 - [ ] `code/` builds and runs cleanly (`dotnet run`), verified, not assumed
 - [ ] At least 3 diagrams exist as both inline Mermaid (in `article.md`) and standalone source files under `diagrams/`
-- [ ] A chapter cover exists under `images/NNN-cover.png` (+ SVG source under `diagrams/svg/`)
+- [ ] The chapter's three signature illustrations exist (Hero Cover, Concept Illustration, Deep-Dive Illustration — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)), exported to PNG via `scripts/Svg2Png`, and referenced inline in `article.md`
+- [ ] The journey footer at the end of `article.md` links the correct previous/next chapters
 - [ ] All eight questions (above) are demonstrably answered somewhere in the chapter
 - [ ] Terminology matches [STYLE_GUIDE.md](STYLE_GUIDE.md#terminology)
 - [ ] `book.json`'s `status` map is updated to `"done"` for this chapter

@@ -75,7 +75,7 @@
     "004-assemblies-metadata": "done",
     "005-stack-vs-heap": "done",
     "006-value-vs-reference-types": "done",
-    "007-object-allocation": "planned",
+    "007-object-allocation": "done",
     "008-boxing-unboxing": "planned",
     "009-strings-interning": "planned",
     "010-garbage-collection": "planned",

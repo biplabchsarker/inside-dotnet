@@ -1,0 +1,11 @@
+flowchart TB
+    subgraph GEN0["Gen 0 segment (shared heap memory)"]
+        direction LR
+        AC1["Thread A's allocation context\n(next-free ptr, limit ptr)"]
+        AC2["Thread B's allocation context\n(next-free ptr, limit ptr)"]
+        FREE["Unclaimed Gen 0 space"]
+    end
+    T1["Thread A"] -->|"bump pointer,\nno lock needed"| AC1
+    T2["Thread B"] -->|"bump pointer,\nno lock needed"| AC2
+    AC1 -.->|"exhausted → claim more"| FREE
+    AC2 -.->|"exhausted → claim more"| FREE

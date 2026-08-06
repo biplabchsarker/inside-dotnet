@@ -108,7 +108,7 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 |---|---|---|
 | 0 — Project Foundation | — | ✅ Done (v1.0) |
 | 1 — Runtime Fundamentals | [001](chapters/001-execution-flow)–[004](chapters/004-assemblies-metadata) | ✅ Done |
-| 2 — Memory | [005](chapters/005-stack-vs-heap)–[006](chapters/006-value-vs-reference-types) done, 007–013 planned | 🚧 In progress |
+| 2 — Memory | [005](chapters/005-stack-vs-heap)–[007](chapters/007-object-allocation) done, 008–013 planned | 🚧 In progress |
 | 3 — C# | 014–018 | ⏳ Planned |
 | 4 — Clean Code | 019–022 | ⏳ Planned |
 | 5 — Design Patterns | 023–026 | ⏳ Planned |
@@ -120,6 +120,6 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 | 11 — Production | 052–056 | ⏳ Planned |
 | Capstone — Becoming an Architect | 057–058 | ⏳ Planned |
 
-**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types
+**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types · [007](chapters/007-object-allocation) Object Allocation
 
 More chapters land incrementally in continuous batches — each one fully written, diagrammed, coded, and verified before moving to the next. See [CONTRIBUTING.md](CONTRIBUTING.md) for the working agreement.

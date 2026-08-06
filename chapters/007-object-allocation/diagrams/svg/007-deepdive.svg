@@ -1,0 +1,55 @@
+<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+  <!-- DEEP-DIVE ILLUSTRATION — chapters/007-object-allocation. Built from assets/templates/memory-layout.svg: the object header written at allocation time, plus the allocation-context pointers driving the bump. -->
+  <rect width="1000" height="480" fill="#FFFFFF"/>
+  <text x="60" y="45" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">Object header at allocation time + the allocation context that placed it</text>
+
+  <g font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">
+    <rect x="60" y="80" width="180" height="60" fill="#512BD4" opacity="0.15" stroke="#512BD4" stroke-width="1.5"/>
+    <text x="150" y="108" text-anchor="middle">Method Table Ptr</text>
+    <text x="150" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">runtime type identity</text>
+
+    <rect x="240" y="80" width="140" height="60" fill="#0078D4" opacity="0.15" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="310" y="108" text-anchor="middle">Sync Block Index</text>
+    <text x="310" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">lock/hash, if used</text>
+
+    <rect x="380" y="80" width="120" height="60" fill="#68217A" opacity="0.15" stroke="#68217A" stroke-width="1.5"/>
+    <text x="440" y="108" text-anchor="middle">Field 1</text>
+    <text x="440" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">zeroed default</text>
+
+    <rect x="500" y="80" width="120" height="60" fill="#107C10" opacity="0.15" stroke="#107C10" stroke-width="1.5"/>
+    <text x="560" y="108" text-anchor="middle">Field 2</text>
+    <text x="560" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">zeroed default</text>
+
+    <rect x="620" y="80" width="160" height="60" fill="#D83B01" opacity="0.15" stroke="#D83B01" stroke-width="1.5"/>
+    <text x="700" y="108" text-anchor="middle">Field N ...</text>
+    <text x="700" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">zeroed default</text>
+  </g>
+
+  <text x="60" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Header (written by the allocator, before your constructor runs) + fields (already zeroed — no write needed here).</text>
+
+  <!-- Allocation context section -->
+  <text x="60" y="225" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F">This thread's allocation context, mid-bump</text>
+
+  <rect x="60" y="250" width="880" height="70" fill="#D8D8DE" opacity="0.35" stroke="#6E6E76" stroke-width="1.5"/>
+  <rect x="60" y="250" width="480" height="70" fill="#512BD4" opacity="0.12"/>
+  <text x="300" y="290" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">Already allocated in this context (prior objects, contiguous)</text>
+
+  <line x1="540" y1="240" x2="540" y2="330" stroke="#512BD4" stroke-width="2.5"/>
+  <text x="540" y="235" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#512BD4" text-anchor="middle" font-weight="700">next-free ptr</text>
+
+  <rect x="540" y="250" width="160" height="70" fill="#107C10" opacity="0.20" stroke="#107C10" stroke-width="2"/>
+  <text x="620" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="700" fill="#1B1B1F" text-anchor="middle">This allocation</text>
+  <text x="620" y="298" font-family="Cascadia Code, Fira Code, monospace" font-size="11" fill="#1B1B1F" text-anchor="middle">header + fields above</text>
+
+  <line x1="700" y1="240" x2="700" y2="330" stroke="#D83B01" stroke-width="2.5" stroke-dasharray="4 4"/>
+  <text x="700" y="235" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#D83B01" text-anchor="middle" font-weight="700">limit ptr</text>
+
+  <rect x="700" y="250" width="240" height="70" fill="#FFFFFF" stroke="#6E6E76" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="820" y="290" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Unclaimed — belongs to the</text>
+  <text x="820" y="306" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">shared Gen 0 segment, not this thread yet</text>
+
+  <text x="60" y="365" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">On the next allocation, "next-free" moves to where "limit" is now, until limit itself is reached —</text>
+  <text x="60" y="385" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">then this thread must claim a fresh slice of the shared segment (or trigger a Gen 0 collection if none remains).</text>
+
+  <text x="60" y="440" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Object header terms (method table pointer, sync block index) recap Episode 3 — The CLR. Sizes/widths above are illustrative, not to scale.</text>
+</svg>

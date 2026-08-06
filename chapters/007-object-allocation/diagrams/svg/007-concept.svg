@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- CONCEPT ILLUSTRATION — chapters/007-object-allocation. Built from assets/templates/timeline.svg: the allocation fast path, from `new` to a usable reference, as five evenly spaced stages along one line. -->
+  <defs>
+    <linearGradient id="tlLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="400" fill="#FFFFFF"/>
+  <text x="60" y="50" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F">The allocation fast path — new SomeClass() to usable reference</text>
+  <line x1="80" y1="220" x2="1320" y2="220" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Stage 1 -->
+  <circle cx="140" cy="220" r="10" fill="#512BD4"/>
+  <text x="140" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">new</text>
+  <text x="140" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">SomeClass()</text>
+  <text x="140" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">size known</text>
+  <text x="140" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">at JIT time</text>
+
+  <!-- Stage 2 -->
+  <circle cx="435" cy="220" r="10" fill="#6B4CE0"/>
+  <text x="435" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Check context</text>
+  <text x="435" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">room left?</text>
+  <text x="435" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">this thread's own</text>
+  <text x="435" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">allocation context</text>
+
+  <!-- Stage 3 -->
+  <circle cx="730" cy="220" r="10" fill="#2D75C4"/>
+  <text x="730" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Bump pointer</text>
+  <text x="730" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">no lock, no search</text>
+  <text x="730" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">next-free +=</text>
+  <text x="730" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">object size</text>
+
+  <!-- Stage 4 -->
+  <circle cx="1025" cy="220" r="10" fill="#0078D4"/>
+  <text x="1025" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Write header</text>
+  <text x="1025" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">on already-zeroed memory</text>
+  <text x="1025" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">method table ptr +</text>
+  <text x="1025" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">sync block index</text>
+
+  <!-- Stage 5 -->
+  <circle cx="1320" cy="220" r="10" fill="#005A9E"/>
+  <text x="1320" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Construct</text>
+  <text x="1320" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">base, then derived</text>
+  <text x="1320" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">reference</text>
+  <text x="1320" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">returned to caller</text>
+
+  <text x="700" y="330" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">If stage 2 finds no room, the thread refills its context from the shared Gen 0 segment first — the rare, coordinated path, not shown here.</text>
+</svg>

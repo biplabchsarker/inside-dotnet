@@ -1,0 +1,4 @@
+flowchart LR
+    A["new SomeClass()"] --> B{"Size ≥ 85,000 bytes?"}
+    B -->|"no — almost everything"| C["SOH allocation path\n(this chapter)"]
+    B -->|"yes"| D["LOH allocation path\n(Episode 12)"]

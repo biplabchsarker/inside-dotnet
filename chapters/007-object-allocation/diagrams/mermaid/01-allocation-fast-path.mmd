@@ -1,0 +1,9 @@
+flowchart LR
+    A["new SomeClass()"] --> B{"Enough room in this\nthread's allocation context?"}
+    B -->|"yes — common case"| C["Bump the context's\nnext-free pointer"]
+    C --> D["Write object header\n(method table ptr + sync block)"]
+    D --> E["Memory already zeroed\n(guaranteed, not re-zeroed here)"]
+    E --> F["Run constructors\n(base, then derived)"]
+    F --> G["Return reference"]
+    B -->|"no — context exhausted"| H["Refill context from Gen 0\n(may trigger a Gen 0 collection)"]
+    H --> C

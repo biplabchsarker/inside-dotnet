@@ -1,0 +1,19 @@
+# Interview Questions — Object Allocation
+
+**Q1: Walk through exactly what happens, mechanically, when `new SomeClass()` executes on the fast path.**
+A: The JIT-compiled code checks whether the current thread's allocation context has enough remaining space for the object's size. If so, it takes the context's current "next free" address, advances that pointer by the object's size, writes the object header (a method table pointer identifying the exact runtime type, plus a sync block index) into the reserved block, and returns that address as the new reference. The memory was already zeroed before this operation, so no field-by-field zeroing happens here. Constructors then run against that address, base class first, then derived.
+
+**Q2: Why does each thread get its own allocation context instead of every thread bumping one shared pointer?**
+A: A single shared pointer would require every allocation on every thread to synchronize against every other thread's allocations — effectively a global lock taken on the single most frequent operation in a managed program. Per-thread allocation contexts let each thread bump its own private pointers with no coordination, so contention only happens on the comparatively rare event of a context running out and needing to claim more space from the shared Gen 0 segment.
+
+**Q3: .NET guarantees new objects start zeroed. Where does that zeroing actually happen, and why does that matter for allocation performance?**
+A: It's not performed at the moment of each `new`. Freshly committed OS pages arrive already zeroed, and pages reclaimed by a collection are re-zeroed by the GC as part of collection/compaction work — off the allocation hot path. This matters because it means the fast path (bump the pointer, write the header) doesn't pay a per-field zeroing cost; the guarantee is real, but the work backing it is relocated to a less frequent, less latency-sensitive point in time.
+
+**Q4: What happens when a thread's allocation context is exhausted?**
+A: The thread needs a refill: either the shared Gen 0 segment still has unclaimed space, in which case the thread claims a new slice (cheap, no collection required), or it doesn't, in which case the allocation triggers a Gen 0 collection to reclaim space before the allocation can proceed. This is the trigger condition for the GC's involvement — allocation-context exhaustion, not a background timer or a periodic check on every allocation.
+
+**Q5: If a base class constructor calls a virtual method that a derived class overrides, what does that override see, and why?**
+A: It sees the derived class's fields at their zeroed defaults, not whatever the derived constructor would eventually set them to. Construction proceeds strictly base-to-derived — the base constructor's body runs to completion (including any virtual calls it makes) before the derived constructor's field initializers and body run at all. The object already exists (allocated, headered, zeroed) and is already the derived runtime type when the virtual call resolves, which is exactly why the override runs — but the derived-specific initialization hasn't happened yet.
+
+**Q6: Why do objects at or above roughly 85,000 bytes take a different allocation path than everything else, and why doesn't this chapter cover it in depth?**
+A: They're routed to the Large Object Heap instead of being bump-allocated into a Gen 0 segment shared with small, short-lived objects — a separate strategy with different collection frequency and fragmentation characteristics, because collecting and compacting very large objects on the same schedule as small ones would be wasteful. This chapter is about the allocation mechanism generically, and deliberately stops at the routing decision so it doesn't duplicate [Episode 12 — GC Generations & LOH](../011-gc-generations-loh/article.md), which owns the LOH's actual mechanics.
