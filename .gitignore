@@ -2,6 +2,7 @@
 bin/
 obj/
 *.user
+BenchmarkDotNet.Artifacts/
 
 ## OS
 .DS_Store

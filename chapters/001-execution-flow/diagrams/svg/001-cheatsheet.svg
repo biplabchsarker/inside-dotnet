@@ -1,0 +1,42 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHEAT SHEET TEMPLATE. Duplicate into a chapter's diagrams/svg/ as NNN-cheatsheet.svg.
+       Dense, scannable, one-page. Edit: chapter title, the one-line rule, the 3-5 bullets,
+       and the single interview question. Keep the layout - do not redesign the geometry. -->
+  <defs>
+    <linearGradient id="csHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="700" fill="#FFFFFF"/>
+  <rect width="1000" height="90" fill="url(#csHeader)"/>
+  <text x="40" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CHEAT SHEET</text>
+  <text x="40" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">What Really Happens When You Run a .NET App?</text>
+
+  <rect x="40" y="120" width="920" height="70" rx="10" fill="#512BD4" opacity="0.08" stroke="#512BD4" stroke-width="2"/>
+  <text x="60" y="150" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="60" y="178" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#1B1B1F">C# compiles to IL, not machine code — the JIT compiles IL to native code per method, on first call.</text>
+
+  <text x="40" y="235" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" letter-spacing="1">REMEMBER THIS</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#1B1B1F">
+    <circle cx="52" cy="270" r="5" fill="#0078D4"/>
+    <text x="70" y="275">Roslyn: C# -> IL + metadata (build time, not runtime)</text>
+    <circle cx="52" cy="305" r="5" fill="#0078D4"/>
+    <text x="70" y="310">hostfxr/coreclr load the CLR; assembly loader reads metadata</text>
+    <circle cx="52" cy="340" r="5" fill="#0078D4"/>
+    <text x="70" y="345">JIT compiles each method once, on first call, then caches native code</text>
+    <circle cx="52" cy="375" r="5" fill="#0078D4"/>
+    <text x="70" y="380">First call slower than the 1000th - that's JIT warm-up, not a bug</text>
+    <circle cx="52" cy="410" r="5" fill="#0078D4"/>
+    <text x="70" y="415">GC, exception handling, security, threading run underneath continuously</text>
+  </g>
+
+  <rect x="40" y="460" width="920" height="150" rx="10" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="60" y="495" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="60" y="530" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">"Is C# compiled or interpreted?"</text>
+  <text x="60" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#1B1B1F">Neither. Roslyn compiles to IL ahead of time; the JIT compiles IL to native code per method at run time.</text>
+
+  <text x="40" y="670" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

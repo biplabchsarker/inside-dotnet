@@ -42,7 +42,7 @@ Why not compile C# directly to machine code, the way C or C++ does? Because .NET
 - **Runtime services** — garbage collection, type safety, exception handling, and security all require the runtime to understand the *structure* of your code (types, methods, metadata), which a raw machine-code binary doesn't preserve.
 - **Optimization opportunities at run time** — the JIT can make decisions based on the actual CPU it's running on (SIMD width, core count) that an ahead-of-time compiler targeting "any x64 CPU" cannot.
 
-Without this two-stage model, .NET would have to ship a separately compiled binary per CPU architecture and OS, lose the ability to verify code safety at load time, and give up the ability to specialize native code to the exact machine running it. The cost of this design is a small amount of startup latency (compiling methods on first use) — which is precisely the tradeoff **Native AOT** (Episode 9 — Native AOT) exists to eliminate for scenarios that need instant startup.
+Without this two-stage model, .NET would have to ship a separately compiled binary per CPU architecture and OS, lose the ability to verify code safety at load time, and give up the ability to specialize native code to the exact machine running it. The cost of this design is a small amount of startup latency (compiling methods on first use) — which is precisely the tradeoff **Native AOT** ([Episode 4 — JIT Compilation Explained](../003-jit-compilation/article.md)) exists to eliminate for scenarios that need instant startup.
 
 ### Visual Explanation
 
@@ -237,7 +237,7 @@ Run it with `dotnet run` in [`code/`](code/) — on most machines the first `Fib
 
 To see the *actual* IL your C# compiled to, install `ilspycmd` or use [sharplab.io](https://sharplab.io) and paste the `Fibonacci` method — you'll see IL opcodes like `ldarg.0`, `call`, `add` instead of any CPU-specific instruction, confirming the "pattern, not a cut suit" analogy from earlier.
 
-A second code tier (a true **Performance Example** with statistically meaningful `BenchmarkDotNet` runs comparing cold vs. warm invocation across tiering levels) is deliberately deferred rather than bolted on here — see [Episode 9 — Native AOT](../009-native-aot/article.md) and the diagnostics-focused chapters later in Phase 1, where a benchmark harness earns its place instead of duplicating this chapter's single-Stopwatch demonstration for its own sake.
+A second code tier (a true **Performance Example** with statistically meaningful `BenchmarkDotNet` runs comparing cold vs. warm invocation across tiering levels) is deliberately deferred rather than bolted on here — see [Episode 4 — JIT Compilation Explained](../003-jit-compilation/article.md) and the diagnostics-focused chapters later in Phase 1, where a benchmark harness earns its place instead of duplicating this chapter's single-Stopwatch demonstration for its own sake.
 
 ### Performance Notes
 
@@ -319,6 +319,8 @@ A: Ask what's actually driving the requirement — is cold-start latency measure
 
 ### Key Takeaways
 
+![Cheat sheet: What Really Happens When You Run a .NET Application?](diagrams/png/001-cheatsheet.png)
+
 - C# source is compiled to IL + metadata by Roslyn at build time — not to machine code.
 - The CLR loads assemblies, resolves types from metadata, and hands methods to the JIT compiler *on first use*.
 - The JIT compiles IL to native machine code once per method per process, then caches it — explaining JIT warm-up behavior.
@@ -340,3 +342,5 @@ A: Ask what's actually driving the requirement — is cold-start latency measure
               ↓
     Episode 3 — Understanding the CLR
 ```
+
+**Related:** [Episode 4 — JIT Compilation Explained](../003-jit-compilation/article.md) (Tiered Compilation, ReadyToRun, Native AOT in depth) · [Episode 5 — Assemblies, DLLs & Metadata](../004-assemblies-metadata/article.md)

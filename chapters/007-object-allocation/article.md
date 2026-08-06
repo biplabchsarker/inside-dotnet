@@ -352,6 +352,8 @@ A: They're routed to the Large Object Heap instead of being bump-allocated into 
 
 ### Summary & next chapter
 
+![Cheat sheet: Object Allocation](diagrams/png/007-cheatsheet.png)
+
 **Key takeaways:**
 
 - `new SomeClass()`'s fast path is a bump-pointer allocation into the current thread's allocation context, followed by writing the object header (method table pointer + sync block index) — the exact mechanism behind Episode 6's "heap allocation is also just a pointer bump" claim.
@@ -375,3 +377,5 @@ A: They're routed to the Large Object Heap instead of being bump-allocated into 
               ↓
     Episode 9 — Boxing & Unboxing
 ```
+
+**Related:** [Episode 6 — Stack vs Heap](../005-stack-vs-heap/article.md) (the pointer-bump claim this chapter makes concrete) · [Episode 9 — Boxing & Unboxing](../008-boxing-unboxing/article.md) · [Episode 12 — GC Generations & LOH](../011-gc-generations-loh/article.md)

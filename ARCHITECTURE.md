@@ -19,6 +19,7 @@ inside-dotnet/
 ├── PUBLISHING_GUIDE.md        one-markdown-to-many-platforms pipeline
 ├── CONTRIBUTING.md            how to propose/write a chapter
 ├── CHANGELOG.md               dated log of structural/foundation changes
+├── BACKLOG.md                  deferred review feedback, future-chapter candidates, known gaps
 ├── LICENSE.md                 explains the dual-license split
 ├── LICENSE-CODE               MIT (applies to every code/ folder)
 ├── LICENSE-CONTENT            CC-BY-4.0 (applies to articles, diagrams, prose)

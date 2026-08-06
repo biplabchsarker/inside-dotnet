@@ -322,6 +322,8 @@ A: What's the process lifetime and traffic shape — specifically, does the work
 
 ### Summary & Next Chapter
 
+![Cheat sheet: JIT Compilation Explained](diagrams/png/003-cheatsheet.png)
+
 **Key takeaways**
 
 - A method's first call is redirected through a shared "prestub" that triggers JIT compilation and then backpatches the method's entry point to the compiled native code — there's no runtime dispatch check afterward, just a rewritten pointer.
@@ -346,3 +348,5 @@ A: What's the process lifetime and traffic shape — specifically, does the work
               ↓
     Episode 5 — Assemblies, DLLs & Metadata
 ```
+
+**Related:** [Episode 3 — Understanding the CLR](../002-clr/article.md) (method tables, virtual dispatch) · [Episode 2 — Execution Flow](../001-execution-flow/article.md) (the wider execution pipeline this chapter zooms into)

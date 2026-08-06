@@ -396,6 +396,8 @@ A: Separate processes give the strongest isolation (a crashing or misbehaving pl
 
 ### Summary & next chapter
 
+![Cheat sheet: Understanding the CLR](diagrams/png/002-cheatsheet.png)
+
 - The CLR is a full managed execution environment — type safety, memory management, exception handling, security, threading, and interop, not just "the thing that runs IL."
 - The CTS is the single type system every .NET language compiles onto, which is *why* cross-language interop needs no adapter layer; the CLS is the narrower subset that guarantees a public API is safely consumable from any CLS-compliant language.
 - Every object's header carries a pointer to a per-*type* method table containing a vtable; a virtual call follows that pointer and does an indexed lookup at run time, while a non-virtual call is resolved and potentially inlined at JIT time.
@@ -416,3 +418,5 @@ A: Separate processes give the strongest isolation (a crashing or misbehaving pl
               ↓
     Episode 4 — JIT Compilation Explained
 ```
+
+**Related:** [Episode 5 — Assemblies, DLLs & Metadata](../004-assemblies-metadata/article.md) (AssemblyLoadContext resolution in practice) · [Episode 6 — Stack vs Heap](../005-stack-vs-heap/article.md) (object header, method table pointer)

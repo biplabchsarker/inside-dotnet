@@ -355,6 +355,8 @@ A: It's an oversimplification that holds only for local variables of value types
 
 ### Summary & Next Chapter
 
+![Cheat sheet: Stack vs Heap](diagrams/png/005-cheatsheet.png)
+
 **Key takeaways:**
 
 - The **stack** is per-thread, LIFO, and OS/CPU-provided — not a .NET invention. Its allocation and deallocation are essentially free because they're just pointer moves, and it holds call frames: locals, parameters, and return addresses.
@@ -377,3 +379,5 @@ A: It's an oversimplification that holds only for local variables of value types
               ↓
     Episode 7 — Value Types vs Reference Types
 ```
+
+**Related:** [Episode 7 — Value Types vs Reference Types](../006-value-vs-reference-types/article.md) · [Episode 8 — Object Allocation](../007-object-allocation/article.md) · [Episode 12 — GC Generations & LOH](../011-gc-generations-loh/article.md)

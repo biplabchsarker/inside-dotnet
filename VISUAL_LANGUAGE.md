@@ -33,7 +33,8 @@ Roughly 100 entries at full maturity across the whole 58-chapter roadmap — see
 
 | Template | Use it for |
 |---|---|
-| `hero-illustration.svg` | Base frame for a chapter's Hero Cover — blueprint grid + radial glow + central-motif slot (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#the-three-signature-illustrations--every-chapter)) |
+| `hero-illustration.svg` | Base frame for a chapter's Hero Cover — blueprint grid + radial glow + central-motif slot (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#the-four-signature-illustrations--every-chapter)) |
+| `cheat-sheet.svg` | Base frame for a chapter's Cheat Sheet — one-line rule + bullet list + one interview question, dense and scannable |
 | `timeline.svg` | Sequential/chronological flows (execution timelines, GC generations over time) |
 | `architecture.svg` | Boxes-and-connections system diagrams |
 | `flowchart.svg` | Decision/branching logic |

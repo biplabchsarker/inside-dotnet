@@ -348,6 +348,8 @@ A: Treat it as a versioning-governance problem, not a one-off bug fix. Centraliz
 
 ### Summary & Next Chapter
 
+![Cheat sheet: Assemblies, DLLs & Metadata](diagrams/png/004-cheatsheet.png)
+
 - An assembly is the CLR's unit of deployment, versioning, and type identity — not just a compiled-code file; identity is the 4-tuple (name, version, culture, public key token), not the simple name alone.
 - The PE/COFF container (borrowed from Windows executables, parsed identically cross-platform by CoreCLR) holds a CLR header pointing at a metadata root, which fans out into streams (`#~`, `#Strings`, `#US`, `#Blob`, `#GUID`) backing the actual metadata tables.
 - `TypeDef`/`MethodDef`/`FieldDef` describe what's defined in this assembly; `TypeRef`/`MemberRef`/`AssemblyRef` describe what's referenced from elsewhere — and IL never embeds full names at call sites, only compact metadata tokens indexing into these tables.
@@ -370,3 +372,5 @@ This closes **Part I — The Foundation**. Every mechanism from Episode 1 throug
               ↓
     Episode 6 — Stack vs Heap   (Part II — Memory begins)
 ```
+
+**Related:** [Episode 3 — Understanding the CLR](../002-clr/article.md) (AssemblyLoadContext isolation) · [Episode 8 — Object Allocation](../007-object-allocation/article.md) (what happens once a type is resolved and you `new` an instance of it)

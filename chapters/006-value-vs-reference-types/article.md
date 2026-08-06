@@ -230,6 +230,16 @@ The full runnable version — including the mutable-struct foreach gotcha, `reco
 
 ### Performance notes
 
+- **Measured, not assumed: struct size vs. pass-by-value cost.** `code/Chapter06.Benchmarks` runs a real `BenchmarkDotNet` comparison — a 16-byte struct passed by value, a 256-byte struct passed by value, the same 256-byte struct passed by `in`, and an equivalent reference type passed by reference:
+
+  | Method | Mean | Ratio vs. small struct |
+  |---|---|---|
+  | Small struct (16B) by value | 1.278 ns | 1.00 (baseline) |
+  | Large struct (256B) by value | 3.730 ns | **2.92×** |
+  | Large struct (256B) by `in` | 1.074 ns | 0.84× |
+  | Equivalent class by reference | 1.172 ns | 0.92× |
+
+  *(.NET 10.0.8, X64 RyuJIT AVX2, Windows 11 — see [`code/Chapter06.Benchmarks/`](code/Chapter06.Benchmarks/) to reproduce on your own hardware; absolute nanosecond values are hardware-specific, the ~3× relative gap between by-value and by-`in`/by-reference at this size is the point.)* Passing the 256-byte struct by value costs measurably more than passing it by `in` or passing an equivalent class by reference — both of which collapse to copying a single pointer-sized reference, regardless of the payload size. This is the concrete evidence behind the "`in`/`ref readonly` avoids the copy" claim below, not just an assertion.
 - **Struct size is the whole tradeoff.** A `struct` at or below roughly 16 bytes (a couple of `int`s/`double`s) copies cheaper than a reference indirection in most call patterns. Once a struct grows past a few fields, repeated copying (through method calls, LINQ operators, collection indexers) can outweigh the allocation/GC cost a `class` would have paid once.
 - **`in` / `ref readonly` parameters** let you pass a large `readonly struct` by reference without giving the callee mutation rights — avoiding the copy while keeping the immutability guarantee that made the struct safe to reason about in the first place. Don't reach for `in` on small structs (`int`, `Point`); the indirection can cost more than the copy it avoids.
 - **Boxing is the value-type performance cliff.** Storing an `int` in a non-generic `ArrayList`, passing a `struct` as an `object` parameter, or calling a non-overridden interface member on a struct through its interface type all trigger boxing — a heap allocation plus a full copy, on every single operation. Generic collections (`List<int>` vs `ArrayList`) exist specifically to avoid this.
@@ -303,9 +313,11 @@ A: Start with identity: does this type represent a value (interchangeable if the
 
 ### Summary & next chapter
 
+![Cheat sheet: Value Types vs Reference Types](diagrams/png/006-cheatsheet.png)
+
 - Value types copy their *data* on assignment/pass; reference types copy the *reference*, leaving both variables pointing at one shared object.
 - "Value types live on the stack" is imprecise — they live wherever their containing storage lives: stack for locals, inside the object for class fields, inside the array for array elements, and only get their own heap block when boxed.
-- Boxing/unboxing is the bridge that lets a value type be treated as `object` — a heap allocation plus a full copy each way; the deep dive is [Episode 8](../007-object-allocation/article.md) and beyond.
+- Boxing/unboxing is the bridge that lets a value type be treated as `object` — a heap allocation plus a full copy each way; the deep dive is [Episode 9 — Boxing & Unboxing](../008-boxing-unboxing/article.md).
 - `readonly struct` proves immutability to the compiler (enabling defensive-copy elision); `ref struct` is enforced stack-only storage, which is why `Span<T>` is one.
 - `record class` is a reference type with generated value equality; `record struct` is a value type with the same generated equality — the equality contract is identical, the copy/storage semantics are not.
 - Value types default to reflection-based member-wise equality (`ValueType.Equals`); reference types default to reference equality — override `Equals`/`GetHashCode` on hot-path structs instead of relying on the reflection fallback.
@@ -325,3 +337,5 @@ A: Start with identity: does this type represent a value (interchangeable if the
               ↓
     Episode 8 — Object Allocation
 ```
+
+**Related:** [Episode 6 — Stack vs Heap](../005-stack-vs-heap/article.md) (the container rule this chapter builds on) · [Episode 9 — Boxing & Unboxing](../008-boxing-unboxing/article.md)

@@ -5,8 +5,25 @@
 *A Visual Journey from Developer to Solution Architect — by Biplab Sarker*
 
 **Repo:** https://github.com/biplabchsarker/inside-dotnet
-**Status:** 🚧 Foundation Phase (v1.0)
+**Version:** v0.3 — Memory (Phase 2 in progress)
+**Chapters completed:** 8 / 59 (000–007)
 **License:** Dual — [MIT](LICENSE-CODE) for code, [CC BY 4.0](LICENSE-CONTENT) for written content ([details](LICENSE.md))
+
+| Phase | Status |
+|---|---|
+| 0 — Project Foundation | ✅ Done |
+| 1 — Runtime Fundamentals | ✅ Done |
+| 2 — Memory | 🟡 In progress (3/9) |
+| 3 — C# | ⬜ Not started |
+| 4 — Clean Code | ⬜ Not started |
+| 5 — Design Patterns | ⬜ Not started |
+| 6 — ASP.NET Core | ⬜ Not started |
+| 7 — Dependency Injection | ⬜ Not started |
+| 8 — Entity Framework Core | ⬜ Not started |
+| 9 — Concurrency | ⬜ Not started |
+| 10 — Architecture | ⬜ Not started |
+| 11 — Production | ⬜ Not started |
+| Capstone | ⬜ Not started |
 
 Most developers know how to write code. Fewer understand what the .NET runtime is actually doing behind the scenes. **Inside .NET** is a chapter-by-chapter series that bridges that gap using original diagrams, real-world analogies, internal runtime explanations, practical C# examples, performance notes, common mistakes, and interview insights.
 
@@ -31,6 +48,7 @@ Junior & mid-level developers · Senior engineers · Software architects · Tech
 | [PUBLISHING_GUIDE.md](PUBLISHING_GUIDE.md) | One markdown → LinkedIn/Medium/Dev.to/PDF/etc. |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Working agreement, responsibilities, quality gate |
 | [CHANGELOG.md](CHANGELOG.md) | Dated log of structural/foundation changes |
+| [BACKLOG.md](BACKLOG.md) | Deferred review feedback, future chapter candidates, known gaps |
 | [LICENSE.md](LICENSE.md) | Dual license explained |
 
 ## How this repo is organized

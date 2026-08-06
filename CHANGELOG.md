@@ -2,6 +2,22 @@
 
 All notable structural, foundation, and roadmap changes to this project. Individual chapter publication is tracked in `book.json`'s `status` map and the README status table, not duplicated here — this log is for changes to the *project itself*.
 
+## [1.2.0] — 2026-08-07 — Cheat Sheets, cross-linking, real benchmarks, backlog
+
+### Added
+- Fourth signature illustration: **Cheat Sheet** (one-line rule + bullets + one interview question) — `assets/templates/cheat-sheet.svg`, built for Chapters 000-007, documented in `IMAGE_GUIDE.md`/`VISUAL_LANGUAGE.md`
+- **Related Chapters** line added to every chapter's journey footer (000-007), pointing to substantively-connected chapters beyond just previous/next
+- Real `BenchmarkDotNet` numbers in Chapter 006's Performance Notes (`code/Chapter06.Benchmarks/`) — large-struct-by-value vs. by-`in` vs. equivalent class, measured, not assumed
+- `BACKLOG.md` — deferred review feedback (illustration-quality ceiling, future runtime-internals depth, additional chapter candidates, known content-bug pattern), so review feedback that can't be applied immediately doesn't just get lost
+- Version badge + phase-status table at the top of `README.md`
+
+### Fixed
+- Chapter 001 referenced a nonexistent "Episode 9 — Native AOT" chapter (Native AOT is covered inside Episode 4 / chapter 003) — corrected to point there
+- Chapter 006 linked boxing's deep-dive to the wrong chapter (007 instead of 008) — corrected
+
+### Changed
+- `WRITING_GUIDE.md`'s Definition of Done now requires all four signature illustrations (was three) and a Related-Chapters entry in the journey footer
+
 ## [1.0.0] — 2026-08-06 — Foundation
 
 ### Added

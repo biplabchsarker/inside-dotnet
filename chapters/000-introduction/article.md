@@ -162,6 +162,8 @@ This chapter's self-check quiz lives in [`quiz.md`](quiz.md) — five questions 
 
 ### Summary & Next Chapter
 
+![Cheat sheet: Welcome to Inside .NET](diagrams/png/000-cheatsheet.png)
+
 - This series is about the *internals* of .NET — the "why," not just the "how" — and it exists to close the gap between using the framework and understanding it.
 - It progresses deliberately: Foundation → Memory → C# → Patterns → DI → ASP.NET Core → Concurrency → EF Core → Architecture → Cloud → Architect — each part a more detailed view of the mechanism introduced in Foundation.
 - Every chapter from Episode 2 onward follows the same 13-section template: cover, learning objectives, analogy, problem, diagrams, internals, code, performance, mistakes, architect's perspective, interview questions, quiz, summary.
@@ -181,3 +183,5 @@ This chapter's self-check quiz lives in [`quiz.md`](quiz.md) — five questions 
               ↓
     Episode 2 — Execution Flow
 ```
+
+**Related:** [ROADMAP.md](../../ROADMAP.md) (full 58-chapter plan) · [book.json](../../book.json) (machine-readable status)

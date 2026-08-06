@@ -41,7 +41,7 @@ chapters/NNN-topic-slug/
 10. **Architect's Perspective** — three-tier (see below); each tier opens with a sharp, italicized one-line question before its explanation (e.g. *"Is this interface earning its dispatch cost, or is it decoration?"*) — this is a signature feature of the series, not decoration
 11. **Interview Questions** — 4–6 senior-level Q&A tied directly to this chapter
 12. **Quiz** — 5 questions with collapsible answers
-13. **Summary & Next Chapter** — key takeaways, a bridge to the next episode, then a "Where you are in the journey" footer: a fenced ASCII box showing `Previous episode → ▶ This episode ◀ you are here → Next episode`
+13. **Summary & Next Chapter** — the Cheat Sheet illustration, then key takeaways, a bridge to the next episode, a "Where you are in the journey" footer (a fenced ASCII box showing `Previous episode → ▶ This episode ◀ you are here → Next episode`), and a **Related Chapters** line linking substantively-connected chapters beyond just previous/next (a forward reference this chapter deferred to, a chapter that reuses a concept introduced here, etc.) — verify target chapter numbers against `book.json` before linking, don't rely on memory of what a chapter "should" be numbered
 
 `exercises.md` and `references.md` are separate files but are considered part of the required chapter output. `exercises.md` additionally requires a **Challenge** section: a short, concrete "predict the output before running it" code snippet distinct from `quiz.md`'s conceptual questions — it should test a specific, nameable misconception this chapter addresses.
 
@@ -84,8 +84,8 @@ A chapter is complete only when:
 - [ ] `exercises.md` includes a Challenge section
 - [ ] `code/` builds and runs cleanly (`dotnet run`), verified, not assumed
 - [ ] At least 3 diagrams exist as both inline Mermaid (in `article.md`) and standalone source files under `diagrams/`
-- [ ] The chapter's three signature illustrations exist (Hero Cover, Concept Illustration, Deep-Dive Illustration — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)), exported to PNG via `scripts/Svg2Png`, and referenced inline in `article.md`
-- [ ] The journey footer at the end of `article.md` links the correct previous/next chapters
+- [ ] The chapter's four signature illustrations exist (Hero Cover, Concept Illustration, Deep-Dive Illustration, Cheat Sheet — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)), exported to PNG via `scripts/Svg2Png`, and referenced inline in `article.md`
+- [ ] The journey footer at the end of `article.md` links the correct previous/next chapters, and includes a Related Chapters line
 - [ ] All eight questions (above) are demonstrably answered somewhere in the chapter
 - [ ] Terminology matches [STYLE_GUIDE.md](STYLE_GUIDE.md#terminology)
 - [ ] `book.json`'s `status` map is updated to `"done"` for this chapter
