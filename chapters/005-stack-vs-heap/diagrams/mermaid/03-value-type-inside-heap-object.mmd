@@ -1,0 +1,11 @@
+flowchart LR
+    subgraph STACK["Stack frame: CreateOrder()"]
+        R["local variable 'order'<br/>(a reference, 8 bytes)"]
+    end
+    subgraph HEAPOBJ["Heap: the Order object"]
+        HDR["Object header<br/>(method table ptr, sync block)"]
+        F1["CustomerId: int  ← value type, INSIDE the object"]
+        F2["Total: decimal  ← value type, INSIDE the object"]
+        F3["Lines: reference → points elsewhere on the heap"]
+    end
+    R -->|"points to"| HDR

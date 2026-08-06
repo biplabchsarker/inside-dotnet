@@ -1,0 +1,7 @@
+flowchart LR
+    A["C# Source (.cs)"] -->|Roslyn compiler| B["IL + Metadata (.dll / .exe)"]
+    B -->|dotnet exec / apphost| C["CLR: Assembly Loader"]
+    C --> D["Type Loader<br/>(resolves types, verifies IL)"]
+    D --> E["JIT Compiler<br/>(method-by-method, on first call)"]
+    E --> F["Native Machine Code<br/>(cached in memory for process lifetime)"]
+    F --> G["CPU executes"]

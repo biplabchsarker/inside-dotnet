@@ -1,0 +1,16 @@
+flowchart TB
+    subgraph CLR["Common Language Runtime"]
+        AL[Assembly Loader]
+        TL[Type Loader / Metadata Engine]
+        JIT[JIT Compiler]
+        GC[Garbage Collector]
+        EH[Exception Handling]
+        SEC[Security / Code Access]
+        TH[Threading / Thread Pool]
+        IOP[Interop: P/Invoke, COM]
+    end
+    APP["Your Application (IL)"] --> AL --> TL --> JIT --> NATIVE["Native Code Execution"]
+    NATIVE -. uses .-> GC
+    NATIVE -. uses .-> EH
+    NATIVE -. uses .-> TH
+    NATIVE -. uses .-> IOP

@@ -1,0 +1,8 @@
+flowchart TB
+    subgraph ASM[".NET Assembly (.dll/.exe)"]
+        PE["PE/COFF Header<br/>(Windows-style binary header)"]
+        MAN["Assembly Manifest<br/>(name, version, culture, referenced assemblies)"]
+        META["Metadata Tables<br/>(types, methods, fields, tokens)"]
+        ILC["IL Code<br/>(method bodies)"]
+        RES["Embedded Resources"]
+    end

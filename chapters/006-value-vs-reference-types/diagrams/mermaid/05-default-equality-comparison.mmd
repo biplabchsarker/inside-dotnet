@@ -1,0 +1,5 @@
+flowchart TB
+    VT2["Value type without override"] --> VE["ValueType.Equals<br/>reflection-based, field-by-field comparison<br/>(correct but slow)"]
+    RT2["Reference type without override"] --> RE["object.Equals<br/>reference equality<br/>(same object? not same data?)"]
+    VT3["struct with override"] --> VF["Custom Equals/GetHashCode<br/>(fast, no reflection)"]
+    RT3["record class"] --> RF["Compiler-generated value equality<br/>(field-by-field, no reflection)"]

@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> Uncompiled
+    Uncompiled --> Tier0 : First call hits the prestub
+    Tier0 --> Tier0 : Subsequent calls run Tier 0 code,<br/>call counter increments
+    Tier0 --> Tier1Queued : Call count crosses threshold
+    Tier1Queued --> Tier1Compiling : Background thread picks it up
+    Tier1Compiling --> Tier1 : Fully optimized code ready,<br/>entry point patched
+    Tier1 --> Tier1 : All future calls run optimized code
+    Tier0 --> Tier1OSR : Long-running loop detected<br/>(On-Stack Replacement)
+    Tier1OSR --> Tier1 : Same call transitions to optimized code<br/>mid-execution, without waiting for re-entry

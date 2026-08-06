@@ -1,0 +1,8 @@
+flowchart LR
+    subgraph SA["Stack allocation"]
+        S1["Move stack pointer down<br/>by frame size"] --> S2["Done — O(1),<br/>no search, no lock"]
+    end
+    subgraph HA["Heap allocation (Gen 0, common case)"]
+        H1["Bump allocation pointer<br/>in current segment"] --> H2["Done — also O(1)<br/>*if there's room*"]
+        H2 -.->|"segment full"| H3["Trigger GC<br/>(non-deterministic pause)"]
+    end

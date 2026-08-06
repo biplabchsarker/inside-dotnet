@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Caller
+    participant Obj as Object reference
+    participant MT as Method Table (of runtime type)
+    participant Code as Native method code
+
+    Note over Caller,Code: Virtual call: base.Validate() where actual object is Derived
+    Caller->>Obj: callvirt Validate()
+    Obj->>MT: follow method table pointer (runtime type, not declared type)
+    MT->>MT: look up vtable slot N for Validate
+    MT->>Code: jump to Derived.Validate's compiled address
+    Code-->>Caller: return
+
+    Note over Caller,Code: Non-virtual call: a sealed/static/non-virtual method
+    Caller->>Code: call Method() — address resolved at JIT time, often inlined
+    Code-->>Caller: return

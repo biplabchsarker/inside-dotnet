@@ -1,0 +1,10 @@
+flowchart TB
+    subgraph VT["Value type: b = a;"]
+        direction LR
+        A1["a: Point{X:1,Y:2}"] -. "copies the DATA" .-> B1["b: Point{X:1,Y:2}<br/>(independent copy)"]
+    end
+    subgraph RT["Reference type: b = a;"]
+        direction LR
+        A2["a (reference)"] -->|"points to"| OBJ["Customer object<br/>{Name: 'Alice'}"]
+        B2["b (reference)"] -->|"points to"| OBJ
+    end

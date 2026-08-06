@@ -1,0 +1,7 @@
+flowchart TB
+    A["Recursive call N"] --> B["Recursive call N+1"]
+    B --> C["Recursive call N+2"]
+    C --> D["Stack pointer approaches<br/>guard page at stack limit"]
+    D --> E["CPU/OS raises hardware<br/>guard-page fault"]
+    E --> F{"Is there stack space left<br/>to run exception machinery?"}
+    F -->|No| G["CLR fails fast:<br/>process terminates immediately"]

@@ -1,0 +1,10 @@
+flowchart TB
+    START["Method needs to run for the first time"] --> CHECK{"Does an R2R image<br/>exist for this assembly?"}
+    CHECK -- No --> JITPATH["Prestub triggers JIT<br/>(Tier 0 compile)"]
+    CHECK -- Yes --> VERSIONCHECK{"Does R2R native code's<br/>target CLR version/ABI<br/>match the running CLR<br/>exactly?"}
+    VERSIONCHECK -- "Yes, exact match" --> USE_R2R["Use precompiled native code directly<br/>— zero JIT cost for this method"]
+    VERSIONCHECK -- "No, mismatch" --> JITPATH
+    JITPATH --> TIERED["Enters normal tiered compilation<br/>(Tier 0 now, Tier 1 later if hot)"]
+    USE_R2R --> HOTCHECK{"Is this method called<br/>frequently enough to<br/>benefit from Tier 1?"}
+    HOTCHECK -- Yes --> JITPATH
+    HOTCHECK -- No --> DONE["Stays on R2R code — never JIT'd"]

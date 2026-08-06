@@ -1,0 +1,15 @@
+flowchart TB
+    subgraph LEGACY[".NET Framework — one process"]
+        P1["OS Process"]
+        AD1["AppDomain 1<br/>(isolated: own statics, can unload)"]
+        AD2["AppDomain 2<br/>(isolated: own statics, can unload)"]
+        P1 --> AD1
+        P1 --> AD2
+    end
+    subgraph MODERN[".NET Core / .NET 5+ — one process"]
+        P2["OS Process<br/>(single AppDomain, always)"]
+        ALC0["Default AssemblyLoadContext"]
+        ALC1["Custom AssemblyLoadContext<br/>(e.g. plugin isolation, collectible)"]
+        P2 --> ALC0
+        P2 --> ALC1
+    end

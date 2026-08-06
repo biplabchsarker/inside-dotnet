@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant Caller
+    participant Stub as Prestub (method's initial entry point)
+    participant JIT as RyuJIT
+    participant MT as Method Table (slot for this method)
+    participant Native as Compiled native code
+
+    Caller->>Stub: First call to Method()
+    Stub->>JIT: Trigger compilation (method has never run before)
+    JIT->>JIT: Compile IL -> native code (Tier 0, quick)
+    JIT->>Native: Emit native code into memory
+    JIT->>MT: Patch method table slot to point at Native (backpatching)
+    MT-->>Caller: Subsequent calls jump straight to Native
+    Note over Stub,MT: The prestub is a one-time detour.<br/>Every call after the first skips it entirely.

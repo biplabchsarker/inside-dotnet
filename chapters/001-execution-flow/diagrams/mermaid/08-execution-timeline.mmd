@@ -1,0 +1,15 @@
+gantt
+    dateFormat X
+    axisFormat %L ms
+    title dotnet run timeline (illustrative, not to scale)
+    section Process
+    OS process start        :0, 10
+    section Host
+    hostfxr resolves runtime :10, 20
+    coreclr.dll loaded       :20, 40
+    section CLR
+    Assembly + metadata load :40, 55
+    Type loading / verify    :55, 65
+    JIT compile Main()       :65, 85
+    section Execution
+    Main() runs natively     :85, 95

@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph RC["record class Point3D"]
+        RC1["Reference type"]
+        RC2["Heap-allocated"]
+        RC3["Copied by reference on assignment"]
+        RC4["Value-based Equals/GetHashCode (generated)"]
+    end
+    subgraph RS["record struct Point3D"]
+        RS1["Value type"]
+        RS2["Stack/inline, per normal struct rules"]
+        RS3["Copied by value on assignment"]
+        RS4["Value-based Equals/GetHashCode (generated)"]
+    end
+    NOTE["Both get member-wise equality + ToString() + with-expressions.<br/>Only the copy semantics and storage differ — same equality contract."]
+    RC4 -.-> NOTE
+    RS4 -.-> NOTE

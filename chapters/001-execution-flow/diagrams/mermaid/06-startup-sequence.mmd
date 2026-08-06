@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant OS
+    participant Host as apphost / dotnet.exe
+    participant CLR
+    participant Loader as Assembly Loader
+    participant JIT
+    participant Main as Main()
+
+    OS->>Host: Launch process
+    Host->>CLR: Initialize runtime (hostfxr, load coreclr)
+    CLR->>Loader: Load entry assembly + dependencies
+    Loader->>CLR: Resolve types (from metadata)
+    CLR->>JIT: Request compilation of Main()
+    JIT->>CLR: Return native code, cache it
+    CLR->>Main: Execute native code
+    Main->>CLR: Return / process exits
+    CLR->>OS: Tear down (finalizers, exit code)

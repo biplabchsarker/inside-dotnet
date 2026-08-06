@@ -1,0 +1,5 @@
+flowchart LR
+    RUN["Running Managed Code"] --> GC2["Garbage Collector<br/>manages heap, reclaims memory"]
+    RUN --> EH2["Exception Handling<br/>unwinds stack, runs finally blocks"]
+    RUN --> SEC2["Security<br/>code access, sandboxing"]
+    RUN --> TP["Thread Pool / Threading<br/>schedules work"]

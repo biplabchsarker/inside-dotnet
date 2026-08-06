@@ -1,0 +1,5 @@
+flowchart LR
+    CS["C# (.cs files)"] --> ROSLYN["Roslyn (C# Compiler)"]
+    ROSLYN --> IL["IL + Metadata<br/>(portable, CPU-agnostic)"]
+    IL --> JIT["RyuJIT<br/>(method-level, at first call)"]
+    JIT --> NATIVE["Native machine code<br/>(x64 / ARM64 / etc.)"]

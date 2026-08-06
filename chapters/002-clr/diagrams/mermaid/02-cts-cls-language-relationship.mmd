@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph LANGS["Language compilers"]
+        CS["C# compiler"]
+        FS["F# compiler"]
+        VB["VB.NET compiler"]
+    end
+    subgraph CLS_BOX["CLS — Common Language Specification<br/>(subset rules for cross-language exposure)"]
+    end
+    subgraph CTS_BOX["CTS — Common Type System<br/>(the ONE type system every language maps onto)"]
+        VT["Value types"]
+        RT["Reference types"]
+        IF["Interfaces / Generics / Delegates"]
+    end
+    CS --> CLS_BOX --> CTS_BOX
+    FS --> CLS_BOX
+    VB --> CLS_BOX
+    CTS_BOX --> IL2["Shared IL + Metadata<br/>any language can consume any other's assembly"]

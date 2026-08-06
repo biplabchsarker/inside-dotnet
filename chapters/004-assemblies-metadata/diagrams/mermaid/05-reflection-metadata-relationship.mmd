@@ -1,0 +1,13 @@
+flowchart LR
+    subgraph SOURCE["Compile time"]
+        CS["C# source"] --> ROSLYN["Roslyn"]
+    end
+    ROSLYN --> META["Metadata tables in the compiled assembly<br/>(TypeDef, MethodDef, FieldDef, ...)"]
+    subgraph RUNTIME["Run time — System.Reflection"]
+        ASM["Assembly class"] -->|GetTypes| TYPE["Type class"]
+        TYPE -->|GetMethods / GetFields| MI["MethodInfo / FieldInfo"]
+        TYPE -->|MetadataToken| TOK["Same token scheme IL uses internally"]
+    end
+    META --> ASM
+    META --> TYPE
+    META --> MI

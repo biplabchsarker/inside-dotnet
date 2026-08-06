@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph HEAP["Managed Heap"]
+        subgraph OBJ["An 'Order' object instance"]
+            SB["Sync Block Index<br/>(header word)"]
+            MTP["Method Table Pointer<br/>(header word)"]
+            F1["Field: OrderId"]
+            F2["Field: CustomerName"]
+            F3["Field: Total"]
+        end
+    end
+    subgraph MT["Method Table for type 'Order' (loaded once per type)"]
+        TYPEINFO["Type metadata pointer<br/>(EEClass / TypeHandle)"]
+        VT2["vtable slots:<br/>0: ToString()<br/>1: Equals()<br/>2: Validate() [virtual]"]
+        NONVIRT["Non-virtual methods<br/>(resolved at compile time, not via table)"]
+    end
+    MTP -->|points to| MT

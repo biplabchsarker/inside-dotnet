@@ -5,13 +5,27 @@
 
 ---
 
-### Introduction
+### Chapter cover
 
-Episode 2 walked through the pipeline at a high level: Roslyn produces IL, the CLR loads it, the JIT compiles it, and a handful of runtime services keep it running. That chapter treated "the CLR" as a black box that does useful things. This chapter opens that box.
+![Understanding the CLR — chapter cover](diagrams/svg/002-cover.svg)
 
-The CLR (Common Language Runtime) is not a JIT compiler with some extra features bolted on — it's a full managed execution environment, closer in spirit to a virtual machine than to a traditional runtime library. It defines how every type is represented in memory, how a method call is resolved, how many languages can produce code that interoperates seamlessly, and what "safe" even means for a running program. Understanding these mechanics is what separates "I know C# runs on the CLR" from being able to explain why a virtual call costs more than a non-virtual one, or why F# and C# assemblies can call each other's code without any adapter layer.
+*Cover source: [`diagrams/svg/002-cover.svg`](diagrams/svg/002-cover.svg), following the series template in [BRAND_GUIDE.md](../../BRAND_GUIDE.md).*
 
-### The real-world analogy
+---
+
+### Learning objectives
+
+By the end of this chapter, you will be able to:
+
+- Explain what the CLR actually does beyond "runs .NET code," and list its concrete responsibilities as a managed execution environment.
+- Distinguish the CTS from the CLS, and explain why cross-language interop between C#, F#, and VB.NET needs no adapter layer.
+- Describe how a method table and vtable are built and shared, and trace exactly what happens in memory when a virtual call resolves.
+- Explain why a non-virtual call is cheaper than a virtual one, and identify the JIT optimizations (inlining, guarded devirtualization) that depend on that difference.
+- Explain why `AssemblyLoadContext` replaced AppDomains as the load-isolation mechanism in modern .NET, and when that isolation actually matters architecturally.
+
+---
+
+### Real-world analogy
 
 Think of the CLR as an airport's air traffic control system, not the planes themselves.
 
@@ -23,7 +37,9 @@ Think of the CLR as an airport's air traffic control system, not the planes them
 
 The CLR is the control tower: it doesn't fly the plane (that's your code, executing as native instructions), but nothing takes off, lands, or gets rerouted without going through it first.
 
-### The problem being solved
+---
+
+### Problem statement
 
 Three distinct problems collapse into "why does .NET need a runtime like the CLR at all":
 
@@ -31,7 +47,11 @@ Three distinct problems collapse into "why does .NET need a runtime like the CLR
 - **Memory and type safety without manual bookkeeping.** A raw native binary has no concept of "this pointer refers to a live object of type `Order`." The CLR tracks every object's exact type and every live reference to it, which is what makes garbage collection, safe casts, and bounds-checked arrays possible — none of that is achievable by a runtime that only understands "here's a blob of bytes, jump to this address."
 - **Uniform virtual dispatch across an open-ended type hierarchy.** When you call an overridden method through a base-class reference, something has to decide, at run time, which concrete implementation actually runs — and it has to do so fast, because this happens on every polymorphic call in the program. The method table / vtable design is the CLR's answer to "make dynamic dispatch both correct and cheap."
 
-### Original visual explanation
+Without these three, "write once, run on any CLR-conformant language, safely, at speed" simply doesn't hold — each would have to be solved per-library, per-language, or not at all.
+
+---
+
+### Visual explanation
 
 #### 1. CLR as a managed execution environment
 
@@ -55,6 +75,8 @@ flowchart TB
     NATIVE -.-> IOPc
 ```
 
+*Source: [`diagrams/mermaid/01-clr-managed-execution-environment.mmd`](diagrams/mermaid/01-clr-managed-execution-environment.mmd)*
+
 #### 2. CTS / CLS / language relationship
 
 ```mermaid
@@ -77,6 +99,8 @@ flowchart TB
     CTS_BOX --> IL2["Shared IL + Metadata<br/>any language can consume any other's assembly"]
 ```
 
+*Source: [`diagrams/mermaid/02-cts-cls-language-relationship.mmd`](diagrams/mermaid/02-cts-cls-language-relationship.mmd)*
+
 #### 3. Object layout and the method table pointer
 
 ```mermaid
@@ -97,6 +121,8 @@ flowchart LR
     end
     MTP -->|points to| MT
 ```
+
+*Source: [`diagrams/mermaid/03-object-layout-method-table-pointer.mmd`](diagrams/mermaid/03-object-layout-method-table-pointer.mmd)*
 
 #### 4. Virtual call vs. non-virtual call resolution
 
@@ -119,6 +145,8 @@ sequenceDiagram
     Code-->>Caller: return
 ```
 
+*Source: [`diagrams/mermaid/04-virtual-vs-nonvirtual-call-resolution.mmd`](diagrams/mermaid/04-virtual-vs-nonvirtual-call-resolution.mmd)*
+
 #### 5. AppDomain (legacy) vs. AssemblyLoadContext (modern)
 
 ```mermaid
@@ -139,7 +167,11 @@ flowchart TB
     end
 ```
 
-### Internal .NET mechanics
+*Source: [`diagrams/mermaid/05-appdomain-vs-assemblyloadcontext.mmd`](diagrams/mermaid/05-appdomain-vs-assemblyloadcontext.mmd)*
+
+---
+
+### Under the hood
 
 **1. The CLR's actual job list.** Beyond "runs your code," the CLR is responsible for: enforcing type safety (you cannot treat an arbitrary bag of bytes as a `Customer` object without going through a legitimate cast or deserialization path that the runtime validates); memory management (every managed allocation and its lifetime is tracked so the GC can reclaim it); structured exception handling that works consistently *across* languages (an exception thrown by F# code can be caught by a C# `catch` block using the same protocol); a security model for code access (largely vestigial for local apps post-.NET Core, but still real for certain hosting scenarios); thread management (the CLR owns the thread pool and the primitives `Task`/`async` are built on); and interop marshaling at the managed/unmanaged boundary.
 
@@ -155,7 +187,13 @@ flowchart TB
 
 **7. CLR vs. BCL vs. FCL — precise terminology.** These three terms get conflated constantly, and precision matters in an interview: the **CLR** is the runtime engine itself — the native component (`coreclr`) that loads assemblies, JITs code, and runs the GC, threading, and exception machinery described above. The **BCL (Base Class Library)** is the minimal set of foundational managed types every .NET program needs — `System.Object`, `System.String`, collections, primitive wrappers, `System.IO` basics — the layer that's almost always present regardless of app type. The **FCL (Framework Class Library)** is the older, broader historical term (pre-dating .NET Core) for *everything* Microsoft shipped as managed libraries on top of the CLR — BCL plus ASP.NET, WinForms, WPF, etc. In modern usage, "BCL" is the term still in active use (and still exists as `System.Private.CoreLib` plus the `System.*` reference assemblies); "FCL" is largely a historical/legacy label you'll mostly encounter in older docs or interview trivia rather than current Microsoft documentation.
 
-### C# implementation
+This section directly answers **why** the CLR exists, **how it works internally**, and **how Microsoft implements it** (the `coreclr`/`vm` source tree referenced in Further Reading) — three of this chapter's eight required questions.
+
+---
+
+### Code example
+
+**Tier: Example** — the simplest correct illustration of CTS type identity, method-table sharing, virtual vs. non-virtual dispatch cost, and `AssemblyLoadContext` inspection, all in one runnable console app. (This chapter uses a single Example tier; deeper tiers — a dedicated BenchmarkDotNet performance harness and a production-style plugin loader built on a collectible ALC — are natural candidates for a follow-up chapter once Part III covers extensibility patterns in depth.)
 
 ```csharp
 // Program.cs — .NET 10 console app
@@ -262,7 +300,19 @@ sealed class Square : IShape
 
 Run it with `dotnet run` in [`code/`](code/). Section 3 (method-table sharing) and section 5 (`AssemblyLoadContext`) directly demonstrate the two most testable claims in this chapter: instances share one type representation, and the CLR's load-isolation model today is ALC-based, not AppDomain-based.
 
-### Common mistakes
+---
+
+### Performance notes
+
+- **Sealing types and methods enables devirtualization and inlining.** If a type or method can't be overridden, the JIT can skip the vtable lookup entirely and, if the method body is small, inline it — removing the call overhead altogether. This is a real, measurable win in hot paths with many small polymorphic calls (a common pattern in visitor-style or strategy-pattern code).
+- **Guarded devirtualization.** Modern RyuJIT can speculatively devirtualize a virtual call at a call site that's observed to almost always target one concrete type, emitting a fast direct-call path with a type check guard and a slow-path fallback — you get most of the inlining benefit without giving up polymorphism. This happens automatically; you don't write code differently to get it, but it's worth knowing it exists before assuming "virtual == always slow."
+- **Type loading cost is paid once per type per process, not per instance.** The method table build (metadata parsing, vtable construction, interface map resolution) happens the first time a type is touched, then every subsequent `new` of that type is just an allocation plus a pointer write — this is part of why the *first* use of a type-heavy code path (e.g., first request after startup) is measurably slower than the second, on top of JIT warm-up.
+- **`AssemblyLoadContext` collectibility has a real cost/benefit tradeoff.** A collectible ALC lets you unload plugin code and reclaim memory, which is valuable for long-running hosts that load/unload plugins repeatedly — but collectible-context code runs with some JIT optimizations disabled or deferred, so it's not the right default for performance-critical, always-loaded code.
+- **How to actually measure this, not just take it on faith.** The demo's Stopwatch comparison is illustrative, not a rigorous benchmark — for real performance claims, use BenchmarkDotNet (`[MethodImpl(MethodImplOptions.NoInlining)]` where you need to force a fair comparison), run in `Release` configuration, and check the JIT's disassembly output (`DOTNET_JitDisasm`) if you need to confirm whether a call site was actually devirtualized or inlined rather than assuming it from timing alone.
+
+---
+
+### Common mistakes / anti-patterns
 
 - **Treating "IL is portable" and "the CTS is optional" as related facts.** They're not — IL portability is a *consequence* of every language mapping onto the same CTS. A language that invented its own incompatible type system couldn't produce IL other .NET languages could consume, portable or not.
 - **Assuming virtual calls are "basically free" on modern CPUs.** The indirection is small in absolute terms, but it's not zero, and — more importantly — it blocks inlining, which is often the larger cost in a hot loop than the indirect jump itself. Sealing classes/methods that don't need to be extended is a legitimate, low-risk optimization the JIT can act on.
@@ -270,12 +320,25 @@ Run it with `dotnet run` in [`code/`](code/). Section 3 (method-table sharing) a
 - **Confusing BCL and FCL, or using "FCL" in current documentation contexts.** BCL is the term in live use; describing the modern `System.*` surface as "the FCL" in a design doc or interview answer reads as dated and imprecise.
 - **Believing CLS compliance is only a "VB.NET-era" concern.** It still matters the moment you publish a library as a public NuGet package intended for consumption by any .NET language, not just the one it was authored in.
 
-### Performance considerations
+---
 
-- **Sealing types and methods enables devirtualization and inlining.** If a type or method can't be overridden, the JIT can skip the vtable lookup entirely and, if the method body is small, inline it — removing the call overhead altogether. This is a real, measurable win in hot paths with many small polymorphic calls (a common pattern in visitor-style or strategy-pattern code).
-- **Guarded devirtualization.** Modern RyuJIT can speculatively devirtualize a virtual call at a call site that's observed to almost always target one concrete type, emitting a fast direct-call path with a type check guard and a slow-path fallback — you get most of the inlining benefit without giving up polymorphism. This happens automatically; you don't write code differently to get it, but it's worth knowing it exists before assuming "virtual == always slow."
-- **Type loading cost is paid once per type per process, not per instance.** The method table build (metadata parsing, vtable construction, interface map resolution) happens the first time a type is touched, then every subsequent `new` of that type is just an allocation plus a pointer write — this is part of why the *first* use of a type-heavy code path (e.g., first request after startup) is measurably slower than the second, on top of JIT warm-up.
-- **`AssemblyLoadContext` collectibility has a real cost/benefit tradeoff.** A collectible ALC lets you unload plugin code and reclaim memory, which is valuable for long-running hosts that load/unload plugins repeatedly — but collectible-context code runs with some JIT optimizations disabled or deferred, so it's not the right default for performance-critical, always-loaded code.
+### Architect's perspective
+
+#### Developer Perspective
+
+Day to day, this chapter's mechanics show up in two decisions: when to seal a class or method, and when to reach for an interface versus a concrete type. Seal anything that isn't part of a designed extension point — it costs nothing (you weren't planning to override it) and gives the JIT room to devirtualize and inline. Prefer interfaces where you genuinely need substitutability (testing, multiple implementations); don't add an interface "for testability" on a type that will only ever have one implementation, since that's a vtable indirection you're paying for with no design payoff. And don't reach for `AppDomain` APIs in new code — if you need isolation or unloading, that's `AssemblyLoadContext`, full stop.
+
+#### Senior Perspective
+
+In code review, the CLR mechanics in this chapter matter most in hot paths and public API design. A visitor pattern or strategy pattern with dozens of small polymorphic calls in a tight loop is exactly where virtual dispatch overhead and blocked inlining compound — that's worth a profiling pass before assuming "clean OO design" is free. On public API surface, CLS-compliance flags (`[CLSCompliant(true)]`) are worth enforcing on any library assembly that might be consumed from F# or another language, because the failure mode (a consumer can't call your API) shows up downstream, not in your own build. And when someone proposes AppDomain-based isolation for a "let's sandbox this plugin" feature, that's the moment to redirect the design toward a collectible `AssemblyLoadContext` before it's built on an API that no longer does what its name implies.
+
+#### Architect Perspective
+
+At a system level, the interface-heavy-vs-concrete-class-heavy question isn't just a style preference — it's a tradeoff between flexibility and per-call cost that compounds across millions of calls in high-throughput services. An architecture with deep interface layering (common in enterprise codebases that over-apply dependency inversion) pays the vtable/interface-dispatch cost pervasively; that's a legitimate reason to keep hot-path internals concrete and reserve interfaces for actual seams (boundaries you test against, boundaries that vary by deployment, plugin contracts) rather than wrapping every class in an interface by default. `AssemblyLoadContext` isolation is the other lever an architect owns: any plugin architecture, multi-tenant extension model, or "hot-reload without restarting the host" requirement is, mechanically, an ALC design problem — how many contexts, whether they're collectible, how you version-isolate assemblies that might be loaded at different versions by different plugins simultaneously. This is also literally how Microsoft's own tooling is built: MSBuild task isolation, `dotnet` SDK resolvers, and third-party plugin hosts for tools like OmniSharp or Roslyn analyzers all use ALC-based isolation rather than process-per-plugin, because it's cheaper to isolate in-process than to pay IPC overhead for every plugin call — a tradeoff worth naming explicitly when a team proposes a heavier isolation model (separate processes, containers) for a problem ALC already solves at lower cost.
+
+This section directly answers the remaining required questions: **when to use/not use** these mechanisms, **how they scale**, and **how an architect thinks about them**.
+
+---
 
 ### Interview questions
 
@@ -294,14 +357,39 @@ A: Most real-world AppDomain usage boiled down to two needs: isolating static st
 **Q5: What's the actual difference between the BCL and the FCL, and which term should you use today?**
 A: The BCL (Base Class Library) is the minimal, always-present set of foundational types — `System.Object`, `String`, core collections, `System.IO` basics. The FCL (Framework Class Library) was the older, broader term covering the BCL plus everything else Microsoft shipped on top of it (ASP.NET, WinForms, WPF) in the .NET Framework era. Current Microsoft documentation and the community use "BCL"; "FCL" is a legacy term you'll see in older material or hear as interview trivia, not in active current usage.
 
-### Key takeaways
+**Q6: An architect is evaluating whether a plugin subsystem should isolate plugins with separate OS processes or with `AssemblyLoadContext`. What's the actual tradeoff?**
+A: Separate processes give the strongest isolation (a crashing or misbehaving plugin can't take down the host, and you get a real security boundary), at the cost of IPC overhead for every cross-boundary call and more complex deployment/lifecycle management. A collectible `AssemblyLoadContext` isolates at the type/assembly-loading level within one process — cheap in-process calls, the ability to load multiple versions of the same dependency side by side, and the ability to unload — but a plugin that corrupts shared state or crashes the process takes the host with it. The right choice depends on trust level: first-party or well-tested plugins commonly justify ALC; third-party, untrusted, or fault-isolation-critical plugins usually justify the process boundary despite the overhead.
+
+---
+
+### Quiz
+
+1. Name three responsibilities of the CLR beyond "compiling and running IL."
+2. What is the CTS, and why is it the reason C# and F# assemblies can call each other with no adapter code?
+3. What does every object carry in its header that makes virtual dispatch possible, and what does that pointer refer to?
+4. Why is a non-virtual method call cheaper than a virtual one, mechanically?
+5. What replaced AppDomains as the load-isolation mechanism in modern .NET, and what capability does it add that a single AppDomain-per-process model lacks?
+
+<details>
+<summary>Answers</summary>
+
+1. Any three of: type safety enforcement, memory management (GC), structured exception handling, security/code-access checks, thread management, managed/unmanaged interop marshaling.
+2. The Common Type System is the single type system every .NET language's compiler maps its own constructs onto — a class or type from any CTS-conformant language becomes the same kind of CTS construct in metadata, so the CLR (and any other language) doesn't need to know or care which language originally produced it.
+3. A pointer to the type's **method table** — a structure built once per type (shared by every instance of that type) containing type metadata and a vtable of function-pointer slots for virtual methods.
+4. A non-virtual call's target address is fixed at JIT time, so it's a direct call with no table lookup — and the JIT can additionally choose to inline it. A virtual call must follow the method-table pointer and index into the vtable at run time, which is resolved against the runtime type and blocks inlining.
+5. `AssemblyLoadContext` (ALC). It adds the ability to load isolated or even multiple different versions of the same assembly into separate contexts within one process, and — if the ALC is collectible — unload that code later, which a single non-unloadable AppDomain-per-process model in modern .NET cannot do on its own.
+
+</details>
+
+---
+
+### Summary & next chapter
 
 - The CLR is a full managed execution environment — type safety, memory management, exception handling, security, threading, and interop, not just "the thing that runs IL."
 - The CTS is the single type system every .NET language compiles onto, which is *why* cross-language interop needs no adapter layer; the CLS is the narrower subset that guarantees a public API is safely consumable from any CLS-compliant language.
 - Every object's header carries a pointer to a per-*type* method table containing a vtable; a virtual call follows that pointer and does an indexed lookup at run time, while a non-virtual call is resolved and potentially inlined at JIT time.
 - AppDomains (isolation + unloadability, .NET Framework) have been replaced by `AssemblyLoadContext` (lighter-weight load isolation, with optional collectibility) in modern .NET.
 - BCL is the current, correct term for the foundational `System.*` library; FCL is the older, broader historical term for BCL-plus-everything-else in .NET Framework.
-
-### What's next
+- At the architect altitude: interface-heavy designs and plugin/isolation architectures both cash out, mechanically, into vtable-dispatch and ALC decisions — not abstract style preferences.
 
 [Episode 4 — JIT Compilation Explained](../003-jit-compilation/article.md) goes inside RyuJIT itself: tiered compilation in detail, how IL is actually translated to machine code, inlining heuristics, and how to read the JIT's own diagnostic output for a method you wrote.

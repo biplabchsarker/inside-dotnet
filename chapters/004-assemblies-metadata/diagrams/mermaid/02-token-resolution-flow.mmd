@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant IL as IL method body
+    participant Token as Metadata token (e.g. 0x0A00001B)
+    participant Tables as Metadata tables
+    participant Resolver as CLR type/member resolver
+    participant Target as Resolved MethodDesc / FieldDesc
+
+    IL->>Token: call 0x0A00001B
+    Note over Token: Top byte (0x0A) identifies the table<br/>(MemberRef); remaining bytes are the row index
+    Token->>Tables: Look up row in MemberRef table
+    Tables->>Tables: Row references a TypeRef (defining type)<br/>+ name + signature (via #Strings/#Blob streams)
+    Tables->>Resolver: Hand resolver the (type, name, signature) triple
+    Resolver->>Resolver: If type is external, resolve owning assembly<br/>via AssemblyRef, load it if not already loaded
+    Resolver->>Target: Bind to concrete MethodDesc in target assembly
+    Target-->>IL: JIT emits a direct call to the resolved native entry point

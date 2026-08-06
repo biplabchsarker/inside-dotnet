@@ -1,0 +1,11 @@
+flowchart TB
+    subgraph HEAP["Managed Heap"]
+        subgraph ORDEROBJ["Order instance (object header + fields)"]
+            HDR["Object header<br/>(method table ptr, sync block)"]
+            F1["string CustomerName<br/>(reference → separate heap object)"]
+            F2["Point ShippingCoords<br/>{X: double, Y: double}<br/>(struct — stored INLINE, no extra allocation)"]
+            F3["decimal Total<br/>(struct — stored INLINE)"]
+        end
+    end
+    STR["'Alice' string object"]
+    F1 -.->|reference| STR

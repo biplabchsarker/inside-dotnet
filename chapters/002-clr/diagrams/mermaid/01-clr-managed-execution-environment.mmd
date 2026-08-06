@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph CLR["Common Language Runtime — Managed Execution Environment"]
+        TS["Type System<br/>(CTS / CLS enforcement)"]
+        ML["Method Tables & Type Objects<br/>(in-memory type representation)"]
+        JITc["JIT Compiler"]
+        GCc["Garbage Collector<br/>(memory management)"]
+        EHc["Exception Handling<br/>(structured, cross-language)"]
+        SECc["Security<br/>(code access, sandboxing)"]
+        THc["Thread Management<br/>(thread pool, sync primitives)"]
+        IOPc["Interop<br/>(P/Invoke, COM)"]
+    end
+    IL["IL from any CTS-conformant language"] --> TS --> ML --> JITc --> NATIVE["Native code execution"]
+    NATIVE -.-> GCc
+    NATIVE -.-> EHc
+    NATIVE -.-> SECc
+    NATIVE -.-> THc
+    NATIVE -.-> IOPc

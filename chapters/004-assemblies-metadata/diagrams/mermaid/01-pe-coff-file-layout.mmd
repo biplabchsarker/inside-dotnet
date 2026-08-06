@@ -1,0 +1,22 @@
+flowchart TB
+    subgraph FILE["MyApp.dll on disk"]
+        DOS["MS-DOS Header + Stub<br/>(legacy compatibility, unused)"]
+        COFF["COFF Header<br/>(machine type, section count, timestamp)"]
+        OPT["PE Optional Header<br/>(entry point RVA, subsystem, CLR header data directory)"]
+        SEC[".text section<br/>(IL code + metadata + CLR header)"]
+        SEC2[".rsrc section<br/>(Win32 resources, version info)"]
+        SEC3[".reloc section<br/>(base relocations)"]
+        subgraph TEXT[".text section contents"]
+            CLRH["CLR Header (COR20 Header)<br/>points to metadata + entry point token"]
+            MD["Metadata Root<br/>(#~ / #Strings / #US / #GUID / #Blob streams)"]
+            MANIFEST["Assembly Manifest<br/>(name, version, culture, public key, AssemblyRefs)"]
+            TABLES["Metadata Tables<br/>(TypeDef, MethodDef, FieldDef, TypeRef, MemberRef...)"]
+            IL["IL method bodies"]
+        end
+    end
+    DOS --> COFF --> OPT --> SEC
+    SEC -.contains.-> CLRH
+    CLRH --> MD
+    MD --> MANIFEST
+    MD --> TABLES
+    TABLES --> IL

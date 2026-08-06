@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant App as Your code (new-ing a type / calling a method)
+    participant CLR as CLR Binder
+    participant ALC as AssemblyLoadContext (Default or custom)
+    participant Deps as deps.json (dependency manifest)
+    participant Probe as Probing paths<br/>(app dir, shared framework, NuGet cache)
+    participant Disk as Loaded assembly in memory
+
+    App->>CLR: First reference to a type in Contoso.Utils
+    CLR->>ALC: Resolve "Contoso.Utils, Version=3.2.0.0, ..."
+    ALC->>ALC: Already loaded in this ALC? (identity match)
+    alt Already loaded
+        ALC-->>App: Return already-loaded assembly
+    else Not yet loaded
+        ALC->>Deps: Consult deps.json for expected version/path
+        Deps->>Probe: Try app base directory first
+        Probe->>Probe: Then shared framework dirs, then NuGet package cache
+        Probe->>Disk: Load matching file, verify manifest identity matches request
+        Disk-->>ALC: Assembly loaded into this ALC
+        ALC-->>App: Return newly loaded assembly
+    end
+    Note over ALC: A custom, isolated ALC (e.g. a plugin host)<br/>can load a DIFFERENT version of the same-named<br/>assembly without colliding with the Default ALC.

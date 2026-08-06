@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant OS as OS Thread Stack
+    participant A as Main()
+    participant B as ProcessOrder()
+    participant C as CalculateTotal()
+
+    A->>OS: push frame for Main (locals, return addr)
+    A->>B: call ProcessOrder(order)
+    OS->>OS: push frame for ProcessOrder<br/>(param 'order' ref, locals)
+    B->>C: call CalculateTotal(items)
+    OS->>OS: push frame for CalculateTotal<br/>(param 'items' ref, local 'sum')
+    C->>OS: return sum
+    OS->>OS: pop CalculateTotal frame<br/>(stack pointer moves back up)
+    B->>OS: return
+    OS->>OS: pop ProcessOrder frame
+    A->>OS: Main continues, then returns
+    OS->>OS: pop Main frame

@@ -1,0 +1,12 @@
+flowchart TB
+    subgraph MANAGED["Managed World"]
+        M1["Your C# code"]
+        M2["BCL (System.*)"]
+        M3["Runs on top of CLR<br/>GC-tracked, type-safe"]
+    end
+    subgraph UNMANAGED["Unmanaged World"]
+        U1["OS kernel calls"]
+        U2["Native libraries (.dll/.so)"]
+        U3["No GC, manual memory"]
+    end
+    MANAGED -- "P/Invoke, COM Interop" --> UNMANAGED

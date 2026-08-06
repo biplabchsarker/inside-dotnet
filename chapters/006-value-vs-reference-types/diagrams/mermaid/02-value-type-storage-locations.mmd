@@ -1,0 +1,13 @@
+flowchart TB
+    subgraph CASE1["Local variable"]
+        S1["Stack frame"] --> V1["int x = 5;<br/>(value lives ON the stack)"]
+    end
+    subgraph CASE2["Field of a class instance"]
+        H2["Heap: Order object"] --> V2["decimal Total;<br/>(struct field lives INSIDE the object, on the heap)"]
+    end
+    subgraph CASE3["Element of an array"]
+        H3["Heap: Point[] array object"] --> V3["Point[3]<br/>(struct elements live INSIDE the array, on the heap)"]
+    end
+    subgraph CASE4["Boxed value"]
+        V4["int i = 5;"] -->|"object o = i;"| H4["Heap: boxed int<br/>(copy wrapped in an object header)"]
+    end

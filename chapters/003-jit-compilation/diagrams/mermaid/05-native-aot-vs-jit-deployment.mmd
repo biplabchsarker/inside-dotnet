@@ -1,0 +1,13 @@
+flowchart LR
+    subgraph JITMODEL["Standard JIT-based deployment"]
+        A1["IL + metadata shipped"] --> A2["CLR loads at run time"]
+        A2 --> A3["Tier 0 JIT on first call"]
+        A3 --> A4["Tier 1 JIT if hot<br/>(background)"]
+        A4 --> A5["Native code in memory<br/>(this process only)"]
+    end
+    subgraph AOTMODEL["Native AOT deployment"]
+        B1["IL + metadata"] --> B2["Compiled fully to native<br/>at publish time (ahead-of-time)"]
+        B2 --> B3["Trimmed: unreachable code removed"]
+        B3 --> B4["Single native binary,<br/>no embedded IL, no JIT"]
+        B4 --> B5["Runs immediately —<br/>no compilation step at all"]
+    end

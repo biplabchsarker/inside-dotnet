@@ -1,0 +1,14 @@
+flowchart TB
+    subgraph MANIFEST["Assembly Manifest"]
+        NAME["Name: Contoso.Utils"]
+        VER["Version: 3.2.0.0"]
+        CULT["Culture: neutral (or e.g. en-US for satellite assemblies)"]
+        PKT["Public Key Token: strong-name signature hash<br/>(empty if not strong-named)"]
+        FILES["File list<br/>(almost always just itself — multi-file assemblies via .netmodule are rare)"]
+        REFS["AssemblyRef table<br/>— every referenced assembly, each with its OWN<br/>name + version + culture + public key token"]
+        EXPORT["ExportedType entries<br/>(types this assembly re-exposes, e.g. type-forwarders)"]
+    end
+    NAME --> IDENTITY["Full Identity String:<br/>Contoso.Utils, Version=3.2.0.0,<br/>Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"]
+    VER --> IDENTITY
+    CULT --> IDENTITY
+    PKT --> IDENTITY

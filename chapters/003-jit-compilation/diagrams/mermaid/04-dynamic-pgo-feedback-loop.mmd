@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant App as Running application
+    participant T0 as Tier 0 code (instrumented)
+    participant Profile as In-memory profile data
+    participant BG as Background JIT thread
+    participant T1 as Tier 1 code (optimized)
+
+    App->>T0: Call method (N times)
+    T0->>Profile: Record call count, branch outcomes,<br/>observed type at call sites
+    Profile->>Profile: Call count crosses tiering threshold
+    Profile->>BG: Trigger Tier 1 recompilation, pass profile data along
+    BG->>T1: Compile using real observed behavior<br/>(favor the hot branch, devirtualize<br/>the type actually seen, inline accordingly)
+    BG->>App: Patch entry point to T1
+    App->>T1: All future calls run the profile-optimized version
