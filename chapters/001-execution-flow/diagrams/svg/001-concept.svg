@@ -1,31 +1,44 @@
-<svg viewBox="0 0 1400 400" xmlns="http://www.w3.org/2000/svg">
-  <!-- TIMELINE TEMPLATE. Duplicate into a chapter's diagrams/svg/. Edit stage labels/times below; add/remove stage groups as needed, keeping even spacing along the main line. -->
+<svg viewBox="0 0 2000 420" xmlns="http://www.w3.org/2000/svg">
+  <!-- Concept illustration: the full end-to-end Developer -> CPU pipeline, one image, seven stages. -->
   <defs>
     <linearGradient id="tlLine" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#512BD4"/>
       <stop offset="100%" stop-color="#0078D4"/>
     </linearGradient>
   </defs>
-  <rect width="1400" height="400" fill="#FFFFFF"/>
-  <line x1="80" y1="200" x2="1320" y2="200" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round"/>
+  <rect width="2000" height="420" fill="#FFFFFF"/>
+  <text x="1000" y="50" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">Developer to CPU — the full pipeline</text>
+  <line x1="80" y1="220" x2="1920" y2="220" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- Stage 1 -->
-  <circle cx="140" cy="200" r="10" fill="#512BD4"/>
-  <text x="140" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">C# Source</text>
-  <text x="140" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">Roslyn</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" text-anchor="middle">
+    <circle cx="140" cy="220" r="10" fill="#512BD4"/>
+    <text x="140" y="190">Developer</text>
+    <text x="140" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">writes C#</text>
 
-  <!-- Stage 2 -->
-  <circle cx="480" cy="200" r="10" fill="#6B4CE0"/>
-  <text x="480" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">IL + Metadata</text>
-  <text x="480" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = ...</text>
+    <circle cx="420" cy="220" r="10" fill="#5C39D8"/>
+    <text x="420" y="190">Roslyn</text>
+    <text x="420" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">compiles</text>
 
-  <!-- Stage 3 -->
-  <circle cx="880" cy="200" r="10" fill="#2D75C4"/>
-  <text x="880" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">JIT Compiled</text>
-  <text x="880" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = ...</text>
+    <circle cx="700" cy="220" r="10" fill="#6647DC"/>
+    <text x="700" y="190">IL</text>
+    <text x="700" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">+ metadata</text>
 
-  <!-- Stage 4 -->
-  <circle cx="1260" cy="200" r="10" fill="#0078D4"/>
-  <text x="1260" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">CPU Executes</text>
-  <text x="1260" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">RyuJIT</text>
+    <circle cx="980" cy="220" r="10" fill="#4A5FD0"/>
+    <text x="980" y="190">CLR</text>
+    <text x="980" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">loads + resolves</text>
+
+    <circle cx="1260" cy="220" r="10" fill="#2E75C4"/>
+    <text x="1260" y="190">JIT</text>
+    <text x="1260" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">RyuJIT compiles</text>
+
+    <circle cx="1540" cy="220" r="10" fill="#1878C8"/>
+    <text x="1540" y="190">Native Code</text>
+    <text x="1540" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">cached in memory</text>
+
+    <circle cx="1820" cy="220" r="10" fill="#0078D4"/>
+    <text x="1820" y="190">CPU</text>
+    <text x="1820" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" font-weight="400" fill="#6E6E76">executes</text>
+  </g>
+
+  <text x="1000" y="330" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">The first four stages happen once per method per process (or at build time); the JIT step happens once per method, on first call — see the timing diagrams below for exactly when.</text>
 </svg>

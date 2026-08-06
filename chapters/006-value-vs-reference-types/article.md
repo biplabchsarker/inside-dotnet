@@ -25,6 +25,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world analogy
 
+A shopping-cart service passes a `Total` field between three microservices during checkout. One team's struct-based `Money` type gets copied cleanly at every hop. Another team's mutable class gets "updated" in a discount-calculation step — and silently corrupts the *original* cart object still referenced by the payment step, because nobody copied it, they shared it. Same bug class, opposite root cause: one team over-trusted copying, the other under-trusted it. This chapter is the difference between those two failure modes.
+
 **Value types are a photocopy. Reference types are a claim ticket to a shared locker.**
 
 Hand a colleague a photocopy of a contract (a value type, copied by value): they can scribble annotations, cross out clauses, spill coffee on it — your original page is untouched, because they never had *your* page, only an independent copy of its content.
@@ -154,7 +156,9 @@ Tying the diagrams to actual CLR behavior:
 
 6. **Equality resolution order:** for a `struct` that doesn't override `Equals`, the CLR falls back to `ValueType.Equals`, which uses reflection to walk the fields and compare them one by one (with a bitwise-comparison fast path when the struct contains no reference-type fields and no padding). That reflection fallback is why custom structs used in hot paths (dictionary keys, equality-heavy comparisons) should override `Equals`/`GetHashCode` explicitly — it's a correctness no-op but a real performance win. For a `class` that doesn't override `Equals`, `object.Equals` performs reference equality — two variables are equal only if they point at the same object, regardless of field contents. `record class` and `record struct` opt out of both defaults: the compiler generates member-wise `Equals`/`GetHashCode`/`==` for you at compile time, with no reflection involved.
 
-7. **This is also how Microsoft implements the BCL's own value types.** `System.Numerics.Vector2/3/4`, `System.Drawing.Point`, and every primitive numeric type are `readonly struct`s (or, for primitives, effectively immutable value types with no mutable public surface) precisely so they get the defensive-copy elision and immutability guarantees described above — the runtime team applies the same rule this chapter recommends to your own types.
+7. **Escape analysis — why the JIT doesn't just "figure this out" for you.** Some managed runtimes (notably the JVM's HotSpot) perform *escape analysis*: proving a heap-allocated object never outlives the method that created it, and never gets referenced from anywhere that survives the call, then allocating it on the stack instead — no code change required. RyuJIT does a narrow form of this (eliding some allocations it can fully prove are dead or trivially non-escaping, and it can stack-allocate a small class instance in a very limited set of provable cases), but it is far more conservative than "figure out every non-escaping object automatically." That's precisely *why* .NET gives you explicit, opt-in tools instead of relying on the JIT to infer it: `struct`, `readonly struct`, `stackalloc`, and `ref struct` (Episode 6) let *you* prove non-escaping-ness to the compiler at the type level, in a way the JIT doesn't have to (and mostly can't) discover on its own from arbitrary `class` code. Don't write a `class` and assume "the JIT will probably stack-allocate it if it doesn't escape" — assume it won't, and reach for the explicit value-type tools when that guarantee actually matters.
+
+8. **This is also how Microsoft implements the BCL's own value types.** `System.Numerics.Vector2/3/4`, `System.Drawing.Point`, and every primitive numeric type are `readonly struct`s (or, for primitives, effectively immutable value types with no mutable public surface) precisely so they get the defensive-copy elision and immutability guarantees described above — the runtime team applies the same rule this chapter recommends to your own types.
 
 ### Code example
 
@@ -244,14 +248,17 @@ The full runnable version — including the mutable-struct foreach gotcha, `reco
 ### Architect's perspective
 
 **Developer Perspective**
+*"Should this type be a struct or a class — and how do I know before it becomes a bug?"*
 
 Day to day, the decision is local and mechanical: is this a small, self-contained piece of data with no identity of its own (a coordinate, a money amount, a date range)? Make it a `struct`, make it `readonly struct` by default, and only drop that default when you have a concrete reason a value needs to mutate in place. Is it an entity with identity, something multiple parts of the system need to observe the *same* instance of? Make it a `class`. When in doubt, default to `class` — the failure mode of an unnecessary reference type is a small allocation; the failure mode of an unnecessary mutable struct is a silent correctness bug that a debugger session, not a compiler error, will surface.
 
 **Senior Perspective**
+*"Is this struct actually immutable, or is it one property-getter away from a silent bug?"*
 
 This choice matters most at code-review time, because the mutable-struct trap doesn't announce itself — it compiles, it runs, and it produces wrong output only under the specific access pattern (`foreach`, a property getter, certain indexer chains) that hands back a copy. A senior engineer reviewing a PR that introduces a new `struct` should be asking three questions reflexively: is it immutable (`readonly struct` or all `init`-only members)? Is it small enough that copying it repeatedly is actually cheap? And is anything in the codebase going to access it through a path that returns a copy and then try to mutate that copy expecting it to stick? The tradeoff against alternatives is rarely "value types are slower" in the abstract — it's "this specific struct is large enough, or mutated often enough in the wrong place, that a class would have been safer or cheaper here." Teams that don't converge on a `readonly struct`-by-default convention end up with a mix of mutable and immutable structs where the mutable ones are, disproportionately, the source of the "changed it and nothing happened" bug reports.
 
 **Architect Perspective**
+*"Does this codebase have an enforced convention for value objects, or does every developer guess?"*
 
 At system scale, this stops being a per-type decision and becomes a convention question: does the team have a documented, enforced rule for when a domain value object is a `readonly struct`/`record struct` versus a `record class`/entity `class`? Domain-driven design's Value Object pattern maps directly onto `readonly struct`/`record struct` when the value is small and copy-heavy (a `Money`, a `DateRange`, a `GeoCoordinate`), and onto an immutable `record class` when the value is larger or its identity-independence matters more than copy cost (a `ShippingAddress` embedded in multiple aggregates). Getting this wrong at scale shows up as one of two failure patterns: a codebase full of large structs being copied through every layer of a call stack (a real, measurable throughput cost that shows up in profiler flame graphs as unexplained `memcpy`-shaped time), or a codebase full of reference-type "value objects" that get compared by identity instead of value in a `Dictionary` or `HashSet` and silently produce duplicate entries. A team-wide analyzer rule (`CA1051`/custom Roslyn analyzer flagging mutable public struct fields) enforced in CI is cheaper than relying on code review vigilance alone, and it's exactly the kind of convention that pays for itself once the team and codebase are large enough that no single reviewer sees every struct definition. This is also precisely how the .NET runtime team treats its own BCL types — `Vector2/3/4`, `TimeSpan`, `DateOnly`, and `Guid` are all `readonly struct`s, not because someone eyeballed each one, but because "small immutable value → `readonly struct`" is applied as a library-wide design guideline, documented in the [.NET class/struct design guidelines](https://learn.microsoft.com/dotnet/standard/design-guidelines/choosing-between-class-and-struct) referenced at the end of this chapter.
 
@@ -306,3 +313,15 @@ A: Start with identity: does this type represent a value (interchangeable if the
 - At scale, this becomes a team convention question — `readonly struct`/`record struct` for small domain value objects, immutable `record class` for larger ones — not a per-file judgment call.
 
 [Episode 8 — Object Allocation](../007-object-allocation/article.md) goes inside what actually happens when `new` allocates a reference type on the heap — object headers, method tables, allocation pointers, and why allocation in .NET is deliberately cheap so that garbage collection can do the expensive work instead.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 6 — Stack vs Heap
+              ↓
+  ▶ Episode 7 — Value Types vs Reference Types   ◀ you are here
+              ↓
+    Episode 8 — Object Allocation
+```

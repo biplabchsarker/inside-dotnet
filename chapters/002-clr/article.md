@@ -29,6 +29,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world analogy
 
+Picture a hospital's patient-monitoring system running thousands of concurrent device readings — every heartbeat, every dosage check, every alert — with zero tolerance for a corrupted read or a missed safety rule. Something has to guarantee that no matter which team wrote which module, every reading is type-safe, every check runs under the same rules, and every dispatch to a handler resolves to the *correct* handler, every time. That "something" is the CLR, and this chapter is about how it actually pulls that off.
+
 Think of the CLR as an airport's air traffic control system, not the planes themselves.
 
 - Airlines (**C#, F#, VB.NET**) all file flight plans in the same standardized format (**CTS/CLS-conformant IL**) — a Boeing pilot and an Airbus pilot both speak the same air traffic language, regardless of which manufacturer built their aircraft.
@@ -185,7 +187,7 @@ flowchart TB
 
 **3. CLS — the interop subset.** The CTS is broader than what every language can *consume*. C# supports unsigned integers as public API surface; some CLS-targeting languages historically didn't. The Common Language Specification is a narrower set of rules ("no unsigned types in public members," "no member names differing only by case," etc.) that, if you follow them, guarantee your public API is usable from *any* CLS-compliant language — not just the one you wrote it in. `[CLSCompliant(true)]` on an assembly asks the compiler to flag violations. This matters directly for anyone publishing a NuGet library intended for multi-language consumption.
 
-**4. Method tables and type objects — how a loaded type actually looks in memory.** When the type loader resolves a type for the first time (Episode 2, step 4), it builds a **method table** (internally, an `MethodTable`/`EEClass` pair in the CLR's source) — a fixed, per-*type* (not per-instance) structure containing: a pointer back to the type's metadata, the type's size and layout, a pointer to its parent's method table, interface implementation maps, and a **vtable** — a slot array of function pointers for every virtual method, ordered so that a derived type's overridden slot occupies the *same index* as the base type's declared slot. Every object instance on the heap carries, as the first word(s) of its header, a pointer to *this* method table (plus a sync-block index word used for locking/hashing) — not a copy of the type's behavior, just a pointer to the one shared table. This is why polymorphism doesn't cost memory per instance: a million `Order` objects share one method table; each instance is just data plus a pointer.
+**4. Method tables and type objects — how a loaded type actually looks in memory.** Method tables themselves aren't allocated on the managed heap you'll read about in Part II — they live in a separate, GC-invisible region called the **loader heap**, one per `AssemblyLoadContext`, freed only when that ALC unloads (if it's collectible) rather than by the garbage collector. When the type loader resolves a type for the first time (Episode 2, step 4), it builds a **method table** (internally, an `MethodTable`/`EEClass` pair in the CLR's source) — a fixed, per-*type* (not per-instance) structure containing: a pointer back to the type's metadata, the type's size and layout, a pointer to its parent's method table, interface implementation maps, and a **vtable** — a slot array of function pointers for every virtual method, ordered so that a derived type's overridden slot occupies the *same index* as the base type's declared slot. Every object instance on the heap carries, as the first word(s) of its header, a pointer to *this* method table (plus a sync-block index word used for locking/hashing) — not a copy of the type's behavior, just a pointer to the one shared table. This is why polymorphism doesn't cost memory per instance: a million `Order` objects share one method table; each instance is just data plus a pointer.
 
 **5. Virtual dispatch vs. non-virtual dispatch, mechanically.** A `callvirt` IL instruction on a virtual method does *not* know at compile time which override will run — the JIT emits code that: follows the object's method-table pointer (the *runtime* type, which may be a subclass of the *declared* reference type), indexes into that table's fixed vtable slot for the method being called, and jumps to whatever compiled address sits there. This indirection is what makes overriding work, and it's also why it's slightly more expensive than a direct call — one extra memory load and an indirect jump, which additionally defeats CPU branch prediction more often than a direct call and blocks inlining (the JIT can't inline through a jump it can't resolve until run time). A **non-virtual call** (a `static`, non-virtual instance method, or a method on a `sealed` class/type) is resolved directly at JIT time to a fixed address — no table lookup, and the JIT is free to inline it entirely, eliminating the call overhead altogether. The C# compiler also has a specific escape hatch here: calling a virtual method through a `sealed` override, or on a value type, can be devirtualized because the runtime type is provably fixed.
 
@@ -331,14 +333,17 @@ Run it with `dotnet run` in [`code/`](code/). Section 3 (method-table sharing) a
 ### Architect's perspective
 
 #### Developer Perspective
+*"What is the CLR, really — and why should I care while I'm just writing code?"*
 
 Day to day, this chapter's mechanics show up in two decisions: when to seal a class or method, and when to reach for an interface versus a concrete type. Seal anything that isn't part of a designed extension point — it costs nothing (you weren't planning to override it) and gives the JIT room to devirtualize and inline. Prefer interfaces where you genuinely need substitutability (testing, multiple implementations); don't add an interface "for testability" on a type that will only ever have one implementation, since that's a vtable indirection you're paying for with no design payoff. And don't reach for `AppDomain` APIs in new code — if you need isolation or unloading, that's `AssemblyLoadContext`, full stop.
 
 #### Senior Perspective
+*"Is this interface earning its dispatch cost, or is it decoration?"*
 
 In code review, the CLR mechanics in this chapter matter most in hot paths and public API design. A visitor pattern or strategy pattern with dozens of small polymorphic calls in a tight loop is exactly where virtual dispatch overhead and blocked inlining compound — that's worth a profiling pass before assuming "clean OO design" is free. On public API surface, CLS-compliance flags (`[CLSCompliant(true)]`) are worth enforcing on any library assembly that might be consumed from F# or another language, because the failure mode (a consumer can't call your API) shows up downstream, not in your own build. And when someone proposes AppDomain-based isolation for a "let's sandbox this plugin" feature, that's the moment to redirect the design toward a collectible `AssemblyLoadContext` before it's built on an API that no longer does what its name implies.
 
 #### Architect Perspective
+*"Should this plugin boundary be an AssemblyLoadContext or a separate process?"*
 
 At a system level, the interface-heavy-vs-concrete-class-heavy question isn't just a style preference — it's a tradeoff between flexibility and per-call cost that compounds across millions of calls in high-throughput services. An architecture with deep interface layering (common in enterprise codebases that over-apply dependency inversion) pays the vtable/interface-dispatch cost pervasively; that's a legitimate reason to keep hot-path internals concrete and reserve interfaces for actual seams (boundaries you test against, boundaries that vary by deployment, plugin contracts) rather than wrapping every class in an interface by default. `AssemblyLoadContext` isolation is the other lever an architect owns: any plugin architecture, multi-tenant extension model, or "hot-reload without restarting the host" requirement is, mechanically, an ALC design problem — how many contexts, whether they're collectible, how you version-isolate assemblies that might be loaded at different versions by different plugins simultaneously. This is also literally how Microsoft's own tooling is built: MSBuild task isolation, `dotnet` SDK resolvers, and third-party plugin hosts for tools like OmniSharp or Roslyn analyzers all use ALC-based isolation rather than process-per-plugin, because it's cheaper to isolate in-process than to pay IPC overhead for every plugin call — a tradeoff worth naming explicitly when a team proposes a heavier isolation model (separate processes, containers) for a problem ALC already solves at lower cost.
 
@@ -399,3 +404,15 @@ A: Separate processes give the strongest isolation (a crashing or misbehaving pl
 - At the architect altitude: interface-heavy designs and plugin/isolation architectures both cash out, mechanically, into vtable-dispatch and ALC decisions — not abstract style preferences.
 
 [Episode 4 — JIT Compilation Explained](../003-jit-compilation/article.md) goes inside RyuJIT itself: tiered compilation in detail, how IL is actually translated to machine code, inlining heuristics, and how to read the JIT's own diagnostic output for a method you wrote.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 2 — Execution Flow
+              ↓
+  ▶ Episode 3 — Understanding the CLR   ◀ you are here
+              ↓
+    Episode 4 — JIT Compilation Explained
+```

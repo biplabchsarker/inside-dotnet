@@ -10,3 +10,7 @@ These exercises are deliberately lightweight — this chapter has no code to run
 
 3. **Map your own learning gaps against the eleven-part structure.**
    Look at the table in this chapter's [Visual Explanation](article.md#visual-explanation) section. For each of the eleven parts, rate your own confidence from 1 (never really understood it) to 5 (could explain it to a junior in an interview setting). Don't fix anything yet — just have the map. Revisit it after Part II (Memory) and see which rating moved the most.
+
+## Challenge
+
+**Predict before you read.** Before opening Episode 2, write down your own answer to this: *"Between typing `dotnet run` and your first line of code executing, roughly how many distinct steps happen, and what are they?"* Don't look anything up — guess from what you already believe is true. Then read Episode 2 and compare. The size of the gap between your guess and the real pipeline is a fair proxy for how much this series has to offer you personally.

@@ -20,6 +20,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world Analogy
 
+A payment-processing function deployed to a fleet of serverless endpoints gets invoked once, cold, and needs to finish in under 100ms or the customer sees a timeout. The same function, deployed inside a long-running checkout service, gets called ten thousand times a minute and needs to be as fast as physically possible by the thousandth call, not the first. Same C#, same IL — two completely different compilation strategies are actually correct, and this chapter is about the machinery that makes both possible from one build artifact.
+
 Think of a chef working a dinner service, not a tailor cutting a suit (that one's taken — Episode 2).
 
 - The very first ticket for a dish nobody's ordered tonight comes in. The chef doesn't stop to plate it perfectly — they get *something correct* onto the pass fast, because the table is waiting (**Tier 0: a quick, minimally optimized compile, prioritizing low latency over peak quality**).
@@ -132,6 +134,25 @@ flowchart LR
 
 ![Deep-dive: ReadyToRun vs JIT decision flow](diagrams/png/003-deepdive.png)
 
+**0. What the JIT actually receives — one C# statement, turned into IL.** Before any of the tiering machinery below runs, it's worth seeing the actual input the JIT compiles, because "the JIT compiles IL" stays abstract until you've looked at real IL once. Take the single line from this chapter's own demo:
+
+```csharp
+x = x * 3 + 1;
+```
+
+Roslyn compiles that to roughly this IL (viewable yourself via [sharplab.io](https://sharplab.io) or `ildasm`/`ilspycmd` against the compiled assembly):
+
+```
+IL_0000: ldloc.0      // load local 'x' onto the evaluation stack
+IL_0001: ldc.i4.3      // push the constant 3
+IL_0002: mul           // pop two values, push x * 3
+IL_0003: ldc.i4.1      // push the constant 1
+IL_0004: add           // pop two values, push (x * 3) + 1
+IL_0005: stloc.0       // pop the result, store it back into 'x'
+```
+
+Every opcode is a tiny, stack-based, CPU-agnostic instruction — `ldloc`/`stloc` move values on and off an evaluation stack, `mul`/`add` operate on whatever's on top of it. Nothing here mentions a register, an x64 instruction, or an ARM64 instruction — that translation is exactly what Tier 0/Tier 1 compilation (below) does, and it's why the *same* IL, unmodified, runs correctly whether the JIT compiling it targets x64 or ARM64. This is the concrete artifact flowing through the pipeline: **C# source → Roslyn → IL + metadata → CLR (loads, resolves) → JIT compiler → native machine code**, the same pipeline Episode 2 introduced, now with an actual IL body sitting in the middle of it instead of a black box.
+
 **1. The prestub — how a never-called method gets its first compile triggered.** When the type loader builds a method table (Episode 3), every method slot doesn't initially point at real code — it points at a small, shared piece of native code called the **prestub** (sometimes called the "pre-JIT stub" in CLR source). The prestub's entire job is: notice this method has never been compiled, ask the JIT to compile it now, and then **backpatch** the method table slot (and any call sites that had already been compiled to jump through that slot) so it points directly at the freshly compiled native code. Every call after the first bypasses the prestub entirely and jumps straight to native code — there is no "check if compiled" branch on the hot path; the redirection *is* the method table entry itself. This is the actual mechanism behind Episode 2's "first call pays a cost, later calls don't" — it's not a cache lookup, it's a one-time pointer rewrite.
 
 **2. Tier 0 — quick JIT, deliberately.** Since .NET Core 3.0, tiered compilation is the default. The *first* real compilation of most methods (Quick JIT) skips RyuJIT's expensive optimization passes — minimal inlining, no loop optimizations, simpler register allocation — trading a slower runtime method for a much faster compile. Critically, Tier 0 code is also **instrumented**: it carries lightweight call-count hooks so the runtime knows how often each method actually executes without needing an external profiler attached. Loops are historically the one exception: a method with a loop that could run for a long time *before* ever getting recompiled was, for a long time, excluded from Quick JIT by default (`TC_QuickJitForLoops`, illustrative name — the underlying switch has existed under slightly different names/defaults across .NET versions) precisely because a slow Tier 0 version stuck in a long loop was worse than paying the optimizing-compile cost upfront. **On-Stack Replacement (OSR)** is the mechanism that eventually closed this gap properly: it lets a *currently executing* long-running loop transition to optimized code mid-flight, without waiting for the method to be re-entered from the top.
@@ -241,14 +262,17 @@ static long HotMethod(int n)
 ### Architect's Perspective
 
 **Developer Perspective**
+*"What is JIT, really — and why is my benchmark lying to me?"*
 
 Day to day, this is mostly invisible, and that's by design. Write normal, idiomatic C#; don't reach for `[MethodImpl(MethodImplOptions.NoInlining)]` or tiering environment variables unless you're specifically diagnosing a JIT-related question (as in this chapter's demo, where suppressing inlining is the entire point). Know that the *first* call to any method — yours, a framework method, anything — is slower than the hundredth, and that this is expected, not a defect to chase. If you're microbenchmarking, use BenchmarkDotNet rather than a hand-rolled `Stopwatch` loop; it already does the warm-up-iteration handling that avoids the tiering-contamination mistake above. If you're building a CLI tool or Azure Function and cold start matters to your users, know that Native AOT is an option — but treat it as an explicit publish-target decision, not a default.
 
 **Senior Perspective**
+*"How does Tiered Compilation actually improve on 'just JIT everything once'?"*
 
 This is where tiering knowledge starts changing what you flag in code review. A PR that sets `DOTNET_TieredCompilation=0` "because it made the demo faster" needs pushback — that demo almost certainly ran a handful of iterations, which is exactly the scenario where disabling tiering looks like a win and long-running production traffic tells a different story. A "the first request after deploy is slow" incident report is frequently JIT/tiering warm-up (compounded by R2R version mismatches after a runtime upgrade), not a code regression — knowing the mechanism lets you close that investigation in minutes instead of bisecting commits. When a team proposes Native AOT for an existing service, the real review question isn't "is it faster" (it usually is, at cold start) — it's "does this codebase's DI container, serializer, and any dynamic-proxy or plugin-loading code survive trimming and the loss of `Reflection.Emit`," because that's the actual migration cost, and it's often nontrivial for anything built on reflection-heavy libraries from the pre-AOT era.
 
 **Architect Perspective**
+*"When should Native AOT replace the standard JIT model for this system?"*
 
 This is the tradeoff that actually has to be made deliberately at the system level, and it looks different depending on the shape of the workload. Take a fleet of serverless functions versus a long-running service processing steady request traffic:
 
@@ -310,3 +334,15 @@ A: What's the process lifetime and traffic shape — specifically, does the work
 **What's next**
 
 [Episode 5 — Assemblies, DLLs & Metadata](../004-assemblies-metadata/article.md) steps back from the JIT itself to the container it operates on: what's actually inside a compiled assembly's metadata tables, how strong naming and versioning work, and how the loader resolves a reference from one assembly to another before any of the compilation machinery in this chapter ever gets a chance to run.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 3 — Understanding the CLR
+              ↓
+  ▶ Episode 4 — JIT Compilation Explained   ◀ you are here
+              ↓
+    Episode 5 — Assemblies, DLLs & Metadata
+```

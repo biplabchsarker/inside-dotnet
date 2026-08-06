@@ -25,6 +25,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world Analogy
 
+Somewhere right now, a .NET service is holding a banking transaction, a hospital's patient record, or a flight booking in memory for a few milliseconds before it's gone. You already know how to write the code that does that. This series is about the few milliseconds you've never had to think about — and why, someday, you will.
+
 Think about driving a car. Millions of people can operate one skillfully — accelerate, brake, merge, park — without knowing what a camshaft does. That's fine, until the car behaves unexpectedly: it stutters on a hill, overheats in traffic, or refuses to start in the cold. At that point, "I know how to drive" isn't enough. You need to understand what's happening between the pedal and the wheels.
 
 .NET developers are in the same position. You know how to *drive* the framework — write the controller, wire up the DI container, call `SaveChangesAsync`. This series is about the engine: the CLR, the GC, the thread pool, the JIT — the machinery that turns your C# into a running, scaling, occasionally misbehaving production system.
@@ -114,14 +116,17 @@ This series exists specifically to prevent a recurring set of mistakes — patte
 ### Architect's Perspective
 
 **Developer Perspective**
+*"Where do I even start with a series this big?"*
 
 This is where the **How?** question — how do you use this correctly, day to day — gets a concrete answer for a chapter that has no API surface: read the series in order, at least through Part I and Part II, and treat every chapter's Interview Questions and Quiz as a checkpoint, not an optional extra. Skipping straight to "Architecture" or "Design Patterns" because that's what your current ticket touches will leave you pattern-matching on vocabulary instead of understanding mechanism — you'll know CQRS separates reads from writes without knowing *why* that separation ever pays for its complexity. Treat Foundation and Memory as load-bearing, not optional.
 
 **Senior Perspective**
+*"Is this actually worth my team's time?"*
 
 This is where the "when should I / when shouldn't I" trade-off (two more of the eight questions) actually lives. Investing time in runtime internals pays off when you're the person a team turns to during an incident, when you're reviewing designs before they ship, or when you're mentoring developers who keep hitting the same class of bug. It pays off *less* when you're deep in a deadline-driven feature sprint and the immediate need is "make this ticket work," not "understand the CLR's GC generations." A senior engineer's judgment call is knowing which mode you're in — and not pretending the second mode is the first just because internals knowledge feels more prestigious.
 
 **Architect Perspective**
+*"Why does Microsoft itself organize .NET's own engineering this way?"*
 
 At the architect altitude, this series' internals-first approach mirrors how Microsoft itself organizes its own runtime engineering: the `dotnet/runtime` repository separates the CLR, the GC, the JIT, and the BCL into distinct, independently-evolving components with their own design documents and performance budgets — because at that scale, an architectural decision in one layer (e.g., how the GC scans stacks) has measurable consequences several layers up (e.g., server GC vs. workstation GC changing container sizing decisions). The same discipline applies to *your* systems: a decision made at the Foundation/Memory level (how objects are allocated, how DI lifetimes are scoped) propagates all the way up to how the system scales under load, how new team members onboard, and how expensive a future migration will be. An architect's job is to see that propagation before it becomes an incident report — which is the whole reason this series is structured bottom-up instead of starting at "system design."
 
@@ -164,3 +169,15 @@ This chapter's self-check quiz lives in [`quiz.md`](quiz.md) — five questions 
 - The goal is a durable reference — a book, not a stream of disconnected posts.
 
 **Next:** [Episode 2 — What Really Happens When You Run a .NET Application?](../001-execution-flow/article.md) opens the hood on the CLR, IL, JIT compilation, and the full source-to-CPU execution pipeline — the mental model every later chapter builds on.
+
+---
+
+**Where you are in the journey:**
+
+```
+            (start)
+              ↓
+  ▶ Episode 0 — Welcome to Inside .NET   ◀ you are here
+              ↓
+    Episode 2 — Execution Flow
+```

@@ -20,6 +20,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world Analogy
 
+A CI pipeline rebuilds a service, and production starts throwing `MissingMethodException` on a method that has existed, unchanged, for two years. Nobody touched that method. Somewhere in the dependency graph, a transitive package silently resolved to a different version than the one the code was actually tested against — and the CLR, correctly, refused to pretend that was fine. This chapter is about the identity system that makes that refusal possible, and the metadata that makes it precise instead of a guess.
+
 Think of a book's front matter and back matter, not the story itself.
 
 - A book's **ISBN** is a globally unique identifier — no other book, not even a different edition of the *same* book, is allowed to reuse it (**an assembly's identity**: name + version + culture + public key token, together, not name alone).
@@ -180,7 +182,7 @@ flowchart LR
 
 **5. Strong naming and assembly identity.** An assembly's full identity is the 4-tuple: **simple name**, **version** (`Major.Minor.Build.Revision`), **culture** (`neutral`, or a specific locale for satellite resource assemblies), and **public key token** (an 8-byte hash of the full public key, present only if the assembly is strong-named). The CLR treats this whole tuple as the identity — not the simple name alone. Strong naming works by signing the assembly's metadata hash with a private key at build time and embedding the corresponding public key (or its token) in the manifest; this proves the assembly hasn't been tampered with since signing and lets two publishers safely ship assemblies with the same simple name (`Utils.dll`) without any identity collision, because their public keys differ. Two assemblies named `Contoso.Utils`, one at `1.0.0.0` and one at `2.0.0.0`, are — as far as the CLR's loader and type system are concerned — as unrelated as two entirely differently-named libraries; a `Contoso.Utils.Widget` type from one is not assignable to a `Contoso.Utils.Widget` type from the other, even though the source code is identical, because type identity in the CLR is `(assembly identity, type name)`, not type name alone.
 
-**6. Assembly resolution — how a reference actually gets satisfied.** When your code first touches a type from a referenced assembly, the CLR binder asks the current `AssemblyLoadContext` (Episode 3) to resolve that assembly's identity. For a normal `dotnet run`/framework-dependent deployment, resolution consults `<app>.deps.json` — generated at build/publish time, listing every dependency's expected version and relative path — then probes, in order: the application's own base directory, the shared framework directories for the resolved runtime version, and the NuGet package cache (`~/.nuget/packages` or the configured global packages folder) for package-based dependencies. The first candidate whose on-disk manifest identity actually matches what was requested wins; a name match with a *different* version or public key token is not a match and does not satisfy the reference — it's either ignored or triggers a `FileNotFoundException`/`FileLoadException` depending on exactly what mismatched. `AssemblyLoadContext.Default` handles this algorithm for the ordinary case; a custom `AssemblyLoadContext` (used for plugin isolation) can override `Load`/resolution entirely, which is how a host process loads two different versions of the same-named plugin dependency side by side without collision — each version lives in its own ALC, and identity resolution never has to reconcile across ALC boundaries.
+**6. Assembly resolution — how a reference actually gets satisfied.** When your code first touches a type from a referenced assembly, the CLR binder asks the current `AssemblyLoadContext` (Episode 3) to resolve that assembly's identity. For a normal `dotnet run`/framework-dependent deployment, resolution consults `<app>.deps.json` — generated at build/publish time, listing every dependency's expected version and relative path — then probes, in order: the application's own base directory, the shared framework directories for the resolved runtime version, and the NuGet package cache (`~/.nuget/packages` or the configured global packages folder) for package-based dependencies. The first candidate whose on-disk manifest identity actually matches what was requested wins; a name match with a *different* version or public key token is not a match and does not satisfy the reference — it's either ignored or triggers a `FileNotFoundException`/`FileLoadException` depending on exactly what mismatched. `AssemblyLoadContext.Default` handles this algorithm for the ordinary case; a custom `AssemblyLoadContext` (used for plugin isolation) can override `Load`/resolution entirely, which is how a host process loads two different versions of the same-named plugin dependency side by side without collision — each version lives in its own ALC, and identity resolution never has to reconcile across ALC boundaries. For the visual of what an ALC actually *is* structurally (and how it replaced AppDomains), see [Episode 3's AppDomain-vs-AssemblyLoadContext diagram](../002-clr/article.md#5-appdomain-legacy-vs-assemblyloadcontext-modern) — this chapter's diagram 4 above shows the *resolution sequence through* an ALC; that one shows the *isolation boundary* an ALC provides.
 
 **7. Reflection is metadata, queried at run time instead of load time.** `System.Reflection`'s `Assembly`, `Type`, `MethodInfo`, `FieldInfo`, and friends are not a separate description of your code — they're a managed API surface over the exact same metadata tables the loader and JIT already consume. `Assembly.GetTypes()` walks the `TypeDef` table; `Type.GetMethods()` walks `MethodDef` rows scoped to that type; `Assembly.GetReferencedAssemblies()` reads the `AssemblyRef` table directly back out as `AssemblyName` objects. This is precisely why reflection can be slow relative to statically-known code paths — it's doing table lookups and signature parsing at run time that the JIT would otherwise have resolved once via a token and never revisited — and precisely why Native AOT (Episode 4) restricts unbounded reflection: if metadata for a type was trimmed away because static analysis couldn't prove it was reachable, there's no table left for `Type.GetType("SomeTypeName")` to find at run time.
 
@@ -287,14 +289,17 @@ Run it with `dotnet run` in [`code/Chapter04.Demo/`](code/Chapter04.Demo/). The 
 ### Architect's Perspective
 
 **Developer Perspective**
+*"Why does my project reference a DLL that's 'right there' but still fail to load?"*
 
 Day to day, this chapter's mechanics mostly stay invisible — you `dotnet add package`, the tooling writes the `AssemblyRef` and `deps.json` entries for you, and resolution just works. The place it becomes your problem directly is diagnosing `FileNotFoundException`/`FileLoadException`/`MissingMethodException` at run time: read the exception's assembly-identity string carefully (name, version, culture, public key token), don't assume "the DLL is right there" means identity matches, and check `deps.json` and the probing paths before assuming the code itself is broken. If you're writing code that uses reflection (a plugin loader, a small serializer, a DI container), cache `MethodInfo`/`PropertyInfo` lookups instead of re-resolving by name every call — this chapter's performance notes are the "why."
 
 **Senior Perspective**
+*"Are we about to load two versions of the same package by accident?"*
 
 The choice that actually bites a team in code review is usually *implicit* dependency-version drift, not an explicit design decision. Two projects in the same solution referencing different minor versions of the same NuGet package produce a build that looks fine locally and throws `MissingMethodException` in CI or production because the binder resolved a version that doesn't have the member being called. The trade-off to make explicit: pin versions consistently across a solution (central package management, `Directory.Packages.props`) versus letting each project float independently — floating is more convenient per-project and is exactly what produces the "same name, different version, different behavior" bug this chapter is built around. Reviewing a PR that adds a new package reference should include asking "does this create a second version of something already in the dependency graph?", not just "does it build."
 
 **Architect Perspective**
+*"Who owns versioning discipline across teams, and where does plugin isolation actually belong?"*
 
 At the system level, assembly identity is a versioning-strategy decision, not just a runtime detail. Three things an architect has to own explicitly across a multi-team org:
 
@@ -353,3 +358,15 @@ A: Treat it as a versioning-governance problem, not a one-off bug fix. Centraliz
 This closes **Part I — The Foundation**. Every mechanism from Episode 1 through this chapter — execution flow, the CLR's core pieces, the type loader and JIT, and now the assembly/metadata layer everything else reads from — has been about what the CLR does with your code *before and as it runs it as a static, already-compiled unit*. **Part II — Memory** starts next, and the foundational question it opens with is the one every allocation in your program answers implicitly, whether you think about it or not: where does this value actually live, and for how long?
 
 [Episode 6 — Stack vs Heap](../005-stack-vs-heap/article.md) leaves the assembly's static structure behind and moves into what happens the moment your code actually runs and starts allocating.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 4 — JIT Compilation Explained
+              ↓
+  ▶ Episode 5 — Assemblies, DLLs & Metadata   ◀ you are here
+              ↓
+    Episode 6 — Stack vs Heap   (Part II — Memory begins)
+```

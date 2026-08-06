@@ -22,6 +22,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world Analogy
 
+Imagine an enterprise banking system processing a wire transfer. Somewhere in the middle of that request, a `TransferRequest` object gets created, validated, and eventually garbage collected — all before the customer's browser finishes its spinner animation. None of that happens by magic: a very specific machine, built from very specific parts, made it happen. This chapter is where you meet that machine for the first time.
+
 Imagine ordering a custom suit instead of buying one off the rack.
 
 - You describe what you want in your own words (**your C# source code**).
@@ -256,14 +258,17 @@ A second code tier (a true **Performance Example** with statistically meaningful
 ### Architect's Perspective
 
 **Developer Perspective**
+*"Why did my first API call take 300ms and the second one take 2ms?"*
 
 Day to day, this chapter's mechanics are invisible — you write C#, run `dotnet run`, and it works. What you should actually *do* with this knowledge: don't panic-optimize a method because "the first call was slow" in a microbenchmark or a unit test; that's JIT warm-up, not your algorithm. If you need to measure real steady-state performance, warm the code path up first (call it once, discard the timing, then measure) or use a proper benchmarking tool (`BenchmarkDotNet`) that already accounts for this.
 
 **Senior Perspective**
+*"Is this a JIT cost, a GC pause, or an actual regression?"*
 
 This matters most in code review when someone proposes a "startup optimization" without diagnosing which of the three costs (assembly load, type load, JIT) they're actually paying — or when a colleague suggests P/Invoke-ing into a native library "for speed" without accounting for marshaling cost and lost GC visibility. It also matters when triaging a production incident: a GC pause, a slow first request after a deploy, and a genuine algorithmic regression all *look* like "the app is slow," but they have different root causes and different fixes. Knowing the pipeline in this chapter is what lets you tell them apart from a stack trace or a trace capture instead of guessing.
 
 **Architect Perspective**
+*"When should Native AOT replace the standard JIT pipeline for this system?"*
 
 At the system level, this chapter's mechanics directly drive a real deployment decision: **JIT warm-up is why serverless functions and scale-to-zero containers pay a "cold start tax"** — every new instance repeats assembly load, type load, and JIT compilation from scratch, because none of that state survives past the process. Three levers exist, and they trade off differently depending on the system:
 
@@ -323,3 +328,15 @@ A: Ask what's actually driving the requirement — is cold-start latency measure
 ### What's Next
 
 [Episode 3 — Understanding the CLR](../002-clr/article.md) goes one level deeper into the CLR itself: the type system (CTS/CLS), the method table and vtable mechanics behind virtual dispatch, and how the CLR actually resolves a method call at run time.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 0 — Welcome
+              ↓
+  ▶ Episode 2 — Execution Flow   ◀ you are here
+              ↓
+    Episode 3 — Understanding the CLR
+```

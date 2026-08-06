@@ -26,3 +26,24 @@ Pick a real value from a domain you know (e.g. `Money`, `DateRange`, `GeoCoordin
 2. Now assume the value grows — add 6 more fields to simulate scope creep. Re-run your reasoning. Does your recommendation change, and at what point?
 
 This exercise is deliberately open-ended — the goal is practicing the Architect Perspective judgment call from the chapter, not arriving at one "correct" answer.
+
+## Challenge
+
+**Predict the output before running it.**
+
+```csharp
+struct Counter { public int Value; }
+
+var list = new List<Counter> { new Counter { Value = 1 } };
+var item = list[0];
+item.Value = 99;
+
+Console.WriteLine(list[0].Value);   // A
+
+var arr = new Counter[] { new Counter { Value = 1 } };
+arr[0].Value = 99;
+
+Console.WriteLine(arr[0].Value);    // B
+```
+
+`A` and `B` look like the same operation on two different collection types. They print different results. Write down what you predict for each, and *why the collection type changes the answer* — specifically, what `list[0]` returns versus what `arr[0]` returns as an addressable location — before running it. This is the mutable-struct trap from this chapter, wearing a slightly different disguise.

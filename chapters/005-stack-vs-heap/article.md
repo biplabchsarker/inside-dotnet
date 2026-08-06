@@ -20,6 +20,8 @@ By the end of this chapter, you will be able to:
 
 ### Real-world Analogy
 
+A high-frequency trading engine processes a million price ticks a second. Every tick creates a tiny struct, does some math, and discards it — millions of times a second, forever. If even one of those allocations landed on the managed heap instead of the stack, the GC would eventually have to pause the world to clean up after all of them, and "eventually" at that volume means "constantly." This chapter is about the one design decision — where does this value actually live — that decides whether that system is even possible.
+
 Picture a professional kitchen.
 
 Each line cook has their own **cutting board** at their station (**the stack** — per-thread, private). It's small, it's fast to work on, and there's a strict rule: whatever you put on it during an order gets cleared the instant that order is plated (**a stack frame is popped the instant its method returns**). You never have to clean someone else's board, and nobody reaches across the kitchen to use yours — it's local, exclusive, and disposable by nature. Grabbing space on your own board costs nothing more than sliding your hand over — you don't ask anyone's permission (**stack allocation is just moving a pointer**).
@@ -157,7 +159,9 @@ By the time the guard page is hit, there is — by definition — no more room o
 
 6. **Object layout on the heap.** A heap object isn't just "your fields." It has an **object header** (a method table pointer used for virtual dispatch and type identity, plus a sync block index historically used for `lock`/`Monitor`), followed by its fields laid out contiguously — value-type fields inlined directly into that block, reference-type fields stored as pointers to *other* heap blocks. This is exactly what Diagram #3 shows, and it's the mechanical reason the "value types = stack" rule breaks down.
 
-7. **How this ties back to the .NET runtime source.** The CLR's GC (`coreclr`'s `gc.cpp`) and the JIT's stack-frame layout logic are both part of the runtime, not the BCL — you can read the actual allocation fast-path (`GCHeap::Alloc` and friends) in the [`dotnet/runtime`](https://github.com/dotnet/runtime) repository. Microsoft's own internal guidance for high-throughput BCL types (e.g. `Span<T>`, `ValueTuple`, `ValueTask`) is built directly on this mechanic: those types are structs specifically so hot paths in the framework itself avoid heap allocation.
+7. **`stackalloc` and `Span<T>` — asking for stack memory on purpose, not by accident.** Everywhere else in this chapter, whether something lands on the stack is a *consequence* of how you wrote the code (a local, not captured, not boxed). `stackalloc` inverts that: it's an explicit request to carve out a block of memory directly from the *current method's own stack frame*, bypassing the heap and the GC entirely for that buffer. You almost never hold the raw pointer it returns directly — you wrap it in a `Span<T>` (`Span<byte> buffer = stackalloc byte[256];`), which is itself a `ref struct`: a special kind of struct the compiler enforces can *only* ever live on the stack (never boxed, never a field of a heap-allocated class, never captured by a lambda) precisely so it can safely hold a pointer into stack memory without that pointer ever outliving the frame it points into. This is why `Span<T>` matters beyond `stackalloc`: it also gives you a *safe, bounds-checked* view over memory you don't own the allocation of at all — a slice of an array, a slice of another `Span<T>`, or a stack buffer — without copying it, which is how modern high-throughput BCL code (`Utf8JsonReader`, string-parsing APIs, socket buffer handling) processes data with zero heap allocations on the hot path. The constraint that makes it safe — `ref struct` can't escape the stack — is also its limit: you cannot use `Span<T>`/`stackalloc` buffers in `async` methods across an `await` (the compiler-generated state machine that survives the `await` is a heap-allocated object, and a stack-pointing `Span<T>` cannot safely be a field of it), and you cannot store one in a class field or an array. Reach for it for small, bounded, synchronous scratch buffers — parsing, formatting, short-lived transformations — never for anything that has to outlive the current call or cross an `await`.
+
+8. **How this ties back to the .NET runtime source.** The CLR's GC (`coreclr`'s `gc.cpp`) and the JIT's stack-frame layout logic are both part of the runtime, not the BCL — you can read the actual allocation fast-path (`GCHeap::Alloc` and friends) in the [`dotnet/runtime`](https://github.com/dotnet/runtime) repository. Microsoft's own internal guidance for high-throughput BCL types (e.g. `Span<T>`, `ValueTuple`, `ValueTask`) is built directly on this mechanic: those types are structs specifically so hot paths in the framework itself avoid heap allocation.
 
 ### Code Example
 
@@ -296,14 +300,17 @@ Run it with `dotnet run` in [`code/Chapter05.Demo/`](code/Chapter05.Demo/) — t
 ### Architect's Perspective
 
 **Developer Perspective**
+*"Is this value actually on the stack, or did its container just move it to the heap?"*
 
 Day to day, this chapter reduces to one habit: know what your container is before you reason about where a value lives. A `struct` local in a tight loop costs you nothing extra; the same `struct` as a class field means every instance of that class carries it on the heap. If you're writing a hot parsing/formatting path, reach for `Span<T>`/`stackalloc` deliberately rather than hoping the JIT keeps things on the stack for you — it's an opt-in tool, not an assumption you get for free. And never write a `catch (StackOverflowException)` — it's dead code that will never execute as written; fix the recursion instead.
 
 **Senior Perspective**
+*"Does this struct-on-a-hot-path claim actually hold, or did it get boxed somewhere?"*
 
 This is where code review actually earns its keep. The moment someone puts a `struct` on a hot path *because* "structs avoid the heap," check what actually contains it — if it's a field on a class, a member of a `List<T>` of reference types, or gets boxed anywhere on that path (passed to an `object`-typed API, or into a non-generic collection), the "avoid the heap" premise silently stopped being true and you've added copy overhead for nothing. The trade-off that actually matters at this altitude: struct-heavy designs trade heap/GC pressure for copy pressure, and copy pressure is invisible in a profiler's allocation view — it shows up as raw CPU time instead, which means a team optimizing purely by watching Gen 0 counts can walk right past a large-struct-copied-on-every-call regression. This is also where "increase stack size" requests in PRs should get pushed back on — it's treating a symptom (recursion depth) instead of the cause (missing base case or an accidental cycle).
 
 **Architect Perspective**
+*"Where in this system does allocation pressure actually justify struct-heavy complexity?"*
 
 At system scale, the stack/heap distinction becomes an allocation-pressure design decision, and the right call depends entirely on throughput and GC sensitivity, not on a blanket "structs are faster" rule. A high-throughput service — a serialization hot path, a real-time pricing engine, a network protocol parser processing millions of messages a second — genuinely justifies a struct-heavy, allocation-avoiding data model: every avoided heap allocation is one less object the GC has to trace, and at that volume, Gen 0 collection frequency is a first-order latency concern (this is precisely why `System.Text.Json`'s `Utf8JsonReader`, `Span<T>`, and `ValueTask` exist in the BCL itself — Microsoft made the same trade-off internally for the same reason). But that same optimization is actively harmful in a typical CRUD service or internal line-of-business API processing dozens of requests per second: structs bring value semantics (accidental copies, defensive-copy bugs, no polymorphism without boxing) that cost a team real defect and onboarding time, for GC savings that were never the bottleneck in the first place. The architect's job is to identify *where* allocation pressure is actually a measured problem (via `dotnet-counters`/production telemetry, not intuition) and confine the added complexity of struct-heavy design to that boundary — not let it leak into the rest of the codebase as a stylistic default. This is also the layer where "how does Microsoft do it" is a genuinely useful data point: the BCL's own struct usage (`Span<T>`, `ValueTuple`, `DateTime`, `Guid`) consistently targets exactly this profile — small, copy-cheap, used on paths where allocation avoidance measurably matters — not "everything should be a struct."
 
@@ -361,5 +368,12 @@ A: It's an oversimplification that holds only for local variables of value types
 
 ---
 
-**Previous:** [Episode 5 — Assemblies, DLLs & Metadata](../004-assemblies-metadata/article.md)
-**Next:** [Episode 7 — Value Types vs Reference Types](../006-value-vs-reference-types/article.md)
+**Where you are in the journey:**
+
+```
+    Episode 5 — Assemblies, DLLs & Metadata
+              ↓
+  ▶ Episode 6 — Stack vs Heap   ◀ you are here   (Part II — Memory)
+              ↓
+    Episode 7 — Value Types vs Reference Types
+```

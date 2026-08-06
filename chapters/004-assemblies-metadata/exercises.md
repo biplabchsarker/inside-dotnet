@@ -5,3 +5,16 @@
 2. **Force and diagnose an identity mismatch.** Create two class library projects with the same simple name (`Contoso.Shared`) but different `<AssemblyVersion>` values, each exposing a type with an identical name and a method with an identical signature. Reference version `1.0.0.0` from a console app, build, then swap the *referenced* project reference to version `2.0.0.0` without changing the console app's source. Run it and capture the exact exception (or lack of one) — then explain why, tying your answer back to the 4-tuple identity model from this chapter.
 
 3. **(Stretch) Load two versions side by side with `AssemblyLoadContext`.** Using the two `Contoso.Shared` versions from Exercise 2, write a small host program that loads both DLLs simultaneously via two separate custom `AssemblyLoadContext` instances (not `AssemblyLoadContext.Default`), invokes each version's method via reflection, and prints both results in the same process run. Confirm both versions genuinely coexist without a `FileLoadException`, and explain why this works when a direct project reference to both versions would not.
+
+## Challenge
+
+**Predict the output before running it.**
+
+```csharp
+AssemblyName a = typeof(string).Assembly.GetName();
+AssemblyName b = typeof(string).Assembly.GetName();
+Console.WriteLine(a.Version == b.Version);     // A
+Console.WriteLine(a == b);                       // B
+```
+
+`A` and `B` look like they're asking the same question. They aren't. Write down `True`/`False` for each — and name, specifically, whether `AssemblyName` overrides value equality or not — before running it. (Hint: this is the same "same type, different question" trap as Chapter 3's challenge, one layer up the identity stack — type identity vs. object identity there, assembly-version equality vs. object equality here.)

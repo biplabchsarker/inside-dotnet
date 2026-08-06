@@ -26,6 +26,20 @@ Write a small console app that:
 
 Confirm the ALC actually unloads (hint: keep a `WeakReference` to the `AssemblyLoadContext` itself and poll `IsAlive`). What's the one thing you have to be careful about with references held by the host app that would prevent the unload from ever completing?
 
+## Challenge
+
+**Predict the output before running it.**
+
+```csharp
+Base b1 = new Derived();
+Base b2 = new Derived();
+Console.WriteLine(b1.GetType() == b2.GetType());                 // A
+Console.WriteLine(b1.GetType().TypeHandle.Value == b2.GetType().TypeHandle.Value); // B
+Console.WriteLine(ReferenceEquals(b1, b2));                        // C
+```
+
+Three lines, three different questions about identity. Write down `True`/`False` for A, B, and C *before* running it — and for each one, name which piece of this chapter's mental model (method table, object header, heap allocation) it's actually testing. If you got any wrong, it's a sign you're conflating "same type" with "same instance," which is exactly the distinction a method table pointer exists to separate.
+
 ---
 
 **Previous:** [Episode 2 — What Really Happens When You Run a .NET Application?](../001-execution-flow/article.md)
