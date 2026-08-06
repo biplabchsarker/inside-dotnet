@@ -1,0 +1,681 @@
+I think Inside .NET is an excellent choice. It's concise, memorable, and perfectly matches a series focused on explaining what happens beneath the surface of .NET. It also leaves room to expand beyond ASP.NET Core into C#, CLR, architecture, performance, and cloud.
+
+Here's a strong foundation for the series.
+
+Series Title
+Inside .NET
+Understanding What Really Happens Under the Hood
+
+A visual journey into the internals of .NET—from memory management and dependency injection to enterprise architecture. Every article explains not just how something works, but why it works that way.
+
+Vision
+
+Most developers know how to write code.
+
+Fewer understand what the .NET runtime is actually doing behind the scenes.
+
+This series bridges that gap using:
+
+Original illustrations (created specifically for the series)
+Real-world analogies
+Internal runtime explanations
+Practical C# examples
+Performance considerations
+Common mistakes
+Architecture best practices
+Interview insights
+
+Every topic builds on the previous one, taking readers from developer fundamentals to solution architecture.
+
+Target Audience
+Junior .NET Developers
+Mid-level Developers
+Senior Engineers
+Software Architects
+Technical Leads
+Engineering Managers
+Students preparing for interviews
+Learning Path
+Foundation — Understanding the Runtime
+
+Episode 1 — Welcome to Inside .NET
+
+Episode 2 — What Happens When You Run a .NET Application?
+
+Episode 3 — Understanding the CLR
+
+Episode 4 — JIT Compilation Explained
+
+Episode 5 — Assemblies, DLLs & Metadata
+
+Memory
+
+Episode 6 — Stack vs Heap
+
+Episode 7 — Value Types vs Reference Types
+
+Episode 8 — Object Allocation
+
+Episode 9 — Garbage Collection
+
+Episode 10 — Large Object Heap
+
+Episode 11 — IDisposable vs Finalizer
+
+Episode 12 — Memory Leaks in Managed Code
+
+Object-Oriented Design
+
+Episode 13 — SOLID Principles
+
+Episode 14 — DRY
+
+Episode 15 — KISS
+
+Episode 16 — YAGNI
+
+Episode 17 — Composition vs Inheritance
+
+Design Patterns
+
+Episode 18 — Singleton
+
+Episode 19 — Factory
+
+Episode 20 — Builder
+
+Episode 21 — Strategy
+
+Episode 22 — Observer
+
+Episode 23 — Decorator
+
+Episode 24 — Repository
+
+Dependency Injection
+
+Episode 25 — Why DI Exists
+
+Episode 26 — Singleton
+
+Episode 27 — Scoped
+
+Episode 28 — Transient
+
+Episode 29 — Lifetime Mistakes
+
+Episode 30 — DI Container Internals
+
+ASP.NET Core
+
+Episode 31 — Request Pipeline
+
+Episode 32 — Middleware
+
+Episode 33 — Model Binding
+
+Episode 34 — Filters
+
+Episode 35 — Routing
+
+Concurrency
+
+Episode 36 — Thread vs Task
+
+Episode 37 — Thread Pool
+
+Episode 38 — async/await
+
+Episode 39 — Synchronization Context
+
+Episode 40 — Parallel Programming
+
+Entity Framework Core
+
+Episode 41 — DbContext Lifecycle
+
+Episode 42 — Change Tracking
+
+Episode 43 — LINQ Execution
+
+Episode 44 — Performance
+
+Architecture
+
+Episode 45 — Clean Architecture
+
+Episode 46 — Onion Architecture
+
+Episode 47 — CQRS
+
+Episode 48 — MediatR
+
+Episode 49 — DDD
+
+Episode 50 — Microservices
+
+Every Article Will Follow the Same Structure
+Introduction
+A real-world analogy
+The problem being solved
+Original visual explanation
+Internal .NET mechanics
+C# implementation
+Common mistakes
+Performance considerations
+Interview questions
+Key takeaways
+What's next in the series
+Visual Identity
+
+We'll create all illustrations from scratch with a consistent style:
+
+Clean white background with subtle gradients
+Blue/purple accent colors inspired by .NET
+Isometric and flat technical diagrams
+Clear labels and minimal text
+Self-explanatory visuals suitable for LinkedIn, presentations, and documentation
+
+No stock images or internet graphics—every illustration will be original.
+
+Episode 1
+Inside .NET — Episode 1
+What Really Happens When You Run a .NET Application?
+
+This opening article will answer questions such as:
+
+What is the CLR?
+What does the .NET runtime do?
+How is C# converted into machine code?
+What is IL (Intermediate Language)?
+What is JIT compilation?
+Where does memory come into play?
+What components participate before your first line of code executes?
+
+We'll accompany it with 8–10 original diagrams, including:
+
+The complete "source code to CPU" execution flow.
+CLR architecture overview.
+Compilation pipeline (C# → IL → JIT → Native Code).
+Assembly structure (DLL/EXE and metadata).
+Runtime services (GC, Exception Handling, Security, Threading).
+Application startup sequence.
+Managed vs unmanaged execution.
+End-to-end execution timeline.
+
+This first article will establish the mental model that the rest of the series builds upon, making every later topic—memory management, dependency injection, async/await, and architecture—much easier to understand.
+
+Prepare A to Z
+
+I love the ambition, and I think this could become something genuinely valuable.
+
+However, an A-to-Z .NET architecture handbook is far beyond what can be produced well in a single response. A complete, high-quality series would likely include:
+
+60–100 chapters
+300–500 original illustrations
+300,000–500,000 words
+Hundreds of code examples
+Consistent branding, diagrams, and layout
+
+That's effectively a technical book rather than a chat response.
+
+Here's the approach I'd recommend
+
+Let's build it as a professional book/course, one polished chapter at a time, while keeping a consistent visual identity throughout.
+
+Working Title
+Inside .NET
+Understanding What Really Happens Under the Hood
+
+By Biplab Sarker
+
+A Visual Journey from Developer to Solution Architect
+
+Proposed Table of Contents (A–Z)
+Part I — The Foundation
+Welcome to Inside .NET
+Evolution of .NET Framework to .NET
+CLR (Common Language Runtime)
+CTS, CLS & CLR
+Assemblies, DLLs & EXEs
+Metadata & Manifest
+IL (Intermediate Language)
+JIT Compilation
+Native AOT
+Application Startup
+Part II — Memory
+Stack
+Heap
+Object Allocation
+Value Types
+Reference Types
+Boxing & Unboxing
+Strings
+Interning
+Large Object Heap
+Pinned Objects
+Memory Fragmentation
+Garbage Collection
+GC Generations
+IDisposable
+Finalizer
+Weak References
+Memory Leaks
+Part III — C#
+Classes
+Objects
+Constructors
+Properties
+Methods
+Encapsulation
+Inheritance
+Polymorphism
+Abstraction
+Interfaces
+Records
+Structs
+Enums
+Delegates
+Events
+Generics
+Reflection
+Expression Trees
+Part IV — SOLID & Clean Code
+SOLID
+DRY
+KISS
+YAGNI
+Separation of Concerns
+Clean Code
+Code Smells
+Refactoring
+Part V — Design Patterns
+Singleton
+Factory
+Builder
+Prototype
+Adapter
+Decorator
+Facade
+Strategy
+Observer
+Mediator
+Command
+Repository
+Unit of Work
+Part VI — Dependency Injection
+IoC
+DI
+Singleton
+Scoped
+Transient
+Service Provider
+Options Pattern
+Part VII — ASP.NET Core
+Kestrel
+Middleware
+Routing
+Model Binding
+Filters
+Authentication
+Authorization
+Minimal APIs
+Controllers
+Web API
+Part VIII — Entity Framework Core
+DbContext
+LINQ
+Change Tracker
+Migrations
+Query Optimization
+Transactions
+Part IX — Concurrency
+Threads
+Tasks
+Thread Pool
+async/await
+Synchronization Context
+Cancellation Tokens
+Parallel Programming
+Part X — Architecture
+Clean Architecture
+Onion Architecture
+Hexagonal Architecture
+CQRS
+MediatR
+DDD
+Event-Driven Architecture
+Microservices
+Modular Monolith
+Part XI — Cloud & Production
+Docker
+Kubernetes
+Azure
+Logging
+OpenTelemetry
+Health Checks
+Caching
+Redis
+Message Queues
+Performance Tuning
+Security
+Part XII — Becoming an Architect
+Scalability
+High Availability
+System Design
+Architecture Reviews
+Technical Leadership
+Decision Records
+Real-World Case Studies
+Every Chapter Will Include
+A compelling introduction
+A relatable real-world analogy
+Why the concept matters
+Internal .NET implementation details
+Original professional illustrations
+Architecture diagrams
+Sequence diagrams
+Flowcharts
+Memory diagrams (where applicable)
+Production-ready C# examples
+Common mistakes
+Performance tips
+Interview questions
+Summary
+References for deeper learning
+A preview of the next chapter
+Original Visual Assets
+
+Every illustration will be created specifically for this series, including:
+
+Runtime architecture
+CLR internals
+Memory allocation
+Garbage collection
+Dependency injection lifetimes
+ASP.NET Core request pipeline
+Thread pool and async execution
+EF Core internals
+Design pattern diagrams
+Clean Architecture layers
+CQRS message flow
+DDD aggregates
+Microservice communication
+Azure deployment architecture
+Performance profiling
+Security flows
+
+All visuals will share a consistent design language so the series feels like a professionally published handbook rather than a collection of blog posts.
+
+Suggested Deliverable
+
+Instead of aiming for "one long blog," let's create Inside .NET as a cohesive project:
+
+LinkedIn article series (one chapter per post)
+Companion GitHub repository with code samples
+Downloadable PDF handbook compiled from the articles
+Presentation deck for each chapter
+Original diagrams that can be reused in talks, training sessions, and documentation
+
+This approach will produce a resource that is valuable not only for your LinkedIn audience but also as a long-term portfolio showcasing your expertise as a Solution Architect.
+
+How do you can assist here? Will I provide local folder directory where you can place all the update here
+E:\Personal\Projects\.Net_Journey
+Write down all the information including code examples, images and place here
+later we will bundle for each of the platform
+will it work?
+
+Yes, that workflow can work very well, with one important limitation:
+
+I cannot directly write to E:\Personal\Projects\.Net_Journey on your computer. I only have access to files that are uploaded into this chat or to the sandbox environment I can generate files in.
+
+A workflow that will work extremely well
+
+Treat me as your technical co-author, illustrator, editor, and reviewer.
+
+.Net_Journey
+│
+├── README.md
+├── book.json
+│
+├── assets
+│   ├── images
+│   ├── icons
+│   ├── diagrams
+│   └── banners
+│
+├── chapters
+│   ├── 000-introduction
+│   ├── 001-what-is-dotnet
+│   ├── 002-clr
+│   ├── 003-jit
+│   ├── 004-stack-vs-heap
+│   └── ...
+│
+├── code
+│   ├── Chapter01
+│   ├── Chapter02
+│   └── ...
+│
+├── linkedin
+├── medium
+├── devto
+├── website
+└── ebook
+I can generate
+Markdown
+chapter.md
+
+Professionally written.
+
+Images
+
+Original diagrams.
+
+Not downloaded.
+
+Generated specifically for your series.
+
+Examples
+
+Stack vs Heap
+CLR
+GC
+Request pipeline
+SOLID
+Design Patterns
+Memory allocation
+Code
+
+Complete working
+
+.NET 9
+
+C#
+
+ASP.NET Core
+
+EF Core
+
+Minimal API
+
+Console
+
+projects.
+
+Mermaid diagrams
+Draw.io diagrams
+architecture.drawio
+PlantUML
+class diagram
+
+sequence diagram
+
+deployment diagram
+SVG
+
+Professional vector graphics.
+
+PPT
+
+Presentation.
+
+PDF
+
+Book.
+
+LinkedIn version
+
+Optimized for LinkedIn.
+
+Medium version
+
+Optimized for Medium.
+
+Website version
+
+SEO optimized.
+
+GitHub README
+
+Generated.
+
+Interview Questions
+
+Senior level.
+
+Architecture discussions
+
+Enterprise level.
+
+Performance comparisons
+
+Benchmark examples.
+
+Even Better
+
+Since you're a developer, I recommend making this a proper Git repository.
+
+InsideDotNet
+
+README.md
+
+/book
+
+/chapters
+
+/assets
+
+/examples
+
+/src
+
+/docs
+
+/slides
+
+/images
+
+/blog
+
+/scripts
+
+Everything version controlled.
+
+We can also build
+MkDocs
+
+Docusaurus
+
+Astro
+
+Next.js
+
+GitHub Pages
+
+so eventually you'll have
+
+inside-dotnet.com
+
+or
+
+GitHub Pages
+
+with search.
+
+I suggest each chapter contains
+001-stack-vs-heap
+
+README.md
+
+article.md
+
+linkedin.md
+
+medium.md
+
+summary.md
+
+faq.md
+
+interview.md
+
+code/
+
+images/
+
+diagrams/
+
+references.md
+
+quiz.md
+
+Very organized.
+
+Images
+
+Instead of random AI pictures,
+
+every image will follow the same style.
+
+Imagine Microsoft Learn quality.
+
+White background
+
+Blue gradients
+
+Minimalistic
+
+Professional
+
+Consistent fonts
+
+Same icon style
+
+Self explanatory
+
+Every diagram will look like it's from the same book.
+
+We can also automate
+
+Eventually we can create scripts
+
+generate.ps1
+
+that produce
+
+LinkedIn
+
+Medium
+
+Dev.to
+
+Hashnode
+
+PDF
+
+PowerPoint
+
+HTML
+
+from one markdown source.

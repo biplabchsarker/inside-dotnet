@@ -1,0 +1,13 @@
+## .NET
+bin/
+obj/
+*.user
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Editors
+.vs/
+.vscode/
+*.swp
