@@ -5,7 +5,9 @@
 
 ![Chapter cover](images/000-cover.png)
 
-*Cover image source: [`diagrams/svg/000-cover.svg`](diagrams/svg/000-cover.svg). PNG export to `images/000-cover.png` is pending real export tooling — see the note in [README.md](README.md).*
+![Hero: Welcome to Inside .NET](images/000-hero.png)
+
+*Cover and hero images exported via `scripts/Svg2Png` from `diagrams/svg/000-cover.svg` and `diagrams/svg/000-hero.svg`.*
 
 ---
 
@@ -46,7 +48,11 @@ This is also **why** this series exists at all (the first of the eight questions
 
 ### Visual Explanation
 
-This chapter is the series' roadmap, not a technical deep-dive — there's no runtime mechanism here to diagram yet, so unlike every chapter from Episode 2 onward, this one stays purely textual. The table below *is* this chapter's visual explanation: the shape of the whole series at a glance.
+This chapter is the series' roadmap, not a technical deep-dive, so its visuals are about the journey rather than a runtime mechanism.
+
+![Concept: the Inside .NET phase roadmap](diagrams/png/000-concept.png)
+
+The table below is the same idea in text: the shape of the whole series at a glance.
 
 | Part | Focus |
 |---|---|
@@ -69,6 +75,8 @@ The full, evolving Table of Contents lives in [`book.json`](../../book.json) at 
 ### Under the Hood
 
 Even this introduction sits on a real technical foundation — this is the **what happens internally** question, answered at the altitude appropriate for a roadmap chapter rather than a specific API.
+
+![Deep-dive: the 13-section chapter template every episode follows](diagrams/png/000-deepdive.png)
 
 Everything in this series ultimately traces back to one execution model: your C# is compiled to Intermediate Language (IL), the Common Language Runtime (CLR) loads and JIT-compiles that IL to native code, and the runtime's services — garbage collection, exception handling, security, threading — operate underneath it for the lifetime of the process. That single model is the trunk every later chapter's branch grows from:
 

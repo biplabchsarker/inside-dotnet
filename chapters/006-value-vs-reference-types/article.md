@@ -9,6 +9,8 @@
 
 ![Chapter 7 cover — Value Types vs Reference Types](diagrams/svg/006-cover.svg)
 
+![Hero: Value Types vs Reference Types](images/006-hero.png)
+
 ---
 
 ### Learning objectives
@@ -43,6 +45,8 @@ A single unified model would force a bad tradeoff in one direction or the other:
 Without this distinction, a language either loses the ability to model small, cheap, independent values efficiently, or loses the ability to model shared, mutable entities without constant defensive copying. Both failure modes show up as real bugs — the "why did my other variable change too" surprise, or the opposite "why didn't my change take effect" surprise — and both are symptoms of not knowing which family a given type belongs to.
 
 ### Visual explanation
+
+![Concept: value copy vs. shared reference](diagrams/png/006-concept.png)
 
 #### 1. Assignment/copy semantics: value vs. reference
 
@@ -133,6 +137,8 @@ flowchart TB
 Standalone Mermaid sources for all five diagrams live under [`diagrams/mermaid/`](diagrams/mermaid/), numbered `01`–`05` to match the order above.
 
 ### Under the hood
+
+![Deep-dive: where does this value type actually live?](diagrams/png/006-deepdive.png)
 
 Tying the diagrams to actual CLR behavior:
 

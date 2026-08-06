@@ -61,7 +61,7 @@ static string ResolvePngPath(string svgPath)
     var fileName = Path.GetFileNameWithoutExtension(full) + ".png";
     var dir = Path.GetDirectoryName(full)!;
 
-    if (dir.Replace('\\', '/').EndsWith("diagrams/svg") && Path.GetFileName(full).EndsWith("-cover.svg"))
+    if (dir.Replace('\\', '/').EndsWith("diagrams/svg") && (Path.GetFileName(full).EndsWith("-cover.svg") || Path.GetFileName(full).EndsWith("-hero.svg")))
     {
         // chapter cover: sibling ../../images/
         var chapterRoot = Directory.GetParent(dir)!.Parent!.FullName;

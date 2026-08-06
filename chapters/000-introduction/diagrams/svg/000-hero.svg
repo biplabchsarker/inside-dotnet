@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    HERO ILLUSTRATION TEMPLATE. Duplicate to chapters/NNN-slug/diagrams/svg/NNN-hero.svg
+    Composition: deep gradient field, blueprint grid, and a glowing "core" motif with
+    elements flowing in from the left and transformed output flowing out to the right,
+    ringed by the containing system. Reads as "engine/mechanism", deliberately generic
+    enough to fit most Inside .NET chapters. Edit the pieces marked EDIT below, namely:
+    the CORE icon/label (the chapter's central concept), the 2 to 4 INPUT elements
+    flowing in from the left, the 2 to 4 OUTPUT elements flowing out to the right, the
+    RING label (the system the core operates inside, omit the ring group if N/A), and
+    the title/part label bottom left. Keep the grid, glow filter, and gradient as is;
+    that consistency is the point.
+  -->
+  <defs>
+    <linearGradient id="heroField" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B1240"/>
+      <stop offset="55%" stop-color="#2A1B6E"/>
+      <stop offset="100%" stop-color="#0B3A66"/>
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8F7BFF" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#512BD4" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#512BD4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#heroField)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+
+  <!-- Core glow field -->
+  <circle cx="800" cy="430" r="260" fill="url(#coreGlow)"/>
+
+  <!-- Optional containing-system ring — EDIT ring label, or delete the whole <g> if this chapter's motif has no "surrounding system" -->
+  <g opacity="0.5">
+    <circle cx="800" cy="430" r="230" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-dasharray="2 10"/>
+    <text x="800" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">11 PHASES · 58 CHAPTERS</text>
+  </g>
+
+  <!-- CORE motif — EDIT: replace this circle+label with the chapter's central icon/composition -->
+  <circle cx="800" cy="430" r="70" fill="#FFFFFF" opacity="0.12" filter="url(#softGlow)"/>
+  <circle cx="800" cy="430" r="70" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+  <text x="800" y="438" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">SERIES</text>
+
+  <!-- INPUT elements flowing in from the left — EDIT: 2-4 labeled nodes -->
+  <g>
+    <rect x="220" y="300" width="120" height="48" rx="8" fill="#FFFFFF" opacity="0.10" stroke="#FFFFFF" stroke-width="1.5"/>
+    <text x="280" y="329" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF" text-anchor="middle">DEVELOPER</text>
+    <path d="M340 324 L720 400" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5" marker-end="url(#heroArrow)"/>
+
+    <rect x="220" y="410" width="120" height="48" rx="8" fill="#FFFFFF" opacity="0.10" stroke="#FFFFFF" stroke-width="1.5"/>
+    <text x="280" y="439" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF" text-anchor="middle">TODAY</text>
+    <path d="M340 434 L732 432" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5" marker-end="url(#heroArrow)"/>
+  </g>
+
+  <!-- OUTPUT elements flowing out to the right — EDIT: 2-4 labeled nodes -->
+  <g>
+    <rect x="1260" y="300" width="130" height="48" rx="8" fill="#FFFFFF" opacity="0.10" stroke="#FFFFFF" stroke-width="1.5"/>
+    <text x="1325" y="329" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF" text-anchor="middle">SOLUTION</text>
+    <path d="M878 400 L1258 324" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5" marker-end="url(#heroArrow)"/>
+
+    <rect x="1260" y="410" width="130" height="48" rx="8" fill="#FFFFFF" opacity="0.10" stroke="#FFFFFF" stroke-width="1.5"/>
+    <text x="1325" y="439" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="600" fill="#FFFFFF" text-anchor="middle">ARCHITECT</text>
+    <path d="M870 432 L1258 434" stroke="#FFFFFF" stroke-width="1.5" opacity="0.5" marker-end="url(#heroArrow)"/>
+  </g>
+
+  <defs>
+    <marker id="heroArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#FFFFFF" opacity="0.7"/>
+    </marker>
+  </defs>
+
+  <!-- Title block, bottom-left — EDIT part label + title -->
+  <text x="120" y="760" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="600" fill="#FFFFFF" opacity="0.75" letter-spacing="3">SERIES INTRODUCTION</text>
+  <text x="120" y="812" font-family="Segoe UI, Inter, sans-serif" font-size="46" font-weight="700" fill="#FFFFFF">Welcome to Inside .NET</text>
+</svg>

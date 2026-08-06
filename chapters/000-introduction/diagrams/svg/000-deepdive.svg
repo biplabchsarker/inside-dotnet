@@ -1,0 +1,22 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHECKLIST TEMPLATE. Best-practices / definition-of-done visual checklist. Edit item text; add/remove rows. -->
+  <rect width="800" height="500" fill="#FFFFFF"/>
+  <text x="50" y="60" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#1B1B1F">Every Chapter Follows the Same 13 Sections</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="17" fill="#1B1B1F">
+    <circle cx="60" cy="110" r="12" fill="none" stroke="#107C10" stroke-width="2"/>
+    <path d="M54 110 L59 115 L67 104" stroke="#107C10" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="90" y="116">Learning Objectives, Analogy, Problem Statement</text>
+
+    <circle cx="60" cy="160" r="12" fill="none" stroke="#107C10" stroke-width="2"/>
+    <path d="M54 160 L59 165 L67 154" stroke="#107C10" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="90" y="166">Visual Explanation, Under the Hood</text>
+
+    <circle cx="60" cy="210" r="12" fill="none" stroke="#D8D8DE" stroke-width="2"/>
+    <text x="90" y="216">Code Example, Performance Notes</text>
+
+    <circle cx="60" cy="260" r="12" fill="none" stroke="#107C10" stroke-width="2"/>
+    <path d="M54 260 L59 265 L67 254" stroke="#107C10" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="90" y="266">Architect's Perspective, Interview Q&amp;A, Quiz</text>
+  </g>
+</svg>

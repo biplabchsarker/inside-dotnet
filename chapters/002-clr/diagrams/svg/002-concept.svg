@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- ARCHITECTURE TEMPLATE. Boxes-and-connections system diagram. Edit box labels; add/remove boxes and connectors as the system needs. -->
+  <rect width="1200" height="700" fill="#FFFFFF"/>
+  <rect x="60" y="60" width="1080" height="580" rx="12" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="90" y="100" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#6E6E76">CLR responsibilities</text>
+
+  <rect x="120" y="140" width="220" height="90" rx="8" fill="#512BD4" opacity="0.08" stroke="#512BD4" stroke-width="2"/>
+  <text x="230" y="192" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Load ＋ Verify</text>
+
+  <rect x="480" y="140" width="220" height="90" rx="8" fill="#0078D4" opacity="0.08" stroke="#0078D4" stroke-width="2"/>
+  <text x="590" y="192" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">JIT Compile</text>
+
+  <rect x="840" y="140" width="220" height="90" rx="8" fill="#68217A" opacity="0.08" stroke="#68217A" stroke-width="2"/>
+  <text x="950" y="192" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Execute</text>
+
+  <rect x="480" y="440" width="220" height="90" rx="8" fill="#107C10" opacity="0.08" stroke="#107C10" stroke-width="2"/>
+  <text x="590" y="492" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Manage Memory ＋ Threads</text>
+
+  <path d="M340 185 H480" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#archArrow)"/>
+  <path d="M700 185 H840" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#archArrow)"/>
+  <path d="M590 230 V440" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#archArrow)"/>
+
+  <defs><marker id="archArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#1B1B1F"/></marker></defs>
+</svg>

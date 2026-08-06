@@ -5,7 +5,9 @@
 
 ---
 
-<!-- Chapter cover: images/005-cover.png, source at diagrams/svg/005-cover.svg (duplicated from assets/brand/chapter-cover-template.svg) -->
+![Chapter cover](images/005-cover.png)
+
+![Hero: Stack vs Heap](images/005-hero.png)
 
 ### Learning Objectives
 
@@ -36,6 +38,8 @@ A running program needs two fundamentally different memory lifetime patterns, an
 This isn't a C#-specific design choice — it's not even a .NET-specific one. **Every process on every mainstream OS gets a call stack from the hardware/OS** (the CPU has stack-pointer and base-pointer registers dedicated to it; `CALL`/`RET` instructions push/pop return addresses onto it) precisely because pattern #1 is universal to how functions call each other in any language, compiled or interpreted. What .NET adds on top of that OS-level primitive is the **second half**: a managed heap with a garbage collector that automates pattern #2's reclamation problem, so you get the flexibility of shared, unpredictable lifetimes without manually tracking every reference (the way C's `malloc`/`free` or C++'s `new`/`delete` force you to). Without that second half, every "outlives the frame" scenario would have to be solved by hand, per object, which is exactly the class of bug (use-after-free, double-free, leaked native handles) that managed runtimes exist to eliminate.
 
 ### Visual Explanation
+
+![Concept: stack vs heap traits, side by side](diagrams/png/005-concept.png)
 
 #### 1. Stack frame push/pop across nested calls
 
@@ -138,6 +142,8 @@ By the time the guard page is hit, there is — by definition — no more room o
 *(Standalone Mermaid sources for all five diagrams live under [`diagrams/mermaid/`](diagrams/mermaid/), numbered to match the order above, per [IMAGE_GUIDE.md](../../IMAGE_GUIDE.md).)*
 
 ### Under the Hood
+
+![Deep-dive: struct as local vs. struct as class field](diagrams/png/005-deepdive.png)
 
 1. **The stack is an OS/hardware construct, not a CLR invention.** When Windows creates a thread, it reserves a contiguous region of virtual memory for that thread's stack — **1 MB by default for the main thread** on Windows (configurable via the linker/`ulimit`-equivalent or, for a CLR thread, via `Thread`'s constructor overload that takes `maxStackSize`). The CPU has dedicated registers for this — on x64, `RSP` (stack pointer) and `RBP`/frame pointer conventions — and the `CALL` instruction automatically pushes a return address before jumping; `RET` pops it back off. The CLR doesn't manage this region with a garbage collector; it just uses the mechanism the OS and CPU already provide.
 

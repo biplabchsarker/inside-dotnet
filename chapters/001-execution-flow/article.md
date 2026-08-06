@@ -5,7 +5,11 @@
 
 ---
 
-<!-- Chapter cover: diagrams/svg/001-cover.svg (PNG export pending — no SVG rasterizer available in the authoring environment; see chapter README). Duplicated from assets/brand/chapter-cover-template.svg per BRAND_GUIDE.md. -->
+![Chapter cover](images/001-cover.png)
+
+![Hero: What Really Happens When You Run a .NET Application?](images/001-hero.png)
+
+*Exported via `scripts/Svg2Png` from `diagrams/svg/001-cover.svg` and `diagrams/svg/001-hero.svg`.*
 
 ### Learning Objectives
 
@@ -39,6 +43,10 @@ Why not compile C# directly to machine code, the way C or C++ does? Because .NET
 Without this two-stage model, .NET would have to ship a separately compiled binary per CPU architecture and OS, lose the ability to verify code safety at load time, and give up the ability to specialize native code to the exact machine running it. The cost of this design is a small amount of startup latency (compiling methods on first use) — which is precisely the tradeoff **Native AOT** (Episode 9 — Native AOT) exists to eliminate for scenarios that need instant startup.
 
 ### Visual Explanation
+
+![Concept: Developer to CPU pipeline](diagrams/png/001-concept.png)
+
+The diagrams below walk through the same pipeline at increasing levels of detail.
 
 #### 1. Source-to-CPU execution flow
 
@@ -166,6 +174,8 @@ gantt
 ```
 
 ### Under the Hood
+
+![Deep-dive: CLR subsystems](diagrams/png/001-deepdive.png)
 
 Walking through the diagrams above in the order execution actually happens:
 

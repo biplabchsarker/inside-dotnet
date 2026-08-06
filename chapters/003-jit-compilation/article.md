@@ -5,7 +5,9 @@
 
 ---
 
-<!-- Chapter cover: images/003-cover.png, source at diagrams/svg/003-cover.svg (duplicated from assets/brand/chapter-cover-template.svg) -->
+![Chapter cover](images/003-cover.png)
+
+![Hero: JIT Compilation Explained](images/003-hero.png)
 
 ### Learning Objectives
 
@@ -37,6 +39,8 @@ Tiered compilation, R2R, and PGO exist because "just JIT everything fully on fir
 - **Precompiling everything ahead of time (R2R, Native AOT) solves startup cost only if the precompiled code is still valid for the machine it lands on.** A native code cache built for one exact CLR version, one exact set of JIT optimization behaviors, is not automatically safe to reuse if the running CLR differs — silently reusing mismatched native code would be a correctness and security problem, not just a performance one. So R2R's design has to include a fallback path, not just a fast path.
 
 ### Visual Explanation
+
+![Concept: Tier 0 vs Tier 1 compilation](diagrams/png/003-concept.png)
 
 #### 1. Prestub and first-call compilation
 
@@ -125,6 +129,8 @@ flowchart LR
 ```
 
 ### Under the Hood
+
+![Deep-dive: ReadyToRun vs JIT decision flow](diagrams/png/003-deepdive.png)
 
 **1. The prestub — how a never-called method gets its first compile triggered.** When the type loader builds a method table (Episode 3), every method slot doesn't initially point at real code — it points at a small, shared piece of native code called the **prestub** (sometimes called the "pre-JIT stub" in CLR source). The prestub's entire job is: notice this method has never been compiled, ask the JIT to compile it now, and then **backpatch** the method table slot (and any call sites that had already been compiled to jump through that slot) so it points directly at the freshly compiled native code. Every call after the first bypasses the prestub entirely and jumps straight to native code — there is no "check if compiled" branch on the hot path; the redirection *is* the method table entry itself. This is the actual mechanism behind Episode 2's "first call pays a cost, later calls don't" — it's not a cache lookup, it's a one-time pointer rewrite.
 

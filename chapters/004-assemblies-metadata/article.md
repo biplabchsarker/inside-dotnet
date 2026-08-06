@@ -5,7 +5,9 @@
 
 ---
 
-<!-- Chapter cover: images/005-cover.png, source at diagrams/svg/004-cover.svg (duplicated from assets/brand/chapter-cover-template.svg) -->
+![Chapter cover](images/004-cover.png)
+
+![Hero: Assemblies, DLLs & Metadata](images/004-hero.png)
 
 ### Learning Objectives
 
@@ -42,6 +44,8 @@ So why does .NET need this much ceremony — headers, manifests, metadata tables
 - **Portability (Episode 2) needs a container format that isn't .NET-specific.** Reusing the Windows PE/COFF format — rather than inventing a new one — meant .NET assemblies could be loaded, inspected, and executed (as native apphosts) using decades of existing OS-level tooling and loader conventions, even on Linux and macOS where CoreCLR reimplements the equivalent loading semantics without literally being the Windows PE loader.
 
 ### Visual Explanation
+
+![Concept: what's inside a .NET assembly](diagrams/png/004-concept.png)
 
 <!-- 5 original diagrams. Authored as Mermaid inline here AND saved as standalone source under diagrams/mermaid/. -->
 
@@ -157,6 +161,8 @@ flowchart LR
 ```
 
 ### Under the Hood
+
+![Deep-dive: metadata token resolution](diagrams/png/004-deepdive.png)
 
 **1. PE/COFF is borrowed, not reinvented.** A .NET assembly is a valid Windows PE (Portable Executable) / COFF (Common Object File Format) binary — the same container format `.exe` and native `.dll` files on Windows use. This is deliberate: it lets OS-level tooling (loaders, signing tools, antivirus scanners) recognize the file's basic shape without knowing anything about .NET. What makes it a *.NET* assembly specifically is a **CLR header** (historically called the COR20 header) referenced from the PE optional header's data directories, pointing at the metadata root and, for executables, the managed entry point's metadata token. On non-Windows platforms, CoreCLR's loader parses this same PE/COFF structure directly — it doesn't rely on the OS's native PE loader, since Linux and macOS don't have one, but it reads the identical on-disk format for cross-platform consistency. This is also how Microsoft itself implements the loader: `dotnet/runtime`'s `coreclr` component ships its own PE/COFF and metadata parser rather than delegating to platform loaders anywhere.
 

@@ -11,6 +11,8 @@
 
 *Cover source: [`diagrams/svg/002-cover.svg`](diagrams/svg/002-cover.svg), following the series template in [BRAND_GUIDE.md](../../BRAND_GUIDE.md).*
 
+![Hero: Understanding the CLR](images/002-hero.png)
+
 ---
 
 ### Learning objectives
@@ -52,6 +54,8 @@ Without these three, "write once, run on any CLR-conformant language, safely, at
 ---
 
 ### Visual explanation
+
+![Concept: CLR responsibilities at a glance](diagrams/png/002-concept.png)
 
 #### 1. CLR as a managed execution environment
 
@@ -172,6 +176,8 @@ flowchart TB
 ---
 
 ### Under the hood
+
+![Deep-dive: object header, method table, and vtable dispatch](diagrams/png/002-deepdive.png)
 
 **1. The CLR's actual job list.** Beyond "runs your code," the CLR is responsible for: enforcing type safety (you cannot treat an arbitrary bag of bytes as a `Customer` object without going through a legitimate cast or deserialization path that the runtime validates); memory management (every managed allocation and its lifetime is tracked so the GC can reclaim it); structured exception handling that works consistently *across* languages (an exception thrown by F# code can be caught by a C# `catch` block using the same protocol); a security model for code access (largely vestigial for local apps post-.NET Core, but still real for certain hosting scenarios); thread management (the CLR owns the thread pool and the primitives `Task`/`async` are built on); and interop marshaling at the managed/unmanaged boundary.
 
