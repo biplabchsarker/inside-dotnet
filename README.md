@@ -2,6 +2,8 @@
 ### Understanding What Really Happens Under the Hood
 *A Visual Journey from Developer to Solution Architect — by Biplab Sarker*
 
+Repo: https://github.com/biplabchsarker/.Net_Journey
+
 Most developers know how to write code. Fewer understand what the .NET runtime is actually doing behind the scenes. **Inside .NET** is a chapter-by-chapter series that bridges that gap using original diagrams, real-world analogies, internal runtime explanations, practical C# examples, performance notes, common mistakes, and interview insights.
 
 Every chapter builds on the previous one, taking readers from developer fundamentals to solution architecture.
