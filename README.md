@@ -68,7 +68,12 @@ See [`book.json`](book.json) for the full Table of Contents (Parts I–XI, 50+ c
 ## Status
 | Chapter | Title | Status |
 |---|---|---|
-| [000](chapters/000-introduction) | Welcome to Inside .NET | Draft |
-| [001](chapters/001-execution-flow) | What Really Happens When You Run a .NET Application? | Draft |
+| [000](chapters/000-introduction) | Welcome to Inside .NET | Done |
+| [001](chapters/001-execution-flow) | What Really Happens When You Run a .NET Application? | Done |
+| [002](chapters/002-clr) | Understanding the CLR | Done |
+| [003](chapters/003-jit-compilation) | JIT Compilation Explained | Done |
+| [004](chapters/004-assemblies-metadata) | Assemblies, DLLs & Metadata | Done |
+| [005](chapters/005-stack-vs-heap) | Stack vs Heap | Done |
+| [006](chapters/006-value-vs-reference-types) | Value Types vs Reference Types | Done |
 
 More chapters land incrementally — each one fully written, diagrammed, and coded before moving to the next.

@@ -51,7 +51,12 @@
     { "id": "XI", "name": "Becoming an Architect", "chapters": ["049-becoming-an-architect", "050-case-studies"] }
   ],
   "status": {
-    "000-introduction": "draft",
-    "001-execution-flow": "draft"
+    "000-introduction": "done",
+    "001-execution-flow": "done",
+    "002-clr": "done",
+    "003-jit-compilation": "done",
+    "004-assemblies-metadata": "done",
+    "005-stack-vs-heap": "done",
+    "006-value-vs-reference-types": "done"
   }
 }
