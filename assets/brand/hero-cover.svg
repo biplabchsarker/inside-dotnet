@@ -1,0 +1,28 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <linearGradient id="heroGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#heroBg)"/>
+  <rect width="1600" height="450" fill="url(#heroGlow)"/>
+
+  <!-- Layer motif, echoing the logo mark, scaled up as a background element -->
+  <g opacity="0.14">
+    <rect x="1150" y="120" width="360" height="46" rx="23" fill="#FFFFFF"/>
+    <rect x="1150" y="190" width="360" height="46" rx="23" fill="#FFFFFF"/>
+    <rect x="1150" y="260" width="360" height="46" rx="23" fill="#FFFFFF"/>
+  </g>
+
+  <text x="120" y="360" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="4">A VISUAL JOURNEY FROM DEVELOPER TO SOLUTION ARCHITECT</text>
+  <text x="120" y="460" font-family="Segoe UI, Inter, sans-serif" font-size="110" font-weight="700" fill="#FFFFFF">Inside .NET</text>
+  <text x="120" y="520" font-family="Segoe UI, Inter, sans-serif" font-size="36" font-weight="400" fill="#FFFFFF" opacity="0.92">Understanding What Really Happens Under the Hood</text>
+
+  <text x="120" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="600" fill="#FFFFFF" opacity="0.75">By Biplab Sarker</text>
+</svg>

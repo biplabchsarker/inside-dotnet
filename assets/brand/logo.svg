@@ -1,0 +1,16 @@
+<svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="8" width="64" height="64" rx="14" fill="url(#logoGradient)"/>
+  <rect x="12" y="24" width="40" height="8" rx="4" fill="#FFFFFF" opacity="0.55"/>
+  <rect x="12" y="38" width="40" height="8" rx="4" fill="#FFFFFF" opacity="0.78"/>
+  <rect x="12" y="52" width="40" height="8" rx="4" fill="#FFFFFF"/>
+
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="30" font-weight="700" fill="#1B1B1F">Inside</text>
+  <text x="170" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="30" font-weight="700" fill="#512BD4">.NET</text>
+  <text x="80" y="62" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="400" fill="#6E6E76">Understanding What Really Happens Under the Hood</text>
+</svg>

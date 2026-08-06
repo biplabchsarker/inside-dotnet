@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="markGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#markGradient)"/>
+  <!-- Stylized "layers" motif: source -> IL -> native, the series' core idea -->
+  <rect x="14" y="16" width="36" height="7" rx="3.5" fill="#FFFFFF" opacity="0.55"/>
+  <rect x="14" y="28.5" width="36" height="7" rx="3.5" fill="#FFFFFF" opacity="0.78"/>
+  <rect x="14" y="41" width="36" height="7" rx="3.5" fill="#FFFFFF"/>
+</svg>
