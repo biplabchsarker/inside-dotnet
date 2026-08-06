@@ -1,0 +1,11 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect x="6" y="22" width="16" height="20" rx="3" fill="none" stroke="#6E6E76" stroke-width="2"/>
+  <path d="M22 32 L34 32" stroke="#512BD4" stroke-width="2" marker-end="url(#jitArrow)"/>
+  <rect x="34" y="18" width="24" height="28" rx="4" fill="#512BD4" opacity="0.12" stroke="#512BD4" stroke-width="2"/>
+  <path d="M42 26 L47 32 L42 38 M50 26 L50 38" stroke="#512BD4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <marker id="jitArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#512BD4"/>
+    </marker>
+  </defs>
+</svg>

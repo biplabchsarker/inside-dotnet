@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- COMPARISON TEMPLATE. Side-by-side two-option comparison. Edit column headers and row labels/values. -->
+  <rect width="1200" height="600" fill="#FFFFFF"/>
+  <rect x="60" y="60" width="510" height="480" rx="10" fill="#512BD4" opacity="0.05" stroke="#512BD4" stroke-width="2"/>
+  <rect x="630" y="60" width="510" height="480" rx="10" fill="#0078D4" opacity="0.05" stroke="#0078D4" stroke-width="2"/>
+  <text x="315" y="110" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="700" fill="#512BD4" text-anchor="middle">Option A — EDIT</text>
+  <text x="885" y="110" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="700" fill="#0078D4" text-anchor="middle">Option B — EDIT</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#1B1B1F">
+    <text x="90" y="170">• Trait 1 — EDIT</text>
+    <text x="660" y="170">• Trait 1 — EDIT</text>
+    <text x="90" y="210">• Trait 2 — EDIT</text>
+    <text x="660" y="210">• Trait 2 — EDIT</text>
+    <text x="90" y="250">• Trait 3 — EDIT</text>
+    <text x="660" y="250">• Trait 3 — EDIT</text>
+    <text x="90" y="290">• Trait 4 — EDIT</text>
+    <text x="660" y="290">• Trait 4 — EDIT</text>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- LIFECYCLE TEMPLATE. State-machine-shaped lifecycle. Edit state labels; add/remove states around the ring, keep arrows following ring order. -->
+  <rect width="700" height="700" fill="#FFFFFF"/>
+  <circle cx="350" cy="350" r="220" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="4 6"/>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F">
+    <rect x="290" y="90" width="120" height="50" rx="8" fill="#512BD4" opacity="0.1" stroke="#512BD4" stroke-width="2"/>
+    <text x="350" y="120" text-anchor="middle">State 1 — EDIT</text>
+
+    <rect x="490" y="300" width="120" height="50" rx="8" fill="#0078D4" opacity="0.1" stroke="#0078D4" stroke-width="2"/>
+    <text x="550" y="330" text-anchor="middle">State 2 — EDIT</text>
+
+    <rect x="290" y="510" width="120" height="50" rx="8" fill="#68217A" opacity="0.1" stroke="#68217A" stroke-width="2"/>
+    <text x="350" y="540" text-anchor="middle">State 3 — EDIT</text>
+
+    <rect x="90" y="300" width="120" height="50" rx="8" fill="#107C10" opacity="0.1" stroke="#107C10" stroke-width="2"/>
+    <text x="150" y="330" text-anchor="middle">State 4 — EDIT</text>
+  </g>
+
+  <path d="M410 130 A220 220 0 0 1 540 300" fill="none" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#lcArrow)"/>
+  <path d="M550 350 A220 220 0 0 1 410 540" fill="none" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#lcArrow)"/>
+  <path d="M350 560 A220 220 0 0 1 160 350" fill="none" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#lcArrow)"/>
+  <path d="M150 300 A220 220 0 0 1 290 130" fill="none" stroke="#1B1B1F" stroke-width="1.5" marker-end="url(#lcArrow)"/>
+
+  <defs><marker id="lcArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#1B1B1F"/></marker></defs>
+</svg>

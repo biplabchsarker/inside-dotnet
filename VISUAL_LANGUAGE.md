@@ -8,19 +8,44 @@ Every image in this project must look like it belongs in the same book — chapt
 - **Speed.** Composing a diagram from existing pieces is faster than designing one from scratch, and it scales to 58 chapters.
 - **Maintainability.** Fix or restyle one component once, and every diagram that uses it benefits — instead of hunting through 50 chapters' worth of bespoke art.
 
-## Component catalog (v1)
+## Component catalog
 
-Each entry below is a planned reusable icon/symbol, defined once under `assets/components/` and referenced from any chapter's diagrams. This catalog grows as new chapters need new concepts — add to it deliberately, don't let one-off icons proliferate outside it.
+Each entry below is a reusable icon/symbol under `assets/components/` — ✅ built, or ⏳ catalogued but not yet drawn (drawn on demand, the first time a chapter actually needs it — see [Governance](#governance)). This catalog is deliberately grown incrementally rather than front-loaded to ~100 speculative icons: build the ones the roadmap's next several chapters need, add more as work reaches them.
 
 | Category | Components |
 |---|---|
-| Runtime | CLR, GC, JIT, Assembly, Metadata, Type Loader |
-| Memory | Stack, Heap, Object, Boxed Value, LOH |
-| Concurrency | Thread, Thread Pool, Task, CPU Core |
-| Infrastructure | Server, Database, Cache, Message Queue, Load Balancer |
-| Cloud | Cloud (generic), Azure, Docker, Kubernetes, Container |
-| Data flow | Request, Response, Pipeline stage, Arrow (sync), Arrow (async, dashed) |
-| Status | Success (check), Warning (triangle), Error (x), Info (circle-i) |
+| Runtime | ✅ CLR, ✅ GC, ⏳ JIT, ⏳ Roslyn, ⏳ IL, ⏳ Assembly, ⏳ Metadata/Manifest, ⏳ Type Loader, ⏳ CTS, ⏳ CLS, ⏳ AssemblyLoadContext, ⏳ Exception Handler, ⏳ Security |
+| Memory | ✅ Stack, ✅ Heap, ⏳ Object, ⏳ Boxed Value, ⏳ LOH, ⏳ Pinned Object, ⏳ Finalizer, ⏳ Weak Reference |
+| Concurrency | ✅ Thread, ✅ CPU Core, ⏳ Thread Pool, ⏳ Task, ⏳ Await, ⏳ Cancellation Token, ⏳ Synchronization Context |
+| C# language | ⏳ Delegate, ⏳ Event, ⏳ Generic, ⏳ Reflection, ⏳ Expression Tree, ⏳ Record, ⏳ Pattern Match |
+| Patterns & DI | ⏳ Singleton, ⏳ Factory, ⏳ Builder, ⏳ Strategy, ⏳ Observer, ⏳ Adapter, ⏳ Decorator, ⏳ Facade, ⏳ Repository, ⏳ Unit of Work, ⏳ DI Container, ⏳ Service Provider, ⏳ Options Pattern |
+| ASP.NET Core / EF Core | ⏳ Middleware, ⏳ Controller, ⏳ Minimal API, ⏳ Kestrel, ⏳ DbContext, ⏳ LINQ, ⏳ Change Tracker, ⏳ Migration |
+| Infrastructure | ✅ Server, ✅ Database, ⏳ Cache, ⏳ Redis, ⏳ Message Queue, ⏳ RabbitMQ, ⏳ Load Balancer, ⏳ SQL Server, ⏳ Postgres, ⏳ MongoDB |
+| Cloud | ✅ Cloud (generic), ✅ Docker, ⏳ Azure, ⏳ Kubernetes, ⏳ Container, ⏳ Microservice, ⏳ OpenTelemetry |
+| Data flow | ⏳ Request, ⏳ Response, ⏳ Pipeline stage, ⏳ Arrow (sync), ⏳ Arrow (async, dashed) |
+| Status | ⏳ Success (check), ⏳ Warning (triangle), ⏳ Error (x), ⏳ Info (circle-i) |
+
+Roughly 100 entries at full maturity across the whole 58-chapter roadmap — see [`assets/components/README.md`](assets/components/README.md) for the live built/pending list, kept in sync with this table.
+
+## Diagram templates
+
+`assets/templates/` holds reusable *starting points* — parameterized SVG skeletons (with `<!-- EDIT -->`-marked regions, same convention as `assets/brand/chapter-cover-template.svg`) for the recurring diagram *shapes* every chapter reaches for, so authoring a new chapter's illustrations means editing a template, not designing from a blank canvas:
+
+| Template | Use it for |
+|---|---|
+| `hero-illustration.svg` | Base frame for a chapter's Hero Cover — blueprint grid + radial glow + central-motif slot (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#the-three-signature-illustrations--every-chapter)) |
+| `timeline.svg` | Sequential/chronological flows (execution timelines, GC generations over time) |
+| `architecture.svg` | Boxes-and-connections system diagrams |
+| `flowchart.svg` | Decision/branching logic |
+| `comparison.svg` | Side-by-side two-option comparisons (stack vs heap, value vs reference) |
+| `memory-layout.svg` | Byte/field-level memory diagrams |
+| `lifecycle.svg` | State-machine-shaped lifecycles (DI lifetimes, DbContext lifecycle) |
+| `decision-tree.svg` | "When should I use X vs Y" branching guidance |
+| `checklist.svg` | Definition-of-done / best-practices visual checklists |
+| `interview-summary.svg` | End-of-chapter interview-question visual recap |
+| `performance-comparison.svg` | Benchmark/timing bar comparisons |
+
+Grown the same way as the component catalog: build the templates the next few chapters actually need first (this batch ships the first several), add the rest incrementally.
 
 ## Component format
 

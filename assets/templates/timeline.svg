@@ -1,0 +1,31 @@
+<svg viewBox="0 0 1400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- TIMELINE TEMPLATE. Duplicate into a chapter's diagrams/svg/. Edit stage labels/times below; add/remove stage groups as needed, keeping even spacing along the main line. -->
+  <defs>
+    <linearGradient id="tlLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="400" fill="#FFFFFF"/>
+  <line x1="80" y1="200" x2="1320" y2="200" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Stage 1 -->
+  <circle cx="140" cy="200" r="10" fill="#512BD4"/>
+  <text x="140" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Stage 1 — EDIT</text>
+  <text x="140" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = 0ms</text>
+
+  <!-- Stage 2 -->
+  <circle cx="480" cy="200" r="10" fill="#6B4CE0"/>
+  <text x="480" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Stage 2 — EDIT</text>
+  <text x="480" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = ...</text>
+
+  <!-- Stage 3 -->
+  <circle cx="880" cy="200" r="10" fill="#2D75C4"/>
+  <text x="880" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Stage 3 — EDIT</text>
+  <text x="880" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = ...</text>
+
+  <!-- Stage 4 -->
+  <circle cx="1260" cy="200" r="10" fill="#0078D4"/>
+  <text x="1260" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Stage 4 — EDIT</text>
+  <text x="1260" y="230" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#6E6E76" text-anchor="middle">t = end</text>
+</svg>

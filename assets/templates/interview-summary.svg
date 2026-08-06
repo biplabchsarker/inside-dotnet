@@ -1,0 +1,11 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- INTERVIEW SUMMARY TEMPLATE. End-of-chapter visual recap of the key interview angle. Edit Q/A text. -->
+  <rect width="900" height="500" fill="#FFFFFF"/>
+  <rect x="40" y="40" width="820" height="420" rx="12" fill="#512BD4" opacity="0.04" stroke="#512BD4" stroke-width="2"/>
+  <text x="70" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" letter-spacing="2">IF THEY ASK ONE THING — EDIT</text>
+  <text x="70" y="140" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F">"Interview question goes here?" — EDIT</text>
+  <line x1="70" y1="165" x2="830" y2="165" stroke="#D8D8DE" stroke-width="1.5"/>
+  <text x="70" y="210" font-family="Segoe UI, Inter, sans-serif" font-size="17" fill="#1B1B1F">Answer summary line 1 — EDIT</text>
+  <text x="70" y="245" font-family="Segoe UI, Inter, sans-serif" font-size="17" fill="#1B1B1F">Answer summary line 2 — EDIT</text>
+  <text x="70" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="17" fill="#1B1B1F">Answer summary line 3 — EDIT</text>
+</svg>

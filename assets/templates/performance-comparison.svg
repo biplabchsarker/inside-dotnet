@@ -1,0 +1,21 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- PERFORMANCE COMPARISON TEMPLATE. Benchmark/timing bar comparison. Edit bar labels, heights, and values to match real measured numbers; never fabricate data, only plot what was actually measured. -->
+  <rect width="900" height="500" fill="#FFFFFF"/>
+  <text x="60" y="60" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">Benchmark title — EDIT (with real measured units)</text>
+  <line x1="80" y1="420" x2="820" y2="420" stroke="#1B1B1F" stroke-width="1.5"/>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#1B1B1F">
+    <rect x="150" y="220" width="90" height="200" fill="#512BD4" opacity="0.75"/>
+    <text x="195" y="210" text-anchor="middle" font-weight="700">123 ns — EDIT</text>
+    <text x="195" y="444" text-anchor="middle">Case A</text>
+
+    <rect x="360" y="320" width="90" height="100" fill="#0078D4" opacity="0.75"/>
+    <text x="405" y="310" text-anchor="middle" font-weight="700">45 ns — EDIT</text>
+    <text x="405" y="444" text-anchor="middle">Case B</text>
+
+    <rect x="570" y="120" width="90" height="300" fill="#D83B01" opacity="0.75"/>
+    <text x="615" y="110" text-anchor="middle" font-weight="700">310 ns — EDIT</text>
+    <text x="615" y="444" text-anchor="middle">Case C</text>
+  </g>
+  <text x="80" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Measured with BenchmarkDotNet on [machine/CLR version — EDIT]. Bar heights are illustrative in this template — scale to real numbers.</text>
+</svg>

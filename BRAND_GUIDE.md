@@ -1,8 +1,8 @@
 # Brand Guide
 
-## Status: v1 — placeholder identity
+## Status: v1 — placeholder identity (navigational cover), v2 — illustration system (Hero/Concept/Deep-Dive)
 
-This is a **functional v1 brand identity**, hand-coded as SVG (geometric/wordmark style) so the project has a consistent look from Phase 0 onward. It is intentionally simple — no illustrated/isometric artwork — because that requires either commissioned design work or an image-generation tool, neither of which is in scope right now. Treat everything in this document as upgradeable, not final.
+The wordmark, hero cover, and navigational chapter-cover template below are the **v1 brand identity** — simple, hand-coded SVG. Since then, **v2** added a per-chapter *illustration* system — Hero Cover, Concept Illustration, Deep-Dive Illustration — with genuinely more visual craft (gradients, glow filters, blueprint grids) — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#the-three-signature-illustrations--every-chapter) and the reusable base at [`assets/templates/hero-illustration.svg`](assets/templates/hero-illustration.svg). Both are hand-coded SVG — no illustrated/isometric *artwork* in the commissioned-illustrator or AI-image-gen sense, because neither is in scope here. Treat everything in this document as upgradeable, not final.
 
 ## Assets
 

@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- MEMORY LAYOUT TEMPLATE. Byte/field-level memory diagram. Edit field labels/widths; each cell width in px roughly maps to relative byte size. -->
+  <rect width="1000" height="400" fill="#FFFFFF"/>
+  <text x="60" y="60" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">Object layout — EDIT</text>
+
+  <g font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">
+    <rect x="60" y="90" width="140" height="60" fill="#512BD4" opacity="0.15" stroke="#512BD4" stroke-width="1.5"/>
+    <text x="130" y="124" text-anchor="middle">Method Table Ptr</text>
+
+    <rect x="200" y="90" width="80" height="60" fill="#0078D4" opacity="0.15" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="240" y="124" text-anchor="middle">Sync Block</text>
+
+    <rect x="280" y="90" width="100" height="60" fill="#68217A" opacity="0.15" stroke="#68217A" stroke-width="1.5"/>
+    <text x="330" y="124" text-anchor="middle">Field 1</text>
+
+    <rect x="380" y="90" width="100" height="60" fill="#107C10" opacity="0.15" stroke="#107C10" stroke-width="1.5"/>
+    <text x="430" y="124" text-anchor="middle">Field 2</text>
+
+    <rect x="480" y="90" width="140" height="60" fill="#D83B01" opacity="0.15" stroke="#D83B01" stroke-width="1.5"/>
+    <text x="550" y="124" text-anchor="middle">Field 3 — EDIT</text>
+  </g>
+
+  <text x="60" y="180" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Each block's width is illustrative of relative size — annotate exact byte offsets/sizes per chapter as needed.</text>
+</svg>
