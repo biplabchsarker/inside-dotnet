@@ -1,0 +1,9 @@
+flowchart TB
+    V["A value type instance"] --> T1["Stored in a non-generic\ncollection (ArrayList, Hashtable)"]
+    V --> T2["Passed as an 'object' parameter,\nincluding params object[] overloads"]
+    V --> T3["Assigned to an interface-typed\nvariable it implements"]
+    V --> T4["Calls a non-overridden member\ninherited from Object\n(default ToString/Equals/GetHashCode)"]
+    T1 --> BOX["A real boxing allocation"]
+    T2 --> BOX
+    T3 --> BOX
+    T4 --> BOX

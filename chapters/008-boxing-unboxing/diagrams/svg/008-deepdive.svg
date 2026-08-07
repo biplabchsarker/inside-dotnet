@@ -1,0 +1,44 @@
+<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+  <!-- DEEP-DIVE ILLUSTRATION — chapters/008-boxing-unboxing. Built from assets/templates/memory-layout.svg: a boxed int's exact byte layout, plus the escape-analysis fork that decides whether the allocation is real. -->
+  <rect width="1000" height="480" fill="#FFFFFF"/>
+  <text x="60" y="45" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">A boxed int's exact layout, and the fork that decides if it costs anything</text>
+
+  <g font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">
+    <rect x="60" y="80" width="220" height="60" fill="#512BD4" opacity="0.15" stroke="#512BD4" stroke-width="1.5"/>
+    <text x="170" y="108" text-anchor="middle">Method Table Ptr</text>
+    <text x="170" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — says "this is System.Int32"</text>
+
+    <rect x="280" y="80" width="220" height="60" fill="#0078D4" opacity="0.15" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="390" y="108" text-anchor="middle">Sync Block Index</text>
+    <text x="390" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — unused unless locked/hashed</text>
+
+    <rect x="500" y="80" width="220" height="60" fill="#68217A" opacity="0.15" stroke="#68217A" stroke-width="1.5"/>
+    <text x="610" y="108" text-anchor="middle">int value (4 bytes)</text>
+    <text x="610" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">padded to 8-byte alignment</text>
+
+    <rect x="720" y="80" width="140" height="60" fill="#D8D8DE" opacity="0.5" stroke="#6E6E76" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="790" y="108" text-anchor="middle" font-size="12">= 24 bytes</text>
+    <text x="790" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">measured, this chapter</text>
+  </g>
+
+  <text x="60" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Same header shape as any heap object (Episode 8) — the "constructor" here is a single memcpy of the value's bits, not user code.</text>
+
+  <!-- Escape analysis fork -->
+  <text x="60" y="225" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F">Does this exact box escape the method that creates it?</text>
+
+  <rect x="60" y="250" width="420" height="150" rx="10" fill="#107C10" opacity="0.08" stroke="#107C10" stroke-width="2"/>
+  <text x="80" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#107C10">NO — proven local to this method</text>
+  <text x="80" y="308" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">Used only for same-method interface</text>
+  <text x="80" y="328" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">dispatch; never stored, returned, or</text>
+  <text x="80" y="348" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">placed in a collection.</text>
+  <text x="80" y="380" font-family="Cascadia Code, Fira Code, monospace" font-size="13" font-weight="700" fill="#107C10">Measured: 0 B allocated</text>
+
+  <rect x="520" y="250" width="420" height="150" rx="10" fill="#D83B01" opacity="0.08" stroke="#D83B01" stroke-width="2"/>
+  <text x="540" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#D83B01">YES — stored, returned, or collected</text>
+  <text x="540" y="308" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">ArrayList.Add(x), a field assignment,</text>
+  <text x="540" y="328" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">or returning the box to a caller — the</text>
+  <text x="540" y="348" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">JIT can't bound its lifetime.</text>
+  <text x="540" y="380" font-family="Cascadia Code, Fira Code, monospace" font-size="13" font-weight="700" fill="#D83B01">Measured: 24 B/box, real GC pressure</text>
+
+  <text x="60" y="440" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Header terms recap Episode 3 — The CLR / Episode 8 — Object Allocation. Sizes above are illustrative except where marked "measured" — see Performance Notes for the BenchmarkDotNet runs.</text>
+</svg>

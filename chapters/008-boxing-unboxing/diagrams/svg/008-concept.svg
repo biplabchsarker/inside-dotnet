@@ -1,0 +1,49 @@
+<svg viewBox="0 0 1400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- CONCEPT ILLUSTRATION — chapters/008-boxing-unboxing. Built from assets/templates/timeline.svg: the full round trip, value -> box -> heap object -> unbox -> value (or exception). -->
+  <defs>
+    <linearGradient id="tlLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="400" fill="#FFFFFF"/>
+  <text x="60" y="50" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F">Boxing and unboxing — the full round trip</text>
+  <line x1="80" y1="220" x2="1320" y2="220" stroke="url(#tlLine)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Stage 1 -->
+  <circle cx="140" cy="220" r="10" fill="#512BD4"/>
+  <text x="140" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Value</text>
+  <text x="140" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">int x = 42;</text>
+  <text x="140" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">inline, no header,</text>
+  <text x="140" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">no heap presence</text>
+
+  <!-- Stage 2 -->
+  <circle cx="435" cy="220" r="10" fill="#6B4CE0"/>
+  <text x="435" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">box</text>
+  <text x="435" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">object o = x;</text>
+  <text x="435" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">allocate + write</text>
+  <text x="435" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">header (Episode 8's allocator)</text>
+
+  <!-- Stage 3 -->
+  <circle cx="730" cy="220" r="10" fill="#2D75C4"/>
+  <text x="730" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Heap object</text>
+  <text x="730" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">its own identity</text>
+  <text x="730" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">no reuse — same value</text>
+  <text x="730" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">boxed twice = 2 objects</text>
+
+  <!-- Stage 4 -->
+  <circle cx="1025" cy="220" r="10" fill="#0078D4"/>
+  <text x="1025" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">unbox</text>
+  <text x="1025" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">(int)o</text>
+  <text x="1025" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">exact method table</text>
+  <text x="1025" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">match required</text>
+
+  <!-- Stage 5 -->
+  <circle cx="1320" cy="220" r="10" fill="#005A9E"/>
+  <text x="1320" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Value, or throw</text>
+  <text x="1320" y="205" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F" text-anchor="middle">independent copy</text>
+  <text x="1320" y="250" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">mismatch throws</text>
+  <text x="1320" y="266" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#6E6E76" text-anchor="middle">InvalidCastException</text>
+
+  <text x="700" y="330" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">A struct assigned to an interface-typed variable boxes exactly once at that assignment — later calls dispatch against the same box, not a new one.</text>
+</svg>

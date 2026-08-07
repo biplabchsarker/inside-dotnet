@@ -1,0 +1,40 @@
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHEAT SHEET — chapters/008-boxing-unboxing. Duplicated from the cheat sheet template; layout unchanged. -->
+  <defs>
+    <linearGradient id="csHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="700" fill="#FFFFFF"/>
+  <rect width="1000" height="90" fill="url(#csHeader)"/>
+  <text x="40" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CHEAT SHEET</text>
+  <text x="40" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">Boxing &amp; Unboxing</text>
+
+  <rect x="40" y="120" width="920" height="70" rx="10" fill="#512BD4" opacity="0.08" stroke="#512BD4" stroke-width="2"/>
+  <text x="60" y="150" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="60" y="178" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#1B1B1F">Boxing allocates through Episode 8's exact allocator - its real cost depends entirely on whether the box escapes.</text>
+
+  <text x="40" y="235" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" letter-spacing="1">REMEMBER THIS</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#1B1B1F">
+    <circle cx="52" cy="270" r="5" fill="#0078D4"/>
+    <text x="70" y="275">ArrayList/Hashtable box every value; List&lt;T&gt;/Dictionary&lt;K,V&gt; never do</text>
+    <circle cx="52" cy="305" r="5" fill="#0078D4"/>
+    <text x="70" y="310">Unboxing checks the EXACT type - (long)boxedInt throws, it never widens</text>
+    <circle cx="52" cy="340" r="5" fill="#0078D4"/>
+    <text x="70" y="345">A struct boxes once per interface assignment, not once per call after</text>
+    <circle cx="52" cy="375" r="5" fill="#0078D4"/>
+    <text x="70" y="380">Generic constraints use "constrained." calls - no box, ever, for that T</text>
+    <circle cx="52" cy="410" r="5" fill="#0078D4"/>
+    <text x="70" y="415">Measured: 6x slower / 24 B per box - unless escape analysis proves it's 0</text>
+  </g>
+
+  <rect x="40" y="460" width="920" height="150" rx="10" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="60" y="495" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="60" y="530" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">"What happens when you box a Nullable&lt;int&gt;?"</text>
+  <text x="60" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#1B1B1F">HasValue false -&gt; null, no allocation. HasValue true -&gt; a plain box of the underlying int.</text>
+
+  <text x="40" y="670" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

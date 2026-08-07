@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant Var as int number = 42
+    participant BoxA as boxedA (heap object #1)
+    participant BoxB as boxedB (heap object #2)
+
+    Var->>BoxA: box — allocate, copy 42 in
+    Var->>BoxB: box again — allocate a DIFFERENT block, copy 42 in
+    Note over BoxA,BoxB: Equal by value (Equals) — NOT equal by reference
+    Var->>Var: number = 99
+    Note over BoxA,BoxB: Neither box changes — each holds its own independent copy

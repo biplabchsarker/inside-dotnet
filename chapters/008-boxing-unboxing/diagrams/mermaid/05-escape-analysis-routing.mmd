@@ -1,0 +1,4 @@
+flowchart TB
+    A["Value assigned to an interface-\nor object-typed variable"] --> B{"Can the JIT's escape analysis\nprove the box never leaves\nthis method?"}
+    B -->|"yes — used only for\nsame-method dispatch, never\nstored, returned, or collected"| C["Box may be stack-allocated\nor removed entirely —\nmeasured: 0 B in this chapter's demo"]
+    B -->|"no — stored in a field,\nadded to a collection,\nor returned to a caller"| D["Real heap allocation,\nthe same allocator as Episode 8"]

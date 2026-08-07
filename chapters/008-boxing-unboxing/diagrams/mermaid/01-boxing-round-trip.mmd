@@ -1,0 +1,5 @@
+flowchart LR
+    A["int x = 42;\n(value type, inline —\nno header, no heap presence)"] --> B["object o = x;\n(implicit box)"]
+    B --> C["Allocate a heap block\n— same fast path as Episode 8:\nbump-pointer + header write"]
+    C --> D["Copy x's bits\ninto the new block"]
+    D --> E["Return a new\nobject reference"]

@@ -1,0 +1,5 @@
+flowchart LR
+    A["int y = (int)o;"] --> B{"Does o's method table\nmatch 'int' exactly?"}
+    B -->|"yes"| C["Copy the value's bits\nout of the box"]
+    C --> D["y holds an independent\ncopy — not a view into the box"]
+    B -->|"no — even a\n'compatible' type"| E["throw InvalidCastException"]
