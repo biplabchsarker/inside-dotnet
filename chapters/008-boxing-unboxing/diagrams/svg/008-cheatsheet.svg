@@ -1,40 +1,61 @@
-<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
-  <!-- CHEAT SHEET — chapters/008-boxing-unboxing. Duplicated from the cheat sheet template; layout unchanged. -->
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHEAT SHEET v2 — chapters/008-boxing-unboxing. Adds a real, measured
+       performance-bar row (never fabricated — matches Performance Notes exactly)
+       alongside the standard one-line rule / bullets / interview-question layout. -->
   <defs>
-    <linearGradient id="csHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="csHeader2" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#512BD4"/>
       <stop offset="100%" stop-color="#0078D4"/>
     </linearGradient>
   </defs>
 
-  <rect width="1000" height="700" fill="#FFFFFF"/>
-  <rect width="1000" height="90" fill="url(#csHeader)"/>
+  <rect width="1000" height="800" fill="#FFFFFF"/>
+  <rect width="1000" height="90" fill="url(#csHeader2)"/>
   <text x="40" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CHEAT SHEET</text>
   <text x="40" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">Boxing &amp; Unboxing</text>
 
-  <rect x="40" y="120" width="920" height="70" rx="10" fill="#512BD4" opacity="0.08" stroke="#512BD4" stroke-width="2"/>
-  <text x="60" y="150" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
-  <text x="60" y="178" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#1B1B1F">Boxing allocates through Episode 8's exact allocator - its real cost depends entirely on whether the box escapes.</text>
+  <rect x="40" y="115" width="920" height="65" rx="10" fill="#512BD4" opacity="0.07" stroke="#512BD4" stroke-width="2"/>
+  <text x="60" y="142" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="60" y="167" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Boxing allocates through Episode 8's exact allocator — its real cost depends on whether the box escapes.</text>
 
-  <text x="40" y="235" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" letter-spacing="1">REMEMBER THIS</text>
-
-  <g font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#1B1B1F">
-    <circle cx="52" cy="270" r="5" fill="#0078D4"/>
-    <text x="70" y="275">ArrayList/Hashtable box every value; List&lt;T&gt;/Dictionary&lt;K,V&gt; never do</text>
-    <circle cx="52" cy="305" r="5" fill="#0078D4"/>
-    <text x="70" y="310">Unboxing checks the EXACT type - (long)boxedInt throws, it never widens</text>
-    <circle cx="52" cy="340" r="5" fill="#0078D4"/>
-    <text x="70" y="345">A struct boxes once per interface assignment, not once per call after</text>
-    <circle cx="52" cy="375" r="5" fill="#0078D4"/>
-    <text x="70" y="380">Generic constraints use "constrained." calls - no box, ever, for that T</text>
-    <circle cx="52" cy="410" r="5" fill="#0078D4"/>
-    <text x="70" y="415">Measured: 6x slower / 24 B per box - unless escape analysis proves it's 0</text>
+  <text x="40" y="222" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">REMEMBER THIS</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">
+    <circle cx="52" cy="252" r="4.5" fill="#0078D4"/>
+    <text x="68" y="257">ArrayList/Hashtable box every value; List&lt;T&gt;/Dictionary&lt;K,V&gt; never do</text>
+    <circle cx="52" cy="282" r="4.5" fill="#0078D4"/>
+    <text x="68" y="287">Unboxing checks the EXACT type — (long)boxedInt throws, it never widens</text>
+    <circle cx="52" cy="312" r="4.5" fill="#0078D4"/>
+    <text x="68" y="317">A struct boxes once per interface assignment, not once per call after</text>
+    <circle cx="52" cy="342" r="4.5" fill="#0078D4"/>
+    <text x="68" y="347">Generic constraints use "constrained." calls — no box, ever, for that T</text>
   </g>
 
-  <rect x="40" y="460" width="920" height="150" rx="10" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
-  <text x="60" y="495" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
-  <text x="60" y="530" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">"What happens when you box a Nullable&lt;int&gt;?"</text>
-  <text x="60" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#1B1B1F">HasValue false -&gt; null, no allocation. HasValue true -&gt; a plain box of the underlying int.</text>
+  <!-- Real, measured performance bars — matches Performance Notes exactly -->
+  <text x="40" y="395" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, not estimates</text>
 
-  <text x="40" y="670" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="13">
+    <text x="40" y="428" fill="#1B1B1F">Direct / unboxed use</text>
+    <rect x="330" y="415" width="90" height="18" rx="4" fill="#107C10"/>
+    <text x="430" y="428" fill="#6E6E76">1.00×  (baseline)</text>
+
+    <text x="40" y="460" fill="#1B1B1F">Box + unbox round trip</text>
+    <rect x="330" y="447" width="534" height="18" rx="4" fill="#D83B01"/>
+    <text x="874" y="460" fill="#6E6E76">5.94×  24 B/box</text>
+
+    <text x="40" y="492" fill="#1B1B1F">ArrayList vs List&lt;int&gt; (boxed)</text>
+    <rect x="330" y="479" width="394" height="18" rx="4" fill="#DC7A0C"/>
+    <text x="734" y="492" fill="#6E6E76">4.38×  8× the memory</text>
+
+    <text x="40" y="524" fill="#1B1B1F">Boxed, but proven non-escaping</text>
+    <rect x="330" y="511" width="90" height="18" rx="4" fill="#107C10"/>
+    <text x="430" y="524" fill="#6E6E76">0.98×  0 B (escape analysis)</text>
+  </g>
+  <text x="40" y="555" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Bar length = relative mean time vs. the unboxed baseline. Full tables in Performance Notes.</text>
+
+  <rect x="40" y="590" width="920" height="140" rx="10" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="60" y="622" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="60" y="655" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#1B1B1F">"What happens when you box a Nullable&lt;int&gt;?"</text>
+  <text x="60" y="688" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">HasValue false → null, no allocation. HasValue true → a plain box of the underlying int.</text>
+
+  <text x="40" y="770" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
 </svg>

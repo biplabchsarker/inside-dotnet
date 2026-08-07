@@ -41,6 +41,7 @@ Junior & mid-level developers · Senior engineers · Software architects · Tech
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Tone, code conventions, naming, terminology |
 | [WRITING_GUIDE.md](WRITING_GUIDE.md) | Chapter template + definition of done |
 | [IMAGE_GUIDE.md](IMAGE_GUIDE.md) | Diagram/image rules and folder conventions |
+| [ILLUSTRATION_BRIEFS.md](ILLUSTRATION_BRIEFS.md) | External-sourcing spec for the five signature illustrations, per chapter |
 | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Colors, typography, spacing, diagram rules |
 | [VISUAL_LANGUAGE.md](VISUAL_LANGUAGE.md) | Reusable component icon library |
 | [BRAND_GUIDE.md](BRAND_GUIDE.md) | Logo, cover, and banner usage |

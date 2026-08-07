@@ -1,44 +1,74 @@
-<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
-  <!-- DEEP-DIVE ILLUSTRATION — chapters/008-boxing-unboxing. Built from assets/templates/memory-layout.svg: a boxed int's exact byte layout, plus the escape-analysis fork that decides whether the allocation is real. -->
-  <rect width="1000" height="480" fill="#FFFFFF"/>
-  <text x="60" y="45" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">A boxed int's exact layout, and the fork that decides if it costs anything</text>
+<svg viewBox="0 0 1200 640" xmlns="http://www.w3.org/2000/svg">
+  <!-- DEEP-DIVE ILLUSTRATION v2 — chapters/008-boxing-unboxing.
+       Light isometric style. Two memory-state panels (before/after boxing) plus
+       the exact, measured byte layout of the box — keeps the real 24-byte
+       measurement from Performance Notes, just presented more cleanly. -->
+  <defs>
+    <filter id="ddShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="640" fill="#FFFFFF"/>
+  <text x="60" y="50" font-family="Segoe UI, Inter, sans-serif" font-size="19" font-weight="700" fill="#1B1B1F">Memory before and after boxing — then the box's exact layout</text>
 
-  <g font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">
-    <rect x="60" y="80" width="220" height="60" fill="#512BD4" opacity="0.15" stroke="#512BD4" stroke-width="1.5"/>
-    <text x="170" y="108" text-anchor="middle">Method Table Ptr</text>
-    <text x="170" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — says "this is System.Int32"</text>
+  <!-- Panel 1: Before boxing -->
+  <text x="60" y="95" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#6E6E76" letter-spacing="2">BEFORE BOXING</text>
+  <rect x="60" y="115" width="230" height="150" rx="10" fill="#EFF6FF" stroke="#60A5FA" stroke-width="1.5"/>
+  <text x="80" y="140" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0B3A66">STACK</text>
+  <rect x="80" y="155" width="190" height="40" rx="6" fill="#FFFFFF" stroke="#2D75C4" stroke-width="1.5" filter="url(#ddShadow)"/>
+  <text x="175" y="180" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F" text-anchor="middle">number = 42</text>
 
-    <rect x="280" y="80" width="220" height="60" fill="#0078D4" opacity="0.15" stroke="#0078D4" stroke-width="1.5"/>
-    <text x="390" y="108" text-anchor="middle">Sync Block Index</text>
-    <text x="390" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — unused unless locked/hashed</text>
+  <rect x="310" y="115" width="230" height="150" rx="10" fill="#FAFAFA" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="330" y="140" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#9CA3AF">HEAP</text>
+  <text x="425" y="200" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">(nothing yet)</text>
 
-    <rect x="500" y="80" width="220" height="60" fill="#68217A" opacity="0.15" stroke="#68217A" stroke-width="1.5"/>
-    <text x="610" y="108" text-anchor="middle">int value (4 bytes)</text>
-    <text x="610" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">padded to 8-byte alignment</text>
+  <!-- Panel 2: After boxing -->
+  <text x="620" y="95" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#6E6E76" letter-spacing="2">AFTER BOXING</text>
+  <rect x="620" y="115" width="230" height="150" rx="10" fill="#EFF6FF" stroke="#60A5FA" stroke-width="1.5"/>
+  <text x="640" y="140" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0B3A66">STACK</text>
+  <rect x="640" y="155" width="190" height="40" rx="6" fill="#FFFFFF" stroke="#2D75C4" stroke-width="1.5" filter="url(#ddShadow)"/>
+  <text x="735" y="180" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F" text-anchor="middle">boxed = ref ●</text>
 
-    <rect x="720" y="80" width="140" height="60" fill="#D8D8DE" opacity="0.5" stroke="#6E6E76" stroke-width="1.5" stroke-dasharray="4 3"/>
-    <text x="790" y="108" text-anchor="middle" font-size="12">= 24 bytes</text>
-    <text x="790" y="126" text-anchor="middle" font-size="11" fill="#6E6E76">measured, this chapter</text>
+  <rect x="870" y="115" width="270" height="150" rx="10" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="890" y="140" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#2E1065">HEAP</text>
+  <rect x="890" y="152" width="230" height="42" rx="6" fill="#FFFFFF" stroke="#512BD4" stroke-width="1.5" filter="url(#ddShadow)"/>
+  <text x="1005" y="177" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F" text-anchor="middle">header | value = 42</text>
+  <path d="M 830,175 C 850,175 855,175 875,175" stroke="#512BD4" stroke-width="2" fill="none" marker-end="url(#ddArrow)"/>
+  <circle cx="826" cy="175" r="4" fill="#512BD4"/>
+
+  <defs>
+    <marker id="ddArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#512BD4"/>
+    </marker>
+  </defs>
+
+  <text x="60" y="315" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">'boxed' holds a reference — a real, separate heap object exists only after boxing runs.</text>
+
+  <!-- Exact byte layout, measured -->
+  <line x1="60" y1="355" x2="1140" y2="355" stroke="#E5E7EB" stroke-width="1.5"/>
+  <text x="60" y="400" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#6E6E76" letter-spacing="2">THE BOX'S EXACT LAYOUT — MEASURED, NOT ESTIMATED</text>
+
+  <g filter="url(#ddShadow)" font-family="Cascadia Code, Fira Code, monospace" font-size="13">
+    <rect x="60" y="420" width="260" height="70" fill="#F5F3FF" stroke="#512BD4" stroke-width="1.5"/>
+    <text x="190" y="450" text-anchor="middle" fill="#1B1B1F">Method Table Ptr</text>
+    <text x="190" y="470" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — "this is Int32"</text>
+
+    <rect x="320" y="420" width="260" height="70" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+    <text x="450" y="450" text-anchor="middle" fill="#1B1B1F">Sync Block Index</text>
+    <text x="450" y="470" text-anchor="middle" font-size="11" fill="#6E6E76">8 bytes — unused unless locked</text>
+
+    <rect x="580" y="420" width="260" height="70" fill="#FAF5FF" stroke="#8B5CF6" stroke-width="1.5"/>
+    <text x="710" y="450" text-anchor="middle" fill="#1B1B1F">int value (4 bytes)</text>
+    <text x="710" y="470" text-anchor="middle" font-size="11" fill="#6E6E76">padded to 8-byte alignment</text>
+
+    <rect x="840" y="420" width="180" height="70" fill="#FFFFFF" stroke="#6E6E76" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="930" y="450" text-anchor="middle" font-weight="700" fill="#1B1B1F">= 24 bytes</text>
+    <text x="930" y="470" text-anchor="middle" font-size="11" fill="#6E6E76">measured, Ch. 8 benchmark</text>
   </g>
 
-  <text x="60" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Same header shape as any heap object (Episode 8) — the "constructor" here is a single memcpy of the value's bits, not user code.</text>
-
-  <!-- Escape analysis fork -->
-  <text x="60" y="225" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F">Does this exact box escape the method that creates it?</text>
-
-  <rect x="60" y="250" width="420" height="150" rx="10" fill="#107C10" opacity="0.08" stroke="#107C10" stroke-width="2"/>
-  <text x="80" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#107C10">NO — proven local to this method</text>
-  <text x="80" y="308" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">Used only for same-method interface</text>
-  <text x="80" y="328" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">dispatch; never stored, returned, or</text>
-  <text x="80" y="348" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">placed in a collection.</text>
-  <text x="80" y="380" font-family="Cascadia Code, Fira Code, monospace" font-size="13" font-weight="700" fill="#107C10">Measured: 0 B allocated</text>
-
-  <rect x="520" y="250" width="420" height="150" rx="10" fill="#D83B01" opacity="0.08" stroke="#D83B01" stroke-width="2"/>
-  <text x="540" y="280" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#D83B01">YES — stored, returned, or collected</text>
-  <text x="540" y="308" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">ArrayList.Add(x), a field assignment,</text>
-  <text x="540" y="328" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">or returning the box to a caller — the</text>
-  <text x="540" y="348" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#1B1B1F">JIT can't bound its lifetime.</text>
-  <text x="540" y="380" font-family="Cascadia Code, Fira Code, monospace" font-size="13" font-weight="700" fill="#D83B01">Measured: 24 B/box, real GC pressure</text>
-
-  <text x="60" y="440" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Header terms recap Episode 3 — The CLR / Episode 8 — Object Allocation. Sizes above are illustrative except where marked "measured" — see Performance Notes for the BenchmarkDotNet runs.</text>
+  <text x="60" y="540" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Same header shape as any heap object (Episode 8) — the "constructor" here is one memcpy, not user code.</text>
+  <text x="60" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF">Header terms recap Episode 3 — The CLR / Episode 8 — Object Allocation.</text>
 </svg>

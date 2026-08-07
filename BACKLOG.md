@@ -2,13 +2,18 @@
 
 Deferred items from review feedback — things worth doing, deliberately not done yet, so they don't get lost. Check this before starting a new phase of work; move an item to [CHANGELOG.md](CHANGELOG.md) when it ships.
 
-## Illustration quality ceiling (2026-08-07)
+## Illustration quality ceiling (2026-08-07, updated 2026-08-08)
 
-Two rounds of review feedback have asked for progressively more "cinematic / iconic / memorable" illustrations. The current hand-coded SVG toolset (gradients, glow filters, blueprint grids, consistent iconography — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)) has been pushed about as far as it goes; further requests in this direction hit diminishing returns with the same technique.
+Two rounds of review feedback asked for progressively more "cinematic / iconic / memorable" illustrations. The original hand-coded SVG toolset (dark blueprint-grid gradients, glow filters — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)) hit diminishing returns within that specific technique.
 
-**What would actually move the needle:** a commissioned illustrator, or an AI image-generation tool integrated into the workflow — neither is available in this environment today.
+**2026-08-08 update:** prototyped a second SVG technique for Chapter 008 — light background, isometric-projection cubes (layered flat polygons with per-face gradient shading to fake 3D depth), blur-based soft shadows, generous whitespace, minimal text. This is a genuine step up in polish (see `chapters/008-boxing-unboxing/diagrams/svg/008-hero.svg` and siblings) and directly answers a review request for a "Microsoft Learn cover, not a poster full of text." It is still hand-coded flat/isometric SVG, not true 3D rendering — no raytraced shadows, no painterly shading. That ceiling is unchanged from before; only the *technique within the ceiling* improved.
 
-**Decision needed from the project owner, not to be re-attempted with more SVG iteration:** either (a) accept the current hand-coded SVG ceiling as "good enough — engineering blueprint / vector infographic quality" and stop asking for more cinematic treatment, or (b) source/commission real illustration work for the four signature images (Hero, Concept, Deep-Dive, Cheat Sheet) per chapter, at which point this project's SVG originals become the *layout spec* a real illustrator or image-gen tool works from, not the final artifact.
+**Decided, 2026-08-08:**
+1. **Style verdict: "close, needs iteration."** The isometric-cube prototype is a real improvement but doesn't clear the bar on its own — going forward, the five signature illustrations are **sourced externally** (commissioned illustrator, Canva, Figma, or an AI image-generation tool) rather than iterated further as hand-coded SVG.
+2. **Image count: expand to 5** — Hero Cover, Concept Overview, Runtime/Internal View, Memory/Execution Diagram, Performance & Quick Reference (replaces the 4-illustration structure; Cheat Sheet's role — one-line rule, key bullets, interview question — merges into Performance & Quick Reference rather than disappearing). `WRITING_GUIDE.md`, `IMAGE_GUIDE.md` updated for all future chapters.
+3. **Retrofit timing: not yet.** Chapters 000-007 keep their existing (dark-blueprint, 4-illustration) SVGs as interim placeholders. Chapter 008 keeps its light-isometric SVG prototype as an interim placeholder too, pending its own externally-sourced replacement. No chapter's actual image files are being redone right now — only the standard going forward.
+
+**Next step:** [`ILLUSTRATION_BRIEFS.md`](ILLUSTRATION_BRIEFS.md) — the external-sourcing spec (style brief, 1600×900 PNG sizing, per-chapter content briefs for 000-008) — is ready to hand to whichever external source produces the actual images. Canva/Figma MCP connectors are available in this environment but need the project owner to authorize them via claude.ai connector settings first, if that's the chosen route.
 
 ## Future runtime-internals depth (for chapters not yet written)
 
