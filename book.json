@@ -78,7 +78,7 @@
     "007-object-allocation": "done",
     "008-boxing-unboxing": "done",
     "009-strings-interning": "drafted (text/code/diagrams complete, images pending external sourcing)",
-    "010-garbage-collection": "planned",
+    "010-garbage-collection": "drafted (text/code/diagrams complete, images pending external sourcing)",
     "011-gc-generations-loh": "planned",
     "012-idisposable-finalizers": "planned",
     "013-memory-leaks": "planned",

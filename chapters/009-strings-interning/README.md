@@ -19,4 +19,4 @@ Part II — Memory
 | [diagrams/svg/009-cover.svg](diagrams/svg/009-cover.svg) | Chapter cover source (edited from `assets/brand/chapter-cover-template.svg`) |
 
 **Previous:** [Episode 9 — Boxing & Unboxing](../008-boxing-unboxing/README.md)
-**Next:** [Episode 11 — Garbage Collection Fundamentals](../010-garbage-collection/README.md) *(not yet written)*
+**Next:** [Episode 11 — Garbage Collection Fundamentals](../010-garbage-collection/README.md)

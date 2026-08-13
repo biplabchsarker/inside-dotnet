@@ -1,0 +1,5 @@
+flowchart LR
+    A["MARK\nWalk every root,\nflag every reachable\nobject as live"] --> B["SWEEP\nReclaim the space\nheld by everything\nnot marked"]
+    B --> C["COMPACT\nSlide surviving objects\ntogether, closing gaps\nleft by the sweep"]
+    C --> D["Fix up every reference\nthat pointed at a\nmoved object"]
+    D --> E["Bump-pointer allocation\n(Episode 8) works again —\none contiguous free block"]

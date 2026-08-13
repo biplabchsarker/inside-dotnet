@@ -2,6 +2,19 @@
 
 All notable structural, foundation, and roadmap changes to this project. Individual chapter publication is tracked in `book.json`'s `status` map and the README status table, not duplicated here — this log is for changes to the *project itself*.
 
+## [1.4.0] — 2026-08-14 — Chapter 010 drafted
+
+### Added
+- Chapter 010 (Garbage Collection Fundamentals) written in full: `article.md`'s 13 sections, all companion files, 5 Mermaid diagrams, and two .NET 10 code projects — `Chapter10.Demo` and `Chapter10.Benchmarks` (real `BenchmarkDotNet` measurements: Workstation vs. Server GC throughput, per-generation forced-collection cost — a full collection measured 5.84× a Gen 0 collection — and pre-sized vs. growing `List<T>`, ~1.9× faster)
+- A genuinely surprising fact verified empirically for this chapter (not assumed from folklore): nulling a local variable and calling `GC.Collect()` from the *same still-executing method frame* does not reliably free the object — confirmed three separate ways (`WeakReference`, `GC.GetTotalMemory`, repeated-call JIT-tiering check) before being written up
+- Chapter 010's content brief added to `ILLUSTRATION_BRIEFS.md`, ready for external sourcing; status set to `"drafted"` per the convention introduced for Chapter 009
+
+### Fixed
+- Chapter 009's README "Next" link no longer says "(not yet written)" now that Chapter 010 exists
+
+### Known gap
+- Chapter 010 has no signature illustrations yet (same gap as Chapter 009 — no image-generation/commissioning tool available this session). Tracked in `BACKLOG.md`.
+
 ## [1.3.0] — 2026-08-13 — Chapter 009 drafted; new "drafted" status convention
 
 ### Added

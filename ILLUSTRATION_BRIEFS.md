@@ -144,6 +144,16 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Memory/Execution Diagram | Before/after GC collection, two heaps side by side: one where 200,000 discarded strings return to baseline, one where 200,000 interned strings stay resident — the intern-pool-as-permanent-root visual. |
 | Performance & Quick Reference | Measured bars: Ordinal vs. CurrentCulture comparison (25.66×), `Equals` same-reference vs. different-reference (51.74×), `Substring` whole-range vs. partial (23.62×, 152 B/call) — plus the intern-pool memory-retention numbers (57 KB baseline vs. 16.2 MB retained) and the Turkish-I interview question. |
 
+### 010 — Garbage Collection Fundamentals
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A tidy, glowing heap region with a small "sweep" motion clearing away a few dim, disconnected blocks while a bright, connected cluster (traced from a root icon) stays lit — the chapter's central idea (reachability, not counting) in one image. |
+| Concept Overview | Roots (stack/statics/registers/GC-handle icons) with glowing trace-lines reaching into a heap region — reachable objects lit, unreachable ones dimmed — labeled "Mark." |
+| Runtime/Internal View | Mark → Sweep → Compact as three side-by-side heap snapshots: marked (some blocks lit), swept (gaps where dim blocks were), compacted (blocks slid together, one clean free region at the end). |
+| Memory/Execution Diagram | A small object's promotion path — Gen 0 → Gen 1 → Gen 2 — as three nested regions, with a "survives a collection" arrow moving it one region deeper each time. |
+| Performance & Quick Reference | Measured bars: Gen 0 vs. Gen 1 vs. Gen 2 collection cost (5.84× for a full collection), Workstation vs. Server GC throughput (Server measured *slower* for a single-threaded workload — the counter-intuitive result worth calling out), and pre-sized vs. growing `List<T>` (~1.9× faster) — plus the "does `GC.Collect(0)` touch Gen 2?" interview question. |
+
 ---
 
 ## Notes for whoever produces these

@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant T1 as App thread 1
+    participant T2 as App thread 2
+    participant WGC as Workstation GC (one heap)
+    participant SGC as Server GC (one heap per core)
+
+    Note over T1,WGC: Workstation GC — single-threaded allocation is the common case
+    T1->>WGC: Allocates — one shared heap, one GC thread does the work
+
+    Note over T1,T2,SGC: Server GC — built for many threads allocating concurrently
+    T1->>SGC: Allocates on its own per-core heap
+    T2->>SGC: Allocates on ITS own per-core heap, in parallel
+    SGC->>SGC: Collections run in parallel across cores
+
+    Note over T1,SGC: One thread allocating alone gains nothing from extra heaps —<br/>measured directly in this chapter's benchmark

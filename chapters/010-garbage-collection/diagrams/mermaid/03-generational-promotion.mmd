@@ -1,0 +1,10 @@
+flowchart LR
+    A["Object allocated\nGen 0"] --> B{"Survives a\nGen 0 collection?"}
+    B -->|"no — most objects,\nby the generational\nhypothesis"| DEAD["Reclaimed —\nnever costs another\ncollection's attention"]
+    B -->|"yes"| C["Promoted to Gen 1"]
+    C --> D{"Survives a\nGen 1 collection?"}
+    D -->|"no"| DEAD2["Reclaimed"]
+    D -->|"yes"| E["Promoted to Gen 2"]
+    E --> F["Stays in Gen 2 —\nonly a full collection\never looks at it again"]
+
+    G["Full mechanics of segment\nbudgets, card tables, and write\nbarriers: Episode 12"] -.-> C

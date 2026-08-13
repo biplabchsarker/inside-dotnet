@@ -1,0 +1,11 @@
+flowchart TB
+    subgraph ROOTS["GC roots — the starting points"]
+        R1["Local variables\non every thread's stack"]
+        R2["Static fields"]
+        R3["CPU registers\nholding a reference"]
+        R4["GCHandles\n(pinned/normal/weak)"]
+    end
+
+    ROOTS --> TRACE["Trace every reference\nreachable from a root,\ntransitively"]
+    TRACE --> LIVE["Everything reached =\nLIVE — must survive"]
+    TRACE --> DEAD["Everything NOT reached =\nGARBAGE — safe to reclaim,\nregardless of whether it still\n'looks' referenced somewhere"]

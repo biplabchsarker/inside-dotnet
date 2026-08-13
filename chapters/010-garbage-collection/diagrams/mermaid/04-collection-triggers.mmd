@@ -1,0 +1,12 @@
+flowchart TB
+    A["An allocation request\narrives"] --> B{"Does Gen 0's current\nallocation budget\nhave room?"}
+    B -->|"yes"| C["Bump the pointer,\nreturn the object —\nno collection"]
+    B -->|"no — budget exceeded,\nthe common trigger"| D["Trigger a collection\nstarting at Gen 0"]
+
+    E["Code calls\nGC.Collect(n)"] --> F["Forces a collection of\ngeneration n and below,\non demand"]
+
+    G["The OS/host reports\nlow memory"] --> H["The GC may collect\nmore aggressively,\nincluding Gen 2/LOH,\nto relieve pressure"]
+
+    D --> I{"Do survivors get\npromoted past Gen 0?"}
+    F --> I
+    H --> I
