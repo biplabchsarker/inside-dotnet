@@ -1,0 +1,5 @@
+flowchart TB
+    A["s.Substring(start, length)"] --> B{"start == 0 AND\nlength == s.Length?"}
+    B -->|"yes — the whole string,\nrequested back"| C["return s itself —\nzero allocation,\nsame reference"]
+    B -->|"no — any other range"| D["Allocate a new string,\ncopy the requested\ncharacters into it"]
+    D --> E["Return a genuinely\nnew, independent object"]

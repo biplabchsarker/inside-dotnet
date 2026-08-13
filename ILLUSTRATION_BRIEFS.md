@@ -2,7 +2,7 @@
 
 This is the spec to hand to whoever produces Inside .NET's five signature illustrations per chapter — a commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [IMAGE_GUIDE.md](IMAGE_GUIDE.md) for how these fit into the overall image system, and [BACKLOG.md](BACKLOG.md) for why this moved from hand-coded SVG to external sourcing (2026-08-08).
 
-Chapters 000-008 currently show hand-coded SVG placeholders in these slots. They stay in place, unedited, until a v2 image from this brief replaces them.
+Chapters 000-008 currently show hand-coded SVG placeholders in these slots. They stay in place, unedited, until a v2 image from this brief replaces them. Chapter 009 onward has no interim SVG placeholder at all — its content brief below is ready to hand off, but the five PNGs themselves are not yet sourced (no image-generation/commissioning tool was available when the chapter's text was written); `article.md` references the standard filenames so they can be dropped in without further edits once produced.
 
 ## The style brief — applies to all five images, every chapter
 
@@ -133,6 +133,16 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Runtime/Internal View | The box's exact byte layout — Method Table Ptr (8B) + Sync Block Index (8B) + padded value (8B) = 24 bytes, measured. |
 | Memory/Execution Diagram | Stack/heap state before boxing (heap empty) vs. after boxing (stack holds a reference, heap holds the real object) — side by side. |
 | Performance & Quick Reference | Measured bars: direct/unboxed baseline, box+unbox round trip (5.94×, 24 B/box), `ArrayList` vs `List<int>` (4.38×, 8× memory), and the escape-analysis zero-allocation result (0.98×, 0 B) — plus the `Nullable<T>` boxing interview question. |
+
+### 009 — Strings & Interning
+
+| Image | Depict |
+|---|---|
+| Hero Cover | Two "Hello, World" strings — one glowing path from a single shared canonical instance (labeled *literal*), one drawn as two separate, disconnected instances despite identical text (labeled *runtime-built*) — the chapter's central contrast in one image. |
+| Concept Overview | Two rows: literals flowing into one shared **Intern Pool** icon; runtime-built strings (concatenation, `StringBuilder`, `Substring`) flowing past it into ordinary heap objects, with a dotted "only if you call `string.Intern`" arrow back to the pool. |
+| Runtime/Internal View | The `Equals`/`==` decision path as a labeled flowchart: `ReferenceEquals` check first, then length check, then ordinal byte comparison — versus a separate branch for culture-aware comparison routing through a "globalization engine" box. |
+| Memory/Execution Diagram | Before/after GC collection, two heaps side by side: one where 200,000 discarded strings return to baseline, one where 200,000 interned strings stay resident — the intern-pool-as-permanent-root visual. |
+| Performance & Quick Reference | Measured bars: Ordinal vs. CurrentCulture comparison (25.66×), `Equals` same-reference vs. different-reference (51.74×), `Substring` whole-range vs. partial (23.62×, 152 B/call) — plus the intern-pool memory-retention numbers (57 KB baseline vs. 16.2 MB retained) and the Turkish-I interview question. |
 
 ---
 

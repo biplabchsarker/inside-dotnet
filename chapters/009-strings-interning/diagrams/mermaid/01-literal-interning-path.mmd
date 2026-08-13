@@ -1,0 +1,7 @@
+flowchart LR
+    A["string s = \"inside-dotnet\";\n(a compile-time literal)"] --> B["Compiler emits\nldstr \"inside-dotnet\""]
+    B --> C{"Is this exact text\nalready in the\nintern pool?"}
+    C -->|"no — first time\nthis text is seen"| D["Add it to the pool,\nreturn that reference"]
+    C -->|"yes — another ldstr\nof the same text ran\nearlier, anywhere"| E["Return the EXISTING\npooled reference"]
+    D --> F["s points at the\npooled instance"]
+    E --> F

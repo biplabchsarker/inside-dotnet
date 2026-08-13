@@ -77,7 +77,7 @@
     "006-value-vs-reference-types": "done",
     "007-object-allocation": "done",
     "008-boxing-unboxing": "done",
-    "009-strings-interning": "planned",
+    "009-strings-interning": "drafted (text/code/diagrams complete, images pending external sourcing)",
     "010-garbage-collection": "planned",
     "011-gc-generations-loh": "planned",
     "012-idisposable-finalizers": "planned",

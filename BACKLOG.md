@@ -2,6 +2,12 @@
 
 Deferred items from review feedback — things worth doing, deliberately not done yet, so they don't get lost. Check this before starting a new phase of work; move an item to [CHANGELOG.md](CHANGELOG.md) when it ships.
 
+## Chapter 009's five illustrations not yet sourced (2026-08-13)
+
+Chapter 009 (Strings & Interning) was written in full — all 13 `article.md` sections, both `code/` projects (`Chapter09.Demo`, `Chapter09.Benchmarks`) built and run for real numbers, all 5 diagrams, and every companion file — but no image-generation/commissioning tool was available in the session that wrote it, so its five signature illustrations don't exist yet, not even as an interim SVG placeholder (unlike Chapters 000-008, which all have *something* in these slots). Its content brief is ready in [`ILLUSTRATION_BRIEFS.md`](ILLUSTRATION_BRIEFS.md#009--strings--interning) for whoever sources them.
+
+**Status convention introduced by this gap:** `book.json`'s `status` map now uses `"drafted (text/code/diagrams complete, images pending external sourcing)"` for a chapter in this exact state, distinct from `"done"` (everything in [`WRITING_GUIDE.md`](WRITING_GUIDE.md)'s Definition of Done, images included) and `"planned"` (not started). Update Chapter 009's status to `"done"` once its five PNGs land in `images/`/`diagrams/png/` per the brief — don't leave it at `"drafted"` indefinitely, and don't reuse `"drafted"` for a chapter that's missing anything besides images.
+
 ## Illustration quality ceiling (2026-08-07, updated 2026-08-08)
 
 Two rounds of review feedback asked for progressively more "cinematic / iconic / memorable" illustrations. The original hand-coded SVG toolset (dark blueprint-grid gradients, glow filters — see [IMAGE_GUIDE.md](IMAGE_GUIDE.md)) hit diminishing returns within that specific technique.

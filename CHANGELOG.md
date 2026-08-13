@@ -2,6 +2,16 @@
 
 All notable structural, foundation, and roadmap changes to this project. Individual chapter publication is tracked in `book.json`'s `status` map and the README status table, not duplicated here — this log is for changes to the *project itself*.
 
+## [1.3.0] — 2026-08-13 — Chapter 009 drafted; new "drafted" status convention
+
+### Added
+- Chapter 009 (Strings & Interning) written in full: `article.md`'s 13 sections, all companion files, 5 Mermaid diagrams, and two .NET 10 code projects — `Chapter09.Demo` and `Chapter09.Benchmarks` (real `BenchmarkDotNet`/`GC.GetTotalMemory` measurements: ordinal-vs-culture comparison cost, the `Equals` reference-equality fast path, `Substring`'s self-reference fast path, and a measured ~16 MB intern-pool memory-retention proof)
+- Chapter 009's content brief added to `ILLUSTRATION_BRIEFS.md`, ready for external sourcing
+- New `book.json` status value, `"drafted (...)"`, for a chapter whose text/code/diagrams are complete but whose five signature illustrations aren't sourced yet — distinct from `"done"` and `"planned"`; see `BACKLOG.md` for the exact convention and when to promote it to `"done"`
+
+### Known gap
+- Chapter 009 has no signature illustrations at all yet (not even an interim SVG placeholder, unlike Chapters 000-008) — no image-generation/commissioning tool was available when it was written. Tracked in `BACKLOG.md`.
+
 ## [1.2.0] — 2026-08-07 — Cheat Sheets, cross-linking, real benchmarks, backlog
 
 ### Added

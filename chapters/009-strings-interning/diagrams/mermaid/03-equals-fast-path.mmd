@@ -1,0 +1,9 @@
+flowchart TB
+    A["a.Equals(b)\n(or a == b)"] --> B{"ReferenceEquals(a, b)?"}
+    B -->|"yes"| C["return true —\nno characters compared at all"]
+    B -->|"no"| D{"a.Length == b.Length?"}
+    D -->|"no"| E["return false immediately"]
+    D -->|"yes"| F["Ordinal byte-by-byte\ncomparison of the buffers"]
+    F --> G["return the result"]
+
+    H["StringComparison.CurrentCulture\n/ InvariantCulture requested?"] -.->|"instead of the\nordinal path above"| I["Routes through the\nglobalization/ICU comparer —\nlinguistic rules, not raw bytes"]

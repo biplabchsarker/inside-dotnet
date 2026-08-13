@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant App as Application code
+    participant Heap as GC heap
+    participant Pool as Intern pool (rooted for process lifetime)
+
+    App->>Heap: Build 200,000 unique strings, discard them
+    Heap->>Heap: GC.Collect() reclaims all of them
+    Note over Heap: Heap returns close to baseline — ordinary garbage
+
+    App->>Pool: string.Intern(uniqueString) x 200,000
+    Pool->>Pool: Every one of them is added and kept
+    App->>Heap: GC.Collect() runs again
+    Note over Heap,Pool: Interned strings are NOT reclaimed —<br/>the pool itself is a permanent GC root

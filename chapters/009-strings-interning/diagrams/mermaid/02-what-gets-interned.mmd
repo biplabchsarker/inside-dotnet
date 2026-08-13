@@ -1,0 +1,16 @@
+flowchart TB
+    subgraph AUTO["Interned automatically"]
+        L1["A string literal"]
+        L2["A const expression the\ncompiler folds to one literal"]
+    end
+
+    subgraph MANUAL["Interned only if you ask"]
+        M1["Runtime string.Concat /\n'+' on variables"]
+        M2["StringBuilder.ToString()"]
+        M3["string.Format / interpolation\nwith a runtime value"]
+        M4["Substring (partial range),\nToString(), Regex results,\nfile/network/console input"]
+    end
+
+    AUTO --> POOL["The intern pool"]
+    MANUAL -.->|"string.Intern(s) —\nexplicit, on demand"| POOL
+    MANUAL -->|"left alone"| HEAP["Ordinary heap string —\nGC-collectible normally"]

@@ -6,14 +6,14 @@
 
 **Repo:** https://github.com/biplabchsarker/inside-dotnet
 **Version:** v0.3 — Memory (Phase 2 in progress)
-**Chapters completed:** 8 / 59 (000–007)
+**Chapters completed:** 9 / 59 (000–008) · 1 drafted, images pending (009)
 **License:** Dual — [MIT](LICENSE-CODE) for code, [CC BY 4.0](LICENSE-CONTENT) for written content ([details](LICENSE.md))
 
 | Phase | Status |
 |---|---|
 | 0 — Project Foundation | ✅ Done |
 | 1 — Runtime Fundamentals | ✅ Done |
-| 2 — Memory | 🟡 In progress (3/9) |
+| 2 — Memory | 🟡 In progress (4/9 done, 1 drafted) |
 | 3 — C# | ⬜ Not started |
 | 4 — Clean Code | ⬜ Not started |
 | 5 — Design Patterns | ⬜ Not started |
@@ -127,7 +127,7 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 |---|---|---|
 | 0 — Project Foundation | — | ✅ Done (v1.0) |
 | 1 — Runtime Fundamentals | [001](chapters/001-execution-flow)–[004](chapters/004-assemblies-metadata) | ✅ Done |
-| 2 — Memory | [005](chapters/005-stack-vs-heap)–[008](chapters/008-boxing-unboxing) done, 009–013 planned | 🚧 In progress |
+| 2 — Memory | [005](chapters/005-stack-vs-heap)–[008](chapters/008-boxing-unboxing) done · [009](chapters/009-strings-interning) drafted (images pending), 010–013 planned | 🚧 In progress |
 | 3 — C# | 014–018 | ⏳ Planned |
 | 4 — Clean Code | 019–022 | ⏳ Planned |
 | 5 — Design Patterns | 023–026 | ⏳ Planned |
@@ -139,6 +139,6 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 | 11 — Production | 052–056 | ⏳ Planned |
 | Capstone — Becoming an Architect | 057–058 | ⏳ Planned |
 
-**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types · [007](chapters/007-object-allocation) Object Allocation · [008](chapters/008-boxing-unboxing) Boxing & Unboxing
+**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types · [007](chapters/007-object-allocation) Object Allocation · [008](chapters/008-boxing-unboxing) Boxing & Unboxing · [009](chapters/009-strings-interning) Strings & Interning *(drafted — text, code, and diagrams complete; five signature illustrations pending external sourcing)*
 
 More chapters land incrementally in continuous batches — each one fully written, diagrammed, coded, and verified before moving to the next. See [CONTRIBUTING.md](CONTRIBUTING.md) for the working agreement.
