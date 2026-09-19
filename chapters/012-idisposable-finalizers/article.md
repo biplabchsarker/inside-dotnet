@@ -5,11 +5,15 @@
 
 ---
 
+### Chapter cover
+
 ![Chapter 13 cover — IDisposable & Finalizers](diagrams/svg/012-cover.svg)
 
 ![Hero: IDisposable & Finalizers](images/012-hero.png)
 
-### Learning Objectives
+---
+
+### Learning objectives
 
 By the end of this chapter, you will be able to:
 - Distinguish between Managed and Unmanaged resources and understand why the GC cannot clean up unmanaged resources alone.
@@ -17,7 +21,7 @@ By the end of this chapter, you will be able to:
 - Understand how Finalizers (`~ClassName()`) work under the hood and why they delay object collection.
 - Explain the difference between `IDisposable`, `IAsyncDisposable`, and `SafeHandle`.
 
-### Real-world Analogy
+### Real-world analogy
 
 *Imagine a high-throughput microservice handling thousands of requests per second, talking to a legacy database. If you rely on the Garbage Collector to close those database connections, your application will suddenly stall and crash due to connection pool exhaustion long before the GC feels enough memory pressure to run.*
 
@@ -27,7 +31,7 @@ The Garbage Collector is like a hotel's automated housekeeping service. It routi
 
 A **Finalizer** is checking out without telling anyone, leaving the safe locked, and hoping the hotel manager eventually notices it during a quarterly audit and brings in a locksmith to drill it open. It works, but it's slow, expensive, and ruins the hotel's efficiency.
 
-### Problem Statement
+### Problem statement
 
 The Garbage Collector tracks and reclaims *memory*. But memory is rarely the bottleneck in modern applications. File handles, database connections, unmanaged memory pointers (COM objects, GDI handles), and network sockets are operating system-level resources. 
 
@@ -35,11 +39,11 @@ If the GC reclaims a managed object that holds a file handle, but never explicit
 
 Because the GC runs non-deterministically (only when memory pressure demands it), you cannot predict *when* it will clean up an object. We need a deterministic way to release non-memory resources the exact millisecond we are done with them.
 
-### Visual Explanation
+### Visual explanation
 
 ![Concept: Explicit Dispose vs Finalization Queue](diagrams/png/012-concept.png)
 
-### Under the Hood
+### Under the hood
 
 The mechanics of `IDisposable` are actually entirely separate from the GC. `IDisposable` is just an interface with a single method: `void Dispose()`. It is a developer-to-developer contract. The CLR does not care if you implement it, and the GC does not call it.
 
@@ -67,7 +71,7 @@ This is why finalizers are dangerous: they delay memory reclamation by at least 
 ![Deep-dive: Finalization Queue and F-Reachable Queue internals](diagrams/png/012-internal.png)
 ![Memory: using block vs using declaration execution](diagrams/png/012-memory.png)
 
-### Code Example
+### Code example
 
 #### 1. Example: The using declaration
 
@@ -175,7 +179,7 @@ public class ModernResourceWrapper : IDisposable
 }
 ```
 
-### Performance Notes
+### Performance notes
 
 The overhead of implementing a finalizer is massive. When an object has a finalizer, it goes to the Finalization Queue, survives Gen 0, gets promoted to Gen 1, and requires the dedicated Finalizer Thread to process it.
 
@@ -191,7 +195,7 @@ Never implement a finalizer "just to be safe." If you must wrap an unmanaged res
 
 ![Performance & quick reference: GC cost of finalizers vs non-finalizers](diagrams/png/012-performance.png)
 
-### Common Mistakes / Anti-Patterns
+### Common mistakes / anti-patterns
 
 1. **Adding a Finalizer to a Class without Unmanaged Resources**
    A finalizer guarantees that your object will survive Gen 0, get promoted to Gen 1 (or Gen 2), and stall the Finalizer Thread. Only implement a finalizer if your class holds a raw `IntPtr` to unmanaged memory.
@@ -202,7 +206,7 @@ Never implement a finalizer "just to be safe." If you must wrap an unmanaged res
 4. **Accessing other Managed Objects in a Finalizer**
    When the finalizer runs, there is no guarantee about the order in which objects are finalized. Any managed objects your class references might have already been finalized. A finalizer should only clean up its own unmanaged fields (`IntPtr`).
 
-### Architect's Perspective
+### Architect's perspective
 
 **Developer Perspective**
 *Am I releasing this resource as soon as I'm done with it?*
@@ -216,64 +220,52 @@ Adding a finalizer to a class "just to be safe" is a massive anti-pattern. It fo
 *How does delayed finalization impact the scalability of our high-throughput services?*
 The Finalizer Thread is a single, global background thread. If thousands of objects are dumped into the F-Reachable queue, or if a single finalizer blocks (e.g., trying to acquire a lock or making a network call), the Finalizer Thread stalls. The F-Reachable queue backs up, memory cannot be reclaimed, and your application will eventually throw an `OutOfMemoryException`. Finalizers must be fast, thread-safe, and never block.
 
-### Interview Questions
+### Interview questions
 
 **Q1: What is the difference between `Dispose()` and a Finalizer?**
 A: `Dispose()` is called deterministically by the developer (usually via a `using` statement) to release unmanaged resources immediately. A Finalizer is called non-deterministically by the Garbage Collector's finalizer thread before the object's memory is reclaimed, acting as a fallback mechanism.
 
 ### Quiz
 
-1. **Why does an object with a finalizer survive Gen 0 collection?**
+1. Why does an object with a finalizer survive Gen 0 collection?
+2. What does `GC.SuppressFinalize(this)` do?
+3. Can you predict exactly when a finalizer will run?
+4. Why is it dangerous to access other managed objects inside a finalizer?
+5. What happens if a finalizer throws an unhandled exception?
 
 <details>
-<summary>Answer</summary>
+<summary>Answers</summary>
 
-Because when the GC determines the object is unreachable, it checks the Finalization Queue. Finding the object there, the GC moves it to the F-Reachable queue. The F-Reachable queue acts as a strong GC Root, "resurrecting" the object until the Finalizer Thread can process it. Surviving the collection automatically promotes it to Gen 1.
+1. Because when the GC determines the object is unreachable, it checks the Finalization Queue. Finding the object there, the GC moves it to the F-Reachable queue. The F-Reachable queue acts as a strong GC Root, "resurrecting" the object until the Finalizer Thread can process it. Surviving the collection automatically promotes it to Gen 1.
+2. It sets a bit in the object's header telling the CLR to remove it from the Finalization Queue. This ensures that when the object becomes unreachable, the GC reclaims it immediately without promoting it to the F-Reachable queue.
+3. No. Finalizers run non-deterministically. They only run after a GC collection occurs (which is driven by memory pressure, not time), and they run on a background thread at an unspecified time.
+4. Because there is no guaranteed order for finalization. If your object holds a reference to a managed `FileStream`, that `FileStream` might have already been finalized and closed by the time your finalizer runs.
+5. The Finalizer Thread crashes, which immediately terminates the entire application process (since .NET Framework 2.0).
+
 </details>
 
-2. **What does `GC.SuppressFinalize(this)` do?**
+### Summary & next chapter
 
-<details>
-<summary>Answer</summary>
+![Cheat sheet: IDisposable & Finalizers](diagrams/png/012-performance.png)
 
-It sets a bit in the object's header telling the CLR to remove it from the Finalization Queue. This ensures that when the object becomes unreachable, the GC reclaims it immediately without promoting it to the F-Reachable queue.
-</details>
-
-3. **Can you predict exactly when a finalizer will run?**
-
-<details>
-<summary>Answer</summary>
-
-No. Finalizers run non-deterministically. They only run after a GC collection occurs (which is driven by memory pressure, not time), and they run on a background thread at an unspecified time.
-</details>
-
-4. **Why is it dangerous to access other managed objects inside a finalizer?**
-
-<details>
-<summary>Answer</summary>
-
-Because there is no guaranteed order for finalization. If your object holds a reference to a managed `FileStream`, that `FileStream` might have already been finalized and closed by the time your finalizer runs.
-</details>
-
-5. **What happens if a finalizer throws an unhandled exception?**
-
-<details>
-<summary>Answer</summary>
-
-The Finalizer Thread crashes, which immediately terminates the entire application process (since .NET Framework 2.0).
-</details>
-
-### Summary & Next Chapter
+**Key takeaways:**
 
 - The GC manages memory, not resources.
 - `IDisposable` provides deterministic cleanup.
 - Finalizers are a safety net but cause objects to survive into older generations.
 
-```text
-Previous episode                 ▶ This episode ◀                 Next episode
-011 - GC Generations & LOH       012 - IDisposable & Finalizers   013 - Memory Leaks
+**What's next:** Episode 14 — Memory Leaks is next (not yet drafted) — it continues the resource-lifetime theme this chapter started, moving from *an object that isn't cleaned up deterministically* to *an object that's never reclaimed at all*.
+
+---
+
+**Where you are in the journey:**
+
+```
+    Episode 12 — GC Generations & the Large Object Heap
+              ↓
+  ▶ Episode 13 — IDisposable & Finalizers   ◀ you are here   (Part II — Memory)
+              ↓
+    Episode 14 — Memory Leaks
 ```
 
-**Related Chapters:**
-- [010 - Garbage Collection Fundamentals](../010-garbage-collection/article.md) (Basis for understanding the GC)
-- [013 - Memory Leaks](../013-memory-leaks/article.md) (What happens when you forget to Dispose)
+**Related:** [Episode 12 — GC Generations & the Large Object Heap](../011-gc-generations-loh/article.md) (the Gen 0 → Gen 1 promotion mechanics a finalizer's F-Reachable-queue resurrection hijacks) · [Episode 11 — Garbage Collection Fundamentals](../010-garbage-collection/article.md) (the roots and mark-sweep-compact basics this chapter's finalization lifecycle builds on)

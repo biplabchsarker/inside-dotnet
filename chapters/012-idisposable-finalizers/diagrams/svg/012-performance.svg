@@ -66,6 +66,6 @@
   <text x="104" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">Dispose() is deterministic and called explicitly by the developer to release unmanaged resources immediately.</text>
   <text x="104" y="724" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">A finalizer (~Class) is a non-deterministic safety net called by the GC on a background thread. It severely delays memory reclamation.</text>
 
-  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from Chapter12.Benchmarks — re-run it with `dotnet run -c Release`.</text>
+  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from code/Performance — re-run it with `dotnet run -c Release`.</text>
   <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
 </svg>
