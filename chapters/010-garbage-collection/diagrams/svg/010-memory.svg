@@ -1,0 +1,93 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- MEMORY/EXECUTION DIAGRAM — chapters/010-garbage-collection.
+       A single object's promotion path, Gen 0 -> Gen 1 -> Gen 2, drawn as three
+       nested regions (Russian-doll style) sharing one center. The object's cube
+       moves one ring outward each time it survives a collection; a dashed branch
+       shows the far more common case — not surviving, and being reclaimed. -->
+  <defs>
+    <filter id="softShadow3" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feOffset dy="6" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.16"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cubeShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="survivorArrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#107C10"/>
+    </marker>
+    <marker id="reclaimArrow" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <text x="80" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F">Promotion path — Gen 0 → Gen 1 → Gen 2</text>
+  <text x="80" y="100" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76">Every object starts at the center. Surviving a collection moves it one region deeper — never the other way.</text>
+
+  <!-- Nested generational regions, one shared center (800,465) -->
+  <g filter="url(#softShadow3)">
+    <rect x="250" y="140" width="1100" height="650" rx="30" fill="#FAFAFF" stroke="#DDD6FE" stroke-width="2"/>
+  </g>
+  <rect x="470" y="230" width="660" height="470" rx="26" fill="#F3F0FC" stroke="#C4B5FD" stroke-width="2"/>
+  <rect x="650" y="320" width="300" height="290" rx="22" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="2"/>
+
+  <text x="285" y="182" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#3B1E94" letter-spacing="1">GEN 2 — long-lived</text>
+  <text x="285" y="204" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#6E6E76">Only a full collection ever looks here</text>
+
+  <text x="500" y="272" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#512BD4" letter-spacing="1">GEN 1</text>
+  <text x="500" y="294" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#6E6E76">One promotion in from Gen 0</text>
+
+  <text x="675" y="358" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#512BD4" letter-spacing="1">GEN 0</text>
+  <text x="675" y="378" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">new allocations</text>
+
+  <!-- Survive arrows, moving the object outward one ring at a time -->
+  <path d="M 800,426 C 800,390 800,340 800,314" fill="none" stroke="#107C10" stroke-width="3" stroke-linecap="round" marker-end="url(#survivorArrow)"/>
+  <path d="M 800,236 C 800,222 800,222 800,222" fill="none" stroke="#107C10" stroke-width="3" stroke-linecap="round" marker-end="url(#survivorArrow)"/>
+
+  <rect x="856" y="345" width="270" height="46" rx="10" fill="#F0FDF4" stroke="#107C10" stroke-width="1.5"/>
+  <text x="991" y="364" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#107C10" text-anchor="middle">Survives a Gen 0 collection</text>
+  <text x="991" y="382" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#0F5D0F" text-anchor="middle">Promoted to Gen 1</text>
+
+  <rect x="856" y="200" width="270" height="46" rx="10" fill="#F0FDF4" stroke="#107C10" stroke-width="1.5"/>
+  <text x="991" y="219" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#107C10" text-anchor="middle">Survives a Gen 1 collection</text>
+  <text x="991" y="237" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#0F5D0F" text-anchor="middle">Promoted to Gen 2</text>
+
+  <!-- Object cube, Gen 0 (center) -->
+  <g filter="url(#cubeShadow)">
+    <polygon points="800,430 830,445 800,460 770,445" fill="#DDD6FE"/>
+    <polygon points="770,445 800,460 800,500 770,485" fill="#8B5CF6"/>
+    <polygon points="800,460 830,445 830,485 800,500" fill="#512BD4"/>
+  </g>
+  <text x="800" y="530" font-family="Cascadia Code, Fira Code, monospace" font-size="12" fill="#2E1065" text-anchor="middle">obj (byte[16])</text>
+
+  <!-- Object cube, Gen 1 ring -->
+  <g filter="url(#cubeShadow)">
+    <polygon points="800,240 830,255 800,270 770,255" fill="#DDD6FE"/>
+    <polygon points="770,255 800,270 800,310 770,295" fill="#8B5CF6"/>
+    <polygon points="800,270 830,255 830,295 800,310" fill="#512BD4"/>
+  </g>
+
+  <!-- Object cube, Gen 2 ring -->
+  <g filter="url(#cubeShadow)">
+    <polygon points="800,150 830,165 800,180 770,165" fill="#DDD6FE"/>
+    <polygon points="770,165 800,180 800,220 770,205" fill="#8B5CF6"/>
+    <polygon points="800,180 830,165 830,205 800,220" fill="#512BD4"/>
+  </g>
+
+  <!-- Reclaimed branch: the common case -->
+  <path d="M 772,480 C 650,560 520,610 430,660" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round" marker-end="url(#reclaimArrow)"/>
+  <g filter="url(#softShadow3)">
+    <circle cx="412" cy="672" r="16" fill="#FFF7ED" stroke="#D83B01" stroke-width="1.5"/>
+  </g>
+  <text x="412" y="678" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#D83B01" text-anchor="middle">×</text>
+  <text x="330" y="718" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#1B1B1F">Doesn't survive → Reclaimed</text>
+  <text x="330" y="738" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">Most objects, by the generational hypothesis —</text>
+  <text x="330" y="756" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#6E6E76">never costs another collection's attention again.</text>
+
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#9CA3AF" text-anchor="middle">Segment budgets, card tables, and write barriers behind this path: Episode 12 — GC Generations &amp; the LOH.</text>
+</svg>

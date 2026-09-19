@@ -1,0 +1,71 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">IDisposable &amp; Finalizers</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="130" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="158" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Adding a finalizer guarantees an object will survive Gen 0, get promoted to Gen 1, and stall the Finalizer Thread — avoid them unless strictly necessary.</text>
+
+  <text x="80" y="252" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0.8, 22-logical-processor machine</text>
+
+  <!-- Column separators -->
+  <line x1="800" y1="278" x2="800" y2="550" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- COLUMN A: ALLOCATION TIME -->
+  <text x="80" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">WALL-CLOCK TIME (100,000 ALLOCATIONS)</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="80" y="330" fill="#1B1B1F">Without Finalizer (Baseline)</text>
+    <rect x="80" y="338" width="51" height="20" rx="5" fill="#107C10"/>
+    <text x="141" y="353" fill="#6E6E76">177.9 µs · 1.00×</text>
+
+    <text x="80" y="392" fill="#1B1B1F">With Empty Finalizer (~Class)</text>
+    <rect x="80" y="400" width="600" height="20" rx="5" fill="#D83B01"/>
+    <text x="690" y="415" fill="#6E6E76" font-weight="700">13,060.6 µs · 73.53×</text>
+  </g>
+  <text x="80" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Just the existence of an empty finalizer makes the allocation/collection</text>
+  <text x="80" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">cycle 73× slower due to the overhead of the Finalization and F-Reachable queues.</text>
+
+  <!-- COLUMN B: GC PRESSURE -->
+  <text x="830" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">GC COLLECTIONS PER 1,000 OPERATIONS</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="830" y="330" fill="#1B1B1F">Without Finalizer</text>
+    <rect x="830" y="338" width="191" height="10" rx="2" fill="#107C10"/>
+    <text x="1030" y="347" fill="#6E6E76">Gen 0: 191</text>
+    
+    <rect x="830" y="350" width="2" height="10" rx="2" fill="#107C10"/>
+    <text x="840" y="359" fill="#6E6E76">Gen 1: 0</text>
+
+    <text x="830" y="392" fill="#1B1B1F">With Finalizer</text>
+    <rect x="830" y="400" width="187" height="10" rx="2" fill="#D83B01"/>
+    <text x="1027" y="409" fill="#6E6E76">Gen 0: 187</text>
+    
+    <rect x="830" y="412" width="171" height="10" rx="2" fill="#D83B01"/>
+    <text x="1011" y="421" fill="#6E6E76" font-weight="700">Gen 1: 171</text>
+  </g>
+  <text x="830" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Finalizable objects survive Gen 0. They are promoted to Gen 1,</text>
+  <text x="830" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">polluting the older generation heap and forcing expensive Gen 1 collections.</text>
+
+  <text x="80" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Bar length = relative cost within each comparison, not across columns. Full tables in Performance Notes.</text>
+
+  <!-- Interview question -->
+  <rect x="80" y="600" width="1440" height="150" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="632" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="666" font-family="Segoe UI, Inter, sans-serif" font-size="19" font-weight="700" fill="#1B1B1F">"What is the difference between Dispose() and a Finalizer?"</text>
+  <text x="104" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">Dispose() is deterministic and called explicitly by the developer to release unmanaged resources immediately.</text>
+  <text x="104" y="724" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">A finalizer (~Class) is a non-deterministic safety net called by the GC on a background thread. It severely delays memory reclamation.</text>
+
+  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from Chapter12.Benchmarks — re-run it with `dotnet run -c Release`.</text>
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

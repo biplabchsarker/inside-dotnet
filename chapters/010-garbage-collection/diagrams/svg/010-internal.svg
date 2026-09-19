@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- RUNTIME/INTERNAL VIEW — chapters/010-garbage-collection.
+       Denser breakdown than the Concept image: the same heap shown as three
+       snapshots — marked, swept, compacted — so the reader sees exactly what
+       each phase does to memory layout, not just what it means conceptually. -->
+  <defs>
+    <filter id="panelShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feOffset dy="5" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="phaseArrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#512BD4"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <text x="80" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F">Mark → Sweep → Compact — one heap, three snapshots</text>
+  <text x="80" y="100" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76">Same six memory slots, in allocation order, through all three phases of a collection.</text>
+
+  <!-- PANEL 1 : MARKED -->
+  <g filter="url(#panelShadow)">
+    <rect x="80" y="150" width="420" height="470" rx="20" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  </g>
+  <rect x="80" y="150" width="420" height="56" rx="20" fill="#512BD4" opacity="0.08"/>
+  <text x="110" y="186" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#512BD4" letter-spacing="1">1 · MARKED</text>
+
+  <!-- slots panel 1 -->
+  <g font-family="Cascadia Code, Fira Code, monospace" font-size="11">
+    <rect x="104" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <circle cx="132.5" cy="415" r="7" fill="#FFFFFF"/>
+    <text x="132.5" y="419" text-anchor="middle" fill="#512BD4" font-weight="700">✓</text>
+
+    <rect x="167" y="400" width="57" height="100" rx="8" fill="#EDEDEF" stroke="#D8D8DE" stroke-width="1.5" opacity="0.85"/>
+
+    <rect x="230" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <circle cx="258.5" cy="415" r="7" fill="#FFFFFF"/>
+    <text x="258.5" y="419" text-anchor="middle" fill="#512BD4" font-weight="700">✓</text>
+
+    <rect x="293" y="400" width="57" height="100" rx="8" fill="#EDEDEF" stroke="#D8D8DE" stroke-width="1.5" opacity="0.85"/>
+    <rect x="356" y="400" width="57" height="100" rx="8" fill="#EDEDEF" stroke="#D8D8DE" stroke-width="1.5" opacity="0.85"/>
+
+    <rect x="419" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <circle cx="447.5" cy="415" r="7" fill="#FFFFFF"/>
+    <text x="447.5" y="419" text-anchor="middle" fill="#512BD4" font-weight="700">✓</text>
+  </g>
+  <text x="290" y="536" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F" text-anchor="middle">Every root-reachable object flagged live.</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <circle cx="120" cy="574" r="5" fill="#8B5CF6"/>
+    <text x="134" y="579" fill="#1B1B1F">Marked live</text>
+    <circle cx="260" cy="574" r="5" fill="#D8D8DE"/>
+    <text x="274" y="579" fill="#1B1B1F">Unmarked — will be swept</text>
+  </g>
+
+  <!-- ARROW: mark -> sweep -->
+  <line x1="510" y1="385" x2="580" y2="385" stroke="#512BD4" stroke-width="3" marker-end="url(#phaseArrow)"/>
+  <text x="545" y="365" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" text-anchor="middle">SWEEP</text>
+
+  <!-- PANEL 2 : SWEPT -->
+  <g filter="url(#panelShadow)">
+    <rect x="590" y="150" width="420" height="470" rx="20" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  </g>
+  <rect x="590" y="150" width="420" height="56" rx="20" fill="#0078D4" opacity="0.08"/>
+  <text x="620" y="186" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#0078D4" letter-spacing="1">2 · SWEPT</text>
+
+  <g>
+    <rect x="614" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <rect x="677" y="400" width="57" height="100" rx="8" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <rect x="740" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <rect x="803" y="400" width="57" height="100" rx="8" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <rect x="866" y="400" width="57" height="100" rx="8" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <rect x="929" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+  </g>
+  <text x="800" y="536" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F" text-anchor="middle">Dead objects reclaimed — three separate holes left behind.</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <rect x="630" y="565" width="16" height="16" rx="3" fill="none" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="654" y="578" fill="#1B1B1F">Free, but scattered — bump-pointer can't use these yet</text>
+  </g>
+
+  <!-- ARROW: sweep -> compact -->
+  <line x1="1020" y1="385" x2="1090" y2="385" stroke="#512BD4" stroke-width="3" marker-end="url(#phaseArrow)"/>
+  <text x="1055" y="365" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" text-anchor="middle">COMPACT</text>
+
+  <!-- PANEL 3 : COMPACTED -->
+  <g filter="url(#panelShadow)">
+    <rect x="1100" y="150" width="420" height="470" rx="20" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  </g>
+  <rect x="1100" y="150" width="420" height="56" rx="20" fill="#107C10" opacity="0.08"/>
+  <text x="1130" y="186" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#107C10" letter-spacing="1">3 · COMPACTED</text>
+
+  <g>
+    <rect x="1124" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <rect x="1187" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <rect x="1250" y="400" width="57" height="100" rx="8" fill="#8B5CF6"/>
+    <rect x="1313" y="400" width="163" height="100" rx="8" fill="#F0FDF4" stroke="#107C10" stroke-width="1.5"/>
+    <text x="1394" y="445" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" font-weight="700" fill="#107C10" text-anchor="middle">FREE</text>
+    <text x="1394" y="463" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" fill="#0F5D0F" text-anchor="middle">one block</text>
+  </g>
+  <path d="M 1160,392 C 1170,375 1200,375 1210,392" fill="none" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="1300" y="536" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F" text-anchor="middle">Survivors slide together; every moved reference is fixed up.</text>
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <circle cx="1140" cy="574" r="5" fill="#8B5CF6"/>
+    <text x="1154" y="579" fill="#1B1B1F">Live, now contiguous</text>
+    <rect x="1300" y="566" width="16" height="16" rx="3" fill="#F0FDF4" stroke="#107C10" stroke-width="1.5"/>
+    <text x="1324" y="579" fill="#1B1B1F">Reclaimed, ready to allocate into</text>
+  </g>
+
+  <text x="800" y="845" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#6E6E76" text-anchor="middle">One contiguous free block is the whole point — the bump-pointer allocator from Episode 8 has no way to reuse scattered holes.</text>
+</svg>

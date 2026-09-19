@@ -1,0 +1,83 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — RUNTIME / INTERNAL VIEW</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Card Table &amp; Write Barrier</text>
+
+  <!-- Intro Text -->
+  <text x="80" y="160" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#6E6E76">How the GC avoids scanning the entire massive Gen 2 heap during a Gen 0 collection.</text>
+
+  <!-- Left Side: Code Execution -->
+  <rect x="80" y="200" width="500" height="140" rx="8" fill="#FFFFFF" stroke="#0078D4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="330" y="235" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#0078D4" text-anchor="middle">Execution: Updating a Field</text>
+  <text x="120" y="275" font-family="Cascadia Code, Fira Code, monospace" font-size="18" fill="#1B1B1F">myGen2Object.Ref = </text>
+  <text x="330" y="275" font-family="Cascadia Code, Fira Code, monospace" font-size="18" fill="#107C10">new Gen0Object();</text>
+  <text x="330" y="315" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" font-weight="700" text-anchor="middle">JIT injects a Write Barrier here!</text>
+
+  <!-- The Barrier Action -->
+  <path d="M 330 340 L 330 400" fill="none" stroke="#D83B01" stroke-width="4" marker-end="url(#arrowRed)"/>
+  
+  <!-- Right Side: Heaps -->
+  <rect x="900" y="150" width="600" height="600" rx="16" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1200" y="195" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F" text-anchor="middle">Managed Heap Segments</text>
+
+  <!-- Gen 2 Heap -->
+  <rect x="950" y="240" width="500" height="150" rx="8" fill="#F5EEF8" stroke="#68217A" stroke-width="2"/>
+  <text x="1200" y="270" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#68217A" text-anchor="middle">Generation 2 (Massive)</text>
+  <rect x="980" y="290" width="200" height="80" rx="4" fill="#FFFFFF" stroke="#68217A" stroke-width="2"/>
+  <text x="1080" y="325" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#68217A" text-anchor="middle">myGen2Object</text>
+  <text x="1080" y="350" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">.Ref field updated</text>
+  
+  <!-- Gen 0 Heap -->
+  <rect x="950" y="550" width="500" height="150" rx="8" fill="#E6F2EB" stroke="#107C10" stroke-width="2"/>
+  <text x="1200" y="580" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#107C10" text-anchor="middle">Generation 0 (Ephemeral)</text>
+  <rect x="1100" y="600" width="200" height="80" rx="4" fill="#FFFFFF" stroke="#107C10" stroke-width="2"/>
+  <text x="1200" y="635" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#107C10" text-anchor="middle">new Gen0Object</text>
+
+  <!-- The Reference Arrow -->
+  <path d="M 1080 370 C 1080 460, 1200 460, 1200 600" fill="none" stroke="#107C10" stroke-width="4" stroke-dasharray="6 4" marker-end="url(#arrowGreen)"/>
+
+  <!-- Card Table -->
+  <rect x="80" y="420" width="500" height="160" rx="8" fill="#FDF3EE" stroke="#D83B01" stroke-width="2" filter="url(#shadow)"/>
+  <text x="330" y="460" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#D83B01" text-anchor="middle">The Card Table (1 bit per block)</text>
+  <text x="330" y="485" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Write Barrier intercepts the assignment and flags the card</text>
+  
+  <rect x="120" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="170" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="220" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="270" y="510" width="50" height="40" fill="#D83B01" stroke="#D83B01"/>
+  <text x="295" y="535" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+  <rect x="320" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="370" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="420" y="510" width="50" height="40" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="295" y="570" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="700" fill="#D83B01" text-anchor="middle">Card marked "Dirty"</text>
+
+  <!-- Connect Card Table to Gen 2 -->
+  <path d="M 580 530 C 700 530, 800 350, 950 350" fill="none" stroke="#D83B01" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrowRed)"/>
+
+  <!-- GC Info Box -->
+  <rect x="80" y="700" width="750" height="100" rx="8" fill="#F8FAFC" stroke="#0078D4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="100" y="740" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#0078D4">During the next Gen 0 Collection:</text>
+  <text x="100" y="770" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#1B1B1F">The GC only scans the memory block corresponding to the <tspan fill="#D83B01" font-weight="700">"dirty"</tspan> card.</text>
+  
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#107C10" />
+    </marker>
+  </defs>
+
+</svg>

@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">GC Generations &amp; the Large Object Heap</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="130" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="158" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">The LOH is swept but not compacted by default — forcing compaction is massively expensive (87× slower) and should be an absolute last resort.</text>
+
+  <text x="80" y="252" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0.8, 22-logical-processor machine</text>
+
+  <!-- Column separators -->
+  <line x1="550" y1="278" x2="550" y2="650" stroke="#E5E7EB" stroke-width="1.5"/>
+  <line x1="1050" y1="278" x2="1050" y2="650" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- COLUMN A: LOH COMPACTION COST -->
+  <text x="80" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">LOH COMPACTION COST</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="80" y="330" fill="#1B1B1F">Sweep Only (baseline, Default)</text>
+    <rect x="80" y="338" width="51" height="20" rx="5" fill="#107C10"/>
+    <text x="141" y="353" fill="#6E6E76">52.15 µs · 1.00×</text>
+
+    <text x="80" y="392" fill="#1B1B1F">CompactOnce</text>
+    <rect x="80" y="400" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="390" y="415" fill="#6E6E76" font-weight="700">4,527.08 µs · 87.41×</text>
+  </g>
+  <text x="80" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Compacting large objects requires moving massive blocks of memory</text>
+  <text x="80" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">and pausing all threads for far longer than a simple sweep.</text>
+
+  <!-- COLUMN B: ALLOCATION COST & GC PRESSURE -->
+  <text x="580" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">ALLOCATION COST &amp; GC PRESSURE</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="580" y="330" fill="#1B1B1F">AllocateManySmallObjects (Gen 0)</text>
+    <rect x="580" y="338" width="270" height="20" rx="5" fill="#107C10"/>
+    <text x="860" y="353" fill="#6E6E76">3.258 ms · 1.00×</text>
+
+    <text x="580" y="392" fill="#1B1B1F">AllocateFewLargeObjects (LOH)</text>
+    <rect x="580" y="400" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="890" y="415" fill="#6E6E76" font-weight="700">3.589 ms · 1.11×</text>
+  </g>
+  <text x="580" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Large objects cause 4× more Gen 0/1/2 collections under pressure</text>
+  <text x="580" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">due to threshold-crossing, despite similar total allocation size (~96 MB).</text>
+
+  <!-- COLUMN C: GEN 2 GRAPH SIZE SCALING -->
+  <text x="1080" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">GEN 2 COLLECTION SCALING</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="1080" y="330" fill="#1B1B1F">50,000 object graph</text>
+    <rect x="1080" y="338" width="50" height="20" rx="5" fill="#107C10"/>
+    <text x="1140" y="353" fill="#6E6E76">201.9 µs</text>
+
+    <text x="1080" y="392" fill="#1B1B1F">500,000 object graph</text>
+    <rect x="1080" y="400" width="100" height="20" rx="5" fill="#D83B01"/>
+    <text x="1190" y="415" fill="#6E6E76" font-weight="700">637.3 µs</text>
+
+    <text x="1080" y="454" fill="#1B1B1F">2,000,000 object graph</text>
+    <rect x="1080" y="462" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="1390" y="477" fill="#6E6E76" font-weight="700">1,973.6 µs</text>
+  </g>
+  <text x="1080" y="522" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Gen 2 collection time scales with the number of surviving objects.</text>
+  <text x="1080" y="540" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Caching massive graphs directly impacts background GC overhead.</text>
+
+  <text x="80" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Bar length = relative cost within each comparison, not across columns. Full tables in Performance Notes.</text>
+
+  <!-- Interview question -->
+  <rect x="80" y="600" width="1440" height="150" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="632" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="666" font-family="Segoe UI, Inter, sans-serif" font-size="19" font-weight="700" fill="#1B1B1F">"Does the LOH get compacted by default, and what changes that?"</text>
+  <text x="104" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">No. LOH objects are swept into a free-list but not moved to fill gaps.</text>
+  <text x="104" y="724" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">Setting GCSettings.LargeObjectHeapCompactionMode = CompactOnce forces exactly one compacting pass.</text>
+
+  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from Chapter11.Benchmarks — re-run it with `dotnet run -c Release`.</text>
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

@@ -1,0 +1,159 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- HERO ILLUSTRATION — chapters/010-garbage-collection.
+       Light isometric style, matching 008-hero.svg's established language.
+       Central idea: reachability, not counting. A glowing, connected cluster
+       traced from a root stays lit inside the heap; a few dim, disconnected
+       blocks are mid-sweep, fading off the right edge. -->
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <radialGradient id="blueGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0078D4" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#0078D4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#512BD4" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#512BD4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feOffset dy="8" in="blur" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.22"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="arrowGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="traceStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#512BD4"/>
+    </linearGradient>
+    <linearGradient id="sweepFade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F8FAFC" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#D8D8DE" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#D8D8DE" stop-opacity="0"/>
+    </linearGradient>
+    <marker id="dotEnd" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5">
+      <circle cx="3.5" cy="3.5" r="3.2" fill="#512BD4"/>
+    </marker>
+    <marker id="sweepArrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+  <circle cx="260" cy="440" r="220" fill="url(#blueGlow)"/>
+  <circle cx="760" cy="460" r="360" fill="url(#purpleGlow)"/>
+
+  <!-- Kicker + chapter title, top-left -->
+  <text x="100" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#6E6E76" letter-spacing="3">PART II — MEMORY · EPISODE 11</text>
+  <text x="100" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="34" font-weight="700" fill="#1B1B1F">Garbage Collection Fundamentals</text>
+
+  <!-- HEAP container -->
+  <g filter="url(#softShadow)">
+    <rect x="380" y="230" width="1020" height="430" rx="24" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  </g>
+  <text x="412" y="272" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#9CA3AF" letter-spacing="3">HEAP</text>
+
+  <!-- ROOT icon, left of the heap -->
+  <g filter="url(#softShadow)">
+    <rect x="170" y="378" width="120" height="104" rx="14" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+  </g>
+  <rect x="192" y="402" width="76" height="9" rx="4.5" fill="#0078D4" opacity="0.85"/>
+  <rect x="192" y="422" width="76" height="9" rx="4.5" fill="#0078D4" opacity="0.6"/>
+  <rect x="192" y="442" width="76" height="9" rx="4.5" fill="#0078D4" opacity="0.35"/>
+  <circle cx="230" cy="465" r="4.5" fill="#0078D4"/>
+  <text x="230" y="510" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0B3A66" text-anchor="middle">ROOT</text>
+  <text x="230" y="528" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#6E6E76" text-anchor="middle">stack · statics · registers</text>
+
+  <!-- Trace lines from root to the reachable cluster -->
+  <g fill="none" stroke="url(#traceStroke)" stroke-width="3" stroke-linecap="round" filter="url(#arrowGlow)" opacity="0.85">
+    <path d="M 290,440 C 420,410 480,420 560,435" marker-end="url(#dotEnd)"/>
+    <path d="M 290,455 C 420,470 520,505 640,510" marker-end="url(#dotEnd)"/>
+    <path d="M 290,470 C 400,540 480,565 600,568" marker-end="url(#dotEnd)"/>
+  </g>
+
+  <!-- Reachable, connected cluster (bright purple family) -->
+  <!-- Cube C1 -->
+  <g filter="url(#softShadow)">
+    <polygon points="600,393 655,420 600,447 545,420" fill="#DDD6FE"/>
+    <polygon points="545,420 600,447 600,507 545,480" fill="#8B5CF6"/>
+    <polygon points="600,447 655,420 655,480 600,507" fill="#512BD4"/>
+  </g>
+  <!-- Cube C2 -->
+  <g filter="url(#softShadow)">
+    <polygon points="695,443 750,470 695,497 640,470" fill="#DDD6FE"/>
+    <polygon points="640,470 695,497 695,557 640,530" fill="#8B5CF6"/>
+    <polygon points="695,497 750,470 750,530 695,557" fill="#512BD4"/>
+  </g>
+  <!-- Cube C3 -->
+  <g filter="url(#softShadow)">
+    <polygon points="615,508 665,533 615,558 565,533" fill="#DDD6FE"/>
+    <polygon points="565,533 615,558 615,610 565,585" fill="#8B5CF6"/>
+    <polygon points="615,558 665,533 665,585 615,610" fill="#512BD4"/>
+  </g>
+  <text x="620" y="638" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#2E1065" text-anchor="middle">Reachable — stays lit</text>
+
+  <!-- Sweep motion over the dim, disconnected blocks -->
+  <rect x="900" y="250" width="420" height="390" fill="url(#sweepFade)"/>
+  <path d="M 940,300 C 1020,330 1090,330 1170,300" fill="none" stroke="#9CA3AF" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round" marker-end="url(#sweepArrow)"/>
+  <text x="1055" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#9CA3AF" text-anchor="middle" letter-spacing="1">SWEEP</text>
+
+  <!-- Dim, disconnected cubes (fading, no root path) -->
+  <g opacity="0.55">
+    <polygon points="1000,375 1040,396 1000,417 960,396" fill="#EDEDEF"/>
+    <polygon points="960,396 1000,417 1000,462 960,441" fill="#C7C7CE"/>
+    <polygon points="1000,417 1040,396 1040,441 1000,462" fill="#9CA3AF"/>
+  </g>
+  <g opacity="0.4">
+    <polygon points="1110,430 1150,451 1110,472 1070,451" fill="#EDEDEF"/>
+    <polygon points="1070,451 1110,472 1110,517 1070,496" fill="#C7C7CE"/>
+    <polygon points="1110,472 1150,451 1150,496 1110,517" fill="#9CA3AF"/>
+  </g>
+  <g opacity="0.22">
+    <polygon points="1230,378 1266,397 1230,416 1194,397" fill="#EDEDEF"/>
+    <polygon points="1194,397 1230,416 1230,456 1194,437" fill="#C7C7CE"/>
+    <polygon points="1230,416 1266,397 1266,437 1230,456" fill="#9CA3AF"/>
+  </g>
+
+  <text x="1130" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#9CA3AF" text-anchor="middle">Unreachable — swept away</text>
+
+  <!-- Callout chips -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="600">
+    <rect x="70" y="748" width="260" height="44" rx="22" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <circle cx="96" cy="770" r="5" fill="#512BD4"/>
+    <text x="112" y="775" fill="#1B1B1F">Reachability, Not Counting</text>
+
+    <rect x="345" y="748" width="215" height="44" rx="22" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <circle cx="371" cy="770" r="5" fill="#0078D4"/>
+    <text x="387" y="775" fill="#1B1B1F">Roots Decide</text>
+
+    <rect x="575" y="748" width="255" height="44" rx="22" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <circle cx="601" cy="770" r="5" fill="#107C10"/>
+    <text x="617" y="775" fill="#1B1B1F">Compaction Keeps It Fast</text>
+  </g>
+
+  <!-- Minimal code snippet card -->
+  <g filter="url(#softShadow)">
+    <rect x="990" y="720" width="430" height="130" rx="14" fill="#1B1240"/>
+  </g>
+  <text x="1018" y="756" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#60A5FA">var</text>
+  <text x="1050" y="756" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#E5E7EB"> obj = new byte[16];</text>
+  <text x="1018" y="782" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#E5E7EB">obj = null; GC.Collect();</text>
+  <text x="1018" y="808" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#8F7BFF">// no root reaches it → reclaimed</text>
+
+  <!-- Footer tagline -->
+  <text x="800" y="875" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-style="italic" fill="#6E6E76" text-anchor="middle">Reachability Decides What Survives — Not Reference Counts</text>
+</svg>

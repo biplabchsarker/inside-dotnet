@@ -1,0 +1,96 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CONCEPT OVERVIEW</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Segment Budget Model &amp; The LOH Branch</text>
+
+  <!-- Title/Flow Label -->
+  <text x="800" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F" text-anchor="middle">Object Allocation Pipeline</text>
+
+  <!-- Start -->
+  <rect x="700" y="220" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#512BD4" stroke-width="2"/>
+  <text x="800" y="255" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">new Object()</text>
+
+  <line x1="800" y1="280" x2="800" y2="340" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <!-- Decision -->
+  <polygon points="800,340 920,380 800,420 680,380" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="800" y="375" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#1B1B1F" text-anchor="middle">Total Size</text>
+  <text x="800" y="395" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#1B1B1F" text-anchor="middle">&gt;= 85,000 Bytes?</text>
+
+  <!-- Paths -->
+  <!-- Yes (Right to LOH) -->
+  <line x1="920" y1="380" x2="1150" y2="380" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowheadRed)"/>
+  <text x="1035" y="370" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#D83B01" text-anchor="middle">Yes (Large Object)</text>
+  <line x1="1150" y1="380" x2="1150" y2="460" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowheadRed)"/>
+
+  <!-- No (Down to SOH) -->
+  <line x1="800" y1="420" x2="800" y2="480" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowheadBlue)"/>
+  <text x="860" y="455" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0078D4" text-anchor="middle">No (Small)</text>
+
+  <!-- Large Object Heap Column -->
+  <rect x="1000" y="470" width="300" height="280" rx="12" fill="#FDF3EE" stroke="#D83B01" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1150" y="520" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#D83B01" text-anchor="middle">Large Object Heap (LOH)</text>
+  <text x="1150" y="545" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" text-anchor="middle">Collected with Gen 2</text>
+  <text x="1150" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" text-anchor="middle">Never compacted by default</text>
+  
+  <rect x="1050" y="600" width="200" height="60" rx="6" fill="#FFFFFF" stroke="#D83B01" stroke-width="2"/>
+  <text x="1150" y="635" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#1B1B1F" text-anchor="middle">Massive Arrays</text>
+
+  <!-- Small Object Heap Column -->
+  <rect x="250" y="480" width="600" height="340" rx="12" fill="#E8F4FD" stroke="#0078D4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="550" y="520" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#0078D4" text-anchor="middle">Small Object Heap (SOH)</text>
+  <text x="550" y="545" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#0078D4" text-anchor="middle">Adaptive generation budgets &amp; promotion</text>
+
+  <!-- Gen 0 -->
+  <rect x="280" y="580" width="160" height="210" rx="8" fill="#FFFFFF" stroke="#107C10" stroke-width="2"/>
+  <text x="360" y="620" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#107C10" text-anchor="middle">Gen 0</text>
+  <text x="360" y="640" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Ephemeral</text>
+  <text x="360" y="660" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">(Fastest to collect)</text>
+  
+  <line x1="440" y1="680" x2="490" y2="680" stroke="#107C10" stroke-width="3" marker-end="url(#arrowheadGreen)"/>
+  <text x="465" y="670" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="700" fill="#107C10" text-anchor="middle">Survive</text>
+
+  <!-- Gen 1 -->
+  <rect x="490" y="580" width="160" height="210" rx="8" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="570" y="620" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#0078D4" text-anchor="middle">Gen 1</text>
+  <text x="570" y="640" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Buffer</text>
+  <text x="570" y="660" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">(Short-lived)</text>
+  
+  <line x1="650" y1="680" x2="700" y2="680" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowheadBlue)"/>
+  <text x="675" y="670" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="700" fill="#0078D4" text-anchor="middle">Survive</text>
+
+  <!-- Gen 2 -->
+  <rect x="700" y="580" width="120" height="210" rx="8" fill="#FFFFFF" stroke="#68217A" stroke-width="2"/>
+  <text x="760" y="620" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#68217A" text-anchor="middle">Gen 2</text>
+  <text x="760" y="640" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Long-lived</text>
+  <text x="760" y="660" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">(Slowest)</text>
+
+  <!-- Markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9CA3AF" />
+    </marker>
+    <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0078D4" />
+    </marker>
+    <marker id="arrowheadRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#107C10" />
+    </marker>
+  </defs>
+
+</svg>

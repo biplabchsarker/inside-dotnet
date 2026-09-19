@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <!-- Header -->
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — RUNTIME / INTERNAL VIEW</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Finalization Queue &amp; F-Reachable Queue</text>
+
+  <!-- Heap Visualization Area -->
+  <rect x="80" y="150" width="1440" height="680" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2" filter="url(#shadow)"/>
+
+  <!-- Managed Heap -->
+  <rect x="120" y="200" width="400" height="550" rx="12" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2"/>
+  <text x="320" y="240" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#1B1B1F" text-anchor="middle">Managed Heap (Gen 0)</text>
+  
+  <!-- Live Object -->
+  <rect x="160" y="280" width="320" height="80" rx="6" fill="#E8F4FD" stroke="#0078D4" stroke-width="2"/>
+  <text x="180" y="315" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#0078D4">Live Object (No Finalizer)</text>
+  <text x="180" y="340" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76">Reclaimed immediately when unreachable</text>
+
+  <!-- Finalizable Object -->
+  <rect x="160" y="390" width="320" height="80" rx="6" fill="#F5EEF8" stroke="#68217A" stroke-width="2"/>
+  <text x="180" y="425" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="600" fill="#68217A">Object A (Has Finalizer)</text>
+  <text x="180" y="450" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76">Unreachable during this GC cycle</text>
+
+  <!-- Finalization Queue -->
+  <rect x="600" y="200" width="400" height="250" rx="12" fill="#FFFFFF" stroke="#68217A" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="800" y="240" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#68217A" text-anchor="middle">Finalization Queue</text>
+  <text x="800" y="265" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">List of all objects with finalizers</text>
+
+  <rect x="640" y="290" width="320" height="40" rx="4" fill="#F3F4F6"/>
+  <text x="660" y="316" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#6E6E76">Pointer to Object B</text>
+
+  <rect x="640" y="340" width="320" height="40" rx="4" fill="#F5EEF8" stroke="#68217A" stroke-width="2"/>
+  <text x="660" y="366" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#68217A">Pointer to Object A</text>
+
+  <!-- F-Reachable Queue -->
+  <rect x="600" y="500" width="400" height="250" rx="12" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="800" y="540" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#D83B01" text-anchor="middle">F-Reachable Queue</text>
+  <text x="800" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" text-anchor="middle">Acts as a Strong GC Root (Resurrects Object)</text>
+
+  <rect x="640" y="600" width="320" height="40" rx="4" fill="#FFFFFF" stroke="#D83B01" stroke-width="2" opacity="0.4"/>
+  <text x="660" y="626" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#D83B01" opacity="0.6">(Moved from Finalization Queue)</text>
+
+  <!-- Finalizer Thread -->
+  <rect x="1080" y="350" width="360" height="250" rx="12" fill="#FFFFFF" stroke="#0078D4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1260" y="390" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#0078D4" text-anchor="middle">Finalizer Thread</text>
+  <text x="1260" y="415" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">High-priority background thread</text>
+  
+  <rect x="1120" y="450" width="280" height="100" rx="6" fill="#F3F4F6"/>
+  <text x="1260" y="485" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F" text-anchor="middle">while(true) {</text>
+  <text x="1260" y="505" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#D83B01" font-weight="700" text-anchor="middle">  obj = FReachable.Pop();</text>
+  <text x="1260" y="525" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#68217A" font-weight="700" text-anchor="middle">  obj.Finalize();</text>
+  <text x="1260" y="545" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F" text-anchor="middle">}</text>
+
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrowObjToFin" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#68217A" />
+    </marker>
+    <marker id="arrowFinToFReach" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+    <marker id="arrowFReachToThread" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0078D4" />
+    </marker>
+  </defs>
+
+  <path d="M 480 430 C 540 430, 540 360, 640 360" fill="none" stroke="#68217A" stroke-width="3" marker-end="url(#arrowObjToFin)" stroke-dasharray="8 4"/>
+  <text x="560" y="380" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="700" fill="#68217A" text-anchor="middle">Registered</text>
+  
+  <path d="M 800 450 L 800 500" fill="none" stroke="#D83B01" stroke-width="4" marker-end="url(#arrowFinToFReach)"/>
+  <text x="810" y="475" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#D83B01">GC Moves pointer</text>
+
+  <path d="M 1000 620 C 1050 620, 1050 500, 1120 500" fill="none" stroke="#0078D4" stroke-width="4" marker-end="url(#arrowFReachToThread)"/>
+  <text x="1050" y="580" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0078D4" text-anchor="middle">Thread executes</text>
+
+</svg>

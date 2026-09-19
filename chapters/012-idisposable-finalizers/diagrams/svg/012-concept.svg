@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <linearGradient id="disposeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#005A9E"/>
+    </linearGradient>
+    <linearGradient id="finalizerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D83B01"/>
+      <stop offset="100%" stop-color="#A80000"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <!-- Header -->
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CONCEPT OVERVIEW</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Dual-Path Cleanup Pattern</text>
+
+  <!-- Start Node -->
+  <rect x="700" y="160" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#512BD4" stroke-width="2"/>
+  <text x="800" y="195" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Resource Created</text>
+  
+  <line x1="800" y1="220" x2="800" y2="260" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <!-- Usage -->
+  <rect x="700" y="260" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#512BD4" stroke-width="2"/>
+  <text x="800" y="295" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Application Usage</text>
+
+  <!-- Path Split -->
+  <line x1="800" y1="320" x2="800" y2="350" stroke="#9CA3AF" stroke-width="3"/>
+  <line x1="450" y1="350" x2="1150" y2="350" stroke="#9CA3AF" stroke-width="3"/>
+  
+  <!-- Left Path: Explicit Dispose -->
+  <line x1="450" y1="350" x2="450" y2="400" stroke="#0078D4" stroke-width="4" marker-end="url(#arrowheadBlue)"/>
+  
+  <!-- Right Path: Missed Dispose -->
+  <line x1="1150" y1="350" x2="1150" y2="400" stroke="#D83B01" stroke-width="4" marker-end="url(#arrowheadRed)"/>
+
+  <!-- EXPLICIT DISPOSE COLUMN -->
+  <text x="450" y="380" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#0078D4" text-anchor="middle">THE "DISPOSE" PATH (Fast)</text>
+  
+  <rect x="300" y="400" width="300" height="80" rx="8" fill="url(#disposeGrad)"/>
+  <text x="450" y="435" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle">Explicit call to Dispose()</text>
+  <text x="450" y="460" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#FFFFFF" opacity="0.9" text-anchor="middle">using block or manual call</text>
+
+  <line x1="450" y1="480" x2="450" y2="520" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowheadBlue)"/>
+
+  <rect x="300" y="520" width="300" height="80" rx="8" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="450" y="555" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Immediate Cleanup</text>
+  <text x="450" y="580" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Unmanaged resource freed instantly</text>
+
+  <line x1="450" y1="600" x2="450" y2="640" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowheadBlue)"/>
+
+  <rect x="300" y="640" width="300" height="80" rx="8" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="450" y="675" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">GC.SuppressFinalize()</text>
+  <text x="450" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Removes object from Finalization Queue</text>
+  
+  <line x1="450" y1="720" x2="450" y2="760" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowheadBlue)"/>
+  
+  <rect x="300" y="760" width="300" height="80" rx="8" fill="#E8F4FD" stroke="#0078D4" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="450" y="795" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#0078D4" text-anchor="middle">Skips Finalization</text>
+  <text x="450" y="820" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#0078D4" text-anchor="middle">Reclaimed normally in Gen 0</text>
+
+
+  <!-- MISSED DISPOSE COLUMN -->
+  <text x="1150" y="380" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#D83B01" text-anchor="middle">THE "FINALIZER" PATH (Slow)</text>
+
+  <rect x="1000" y="400" width="300" height="80" rx="8" fill="url(#finalizerGrad)"/>
+  <text x="1150" y="435" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle">Application forgets Dispose()</text>
+  <text x="1150" y="460" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#FFFFFF" opacity="0.9" text-anchor="middle">Object goes out of scope holding resource</text>
+
+  <line x1="1150" y1="480" x2="1150" y2="520" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowheadRed)"/>
+
+  <rect x="1000" y="520" width="300" height="80" rx="8" fill="#FFFFFF" stroke="#D83B01" stroke-width="2"/>
+  <text x="1150" y="555" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">GC Gen 0 Collection</text>
+  <text x="1150" y="580" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" font-weight="700" text-anchor="middle">Memory NOT Reclaimed!</text>
+
+  <line x1="1150" y1="600" x2="1150" y2="640" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowheadRed)"/>
+
+  <rect x="1000" y="640" width="300" height="80" rx="8" fill="#FFFFFF" stroke="#D83B01" stroke-width="2"/>
+  <text x="1150" y="675" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">F-Reachable Queue</text>
+  <text x="1150" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Object resurrected, promoted to Gen 1</text>
+
+  <line x1="1150" y1="720" x2="1150" y2="760" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowheadRed)"/>
+  
+  <rect x="1000" y="760" width="300" height="80" rx="8" fill="#FDF3EE" stroke="#D83B01" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="1150" y="795" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#D83B01" text-anchor="middle">Finalizer Thread Runs</text>
+  <text x="1150" y="820" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" text-anchor="middle">Delayed cleanup, blocks background thread</text>
+
+  <!-- Markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9CA3AF" />
+    </marker>
+    <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0078D4" />
+    </marker>
+    <marker id="arrowheadRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+  </defs>
+
+</svg>

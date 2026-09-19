@@ -1,0 +1,16 @@
+flowchart TB
+    A["Ephemeral segment:\nGen 0 + Gen 1 share it"] --> B["Gen 0 allocations\nbump-pointer into its\ncurrent budget"]
+    B --> C{"Budget\nexceeded?"}
+    C -->|"no"| B
+    C -->|"yes"| D["Gen 0 collection runs"]
+    D --> E["GC re-computes the NEXT\nGen 0 budget from survival\nrate + collection cost —\nnot a fixed constant"]
+    E --> F{"Survivors?"}
+    F -->|"most objects — die young"| G["Reclaimed, never\ncost another\ncollection's attention"]
+    F -->|"some"| H["Promoted to Gen 1,\nGen 1 has its own,\nseparately-adapted budget"]
+    H --> I{"Survives\nGen 1 too?"}
+    I -->|"yes"| J["Promoted to Gen 2 —\nstays until a full\ncollection runs"]
+    I -->|"no"| G
+
+    K["A NEW allocation request\narrives — same 'new T[]' call"] --> L{"Total object size\n>= 85,000 bytes?"}
+    L -->|"no"| B
+    L -->|"yes"| M["Skips Gen 0/1 entirely —\nallocated directly on the\nLarge Object Heap"]

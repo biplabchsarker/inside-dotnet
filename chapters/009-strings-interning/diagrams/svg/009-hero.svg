@@ -1,0 +1,141 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- HERO ILLUSTRATION — chapters/009-strings-interning.
+       Light isometric style, matching chapters/008-boxing-unboxing/diagrams/svg/008-hero.svg.
+       Left: two literals ("a", "b") converging on ONE glowing, purple pooled instance —
+       the intern pool. Right: two runtime-built strings ("c", "d") with identical text,
+       each landing in its own separate, unconnected, ordinary (slate) heap object.
+       Central contrast of Episode 10: same content, opposite reference identity. -->
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <radialGradient id="purpleGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#512BD4" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#512BD4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="slateGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#64748B" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#64748B" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feOffset dy="8" in="blur" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.25"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="arrowGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="arrowStrokeP" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#512BD4"/>
+    </linearGradient>
+    <marker id="heroArrowPurple" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 Z" fill="#512BD4"/>
+    </marker>
+    <marker id="heroArrowGray" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto">
+      <path d="M0 0 L9 4.5 L0 9 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+  <circle cx="420" cy="480" r="270" fill="url(#purpleGlow)"/>
+  <circle cx="1150" cy="480" r="310" fill="url(#slateGlow)"/>
+
+  <!-- Series label, top-left -->
+  <text x="100" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#6E6E76" letter-spacing="3">PART II — MEMORY · EPISODE 10</text>
+  <text x="100" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="34" font-weight="700" fill="#1B1B1F">Strings &amp; Interning</text>
+
+  <!-- Divider -->
+  <line x1="790" y1="175" x2="790" y2="730" stroke="#D8D8DE" stroke-width="1.5" stroke-dasharray="6 6"/>
+
+  <!-- Section labels -->
+  <text x="100" y="192" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#512BD4" letter-spacing="2">LITERAL — INTERNED AUTOMATICALLY</text>
+  <text x="860" y="192" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#475569" letter-spacing="2">RUNTIME-BUILT — NEVER AUTOMATIC</text>
+
+  <!-- LEFT: two literals converging on one pooled instance -->
+  <circle cx="330" cy="239" r="22" fill="#F3F0FC" stroke="#512BD4" stroke-width="1.5"/>
+  <text x="330" y="245" font-family="Cascadia Code, Fira Code, monospace" font-size="16" font-weight="700" fill="#512BD4" text-anchor="middle">a</text>
+  <circle cx="520" cy="239" r="22" fill="#F3F0FC" stroke="#512BD4" stroke-width="1.5"/>
+  <text x="520" y="245" font-family="Cascadia Code, Fira Code, monospace" font-size="16" font-weight="700" fill="#512BD4" text-anchor="middle">b</text>
+
+  <path d="M 330,262 C 348,318 378,358 413,380" fill="none" stroke="url(#arrowStrokeP)" stroke-width="3.5" stroke-linecap="round" filter="url(#arrowGlow)" marker-end="url(#heroArrowPurple)"/>
+  <path d="M 520,262 C 502,318 470,358 433,380" fill="none" stroke="url(#arrowStrokeP)" stroke-width="3.5" stroke-linecap="round" filter="url(#arrowGlow)" marker-end="url(#heroArrowPurple)"/>
+
+  <!-- Pooled instance cube (purple family) -->
+  <g filter="url(#softShadow)">
+    <polygon points="420,345 530,400 420,455 310,400" fill="#DDD6FE"/>
+    <polygon points="310,400 420,455 420,605 310,550" fill="#8B5CF6"/>
+    <polygon points="420,455 530,400 530,550 420,605" fill="#512BD4"/>
+    <polygon points="420,345 530,400 420,455 310,400" fill="none" stroke="#2E1065" stroke-width="1.5" stroke-opacity="0.25"/>
+  </g>
+  <text x="420" y="382" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2E1065" text-anchor="middle" opacity="0.75">POOL</text>
+
+  <text x="420" y="650" font-family="Cascadia Code, Fira Code, monospace" font-size="17" font-weight="600" fill="#1B1B1F" text-anchor="middle">"Hello, World"</text>
+  <text x="420" y="674" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">intern pool — one shared instance</text>
+
+  <rect x="270" y="686" width="300" height="38" rx="19" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  <circle cx="296" cy="705" r="5" fill="#107C10"/>
+  <text x="312" y="710" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">ReferenceEquals(a, b) → true</text>
+
+  <!-- RIGHT: two runtime-built strings, independently allocated -->
+  <circle cx="1030" cy="239" r="22" fill="#F1F5F9" stroke="#475569" stroke-width="1.5"/>
+  <text x="1030" y="245" font-family="Cascadia Code, Fira Code, monospace" font-size="16" font-weight="700" fill="#475569" text-anchor="middle">c</text>
+  <circle cx="1270" cy="239" r="22" fill="#F1F5F9" stroke="#475569" stroke-width="1.5"/>
+  <text x="1270" y="245" font-family="Cascadia Code, Fira Code, monospace" font-size="16" font-weight="700" fill="#475569" text-anchor="middle">d</text>
+
+  <line x1="1030" y1="262" x2="1030" y2="341" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" marker-end="url(#heroArrowGray)"/>
+  <line x1="1270" y1="262" x2="1270" y2="341" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" marker-end="url(#heroArrowGray)"/>
+
+  <!-- Cube c (slate/ordinary heap) -->
+  <g filter="url(#softShadow)">
+    <polygon points="1030,345 1140,400 1030,455 920,400" fill="#E2E8F0"/>
+    <polygon points="920,400 1030,455 1030,605 920,550" fill="#94A3B8"/>
+    <polygon points="1030,455 1140,400 1140,550 1030,605" fill="#475569"/>
+    <polygon points="1030,345 1140,400 1030,455 920,400" fill="none" stroke="#334155" stroke-width="1.5" stroke-opacity="0.25"/>
+  </g>
+
+  <!-- Cube d (slate/ordinary heap) -->
+  <g filter="url(#softShadow)">
+    <polygon points="1270,345 1380,400 1270,455 1160,400" fill="#E2E8F0"/>
+    <polygon points="1160,400 1270,455 1270,605 1160,550" fill="#94A3B8"/>
+    <polygon points="1270,455 1380,400 1380,550 1270,605" fill="#475569"/>
+    <polygon points="1270,345 1380,400 1270,455 1160,400" fill="none" stroke="#334155" stroke-width="1.5" stroke-opacity="0.25"/>
+  </g>
+
+  <!-- Broken-link glyph between the two disconnected cubes -->
+  <line x1="1145" y1="478" x2="1160" y2="478" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="3 4"/>
+  <circle cx="1152" cy="478" r="12" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.5"/>
+  <line x1="1146" y1="484" x2="1158" y2="472" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+
+  <text x="1030" y="650" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F" text-anchor="middle">"Hello, World"</text>
+  <text x="1270" y="650" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F" text-anchor="middle">"Hello, World"</text>
+  <text x="1150" y="674" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">two independent heap objects</text>
+
+  <rect x="1000" y="686" width="300" height="38" rx="19" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  <circle cx="1026" cy="705" r="5" fill="#475569"/>
+  <text x="1042" y="710" font-family="Cascadia Code, Fira Code, monospace" font-size="13" fill="#1B1B1F">ReferenceEquals(c, d) → false</text>
+
+  <!-- Code snippet card -->
+  <g filter="url(#softShadow)">
+    <rect x="550" y="738" width="500" height="92" rx="14" fill="#1B1240"/>
+  </g>
+  <text x="578" y="774" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#E5E7EB">ReferenceEquals(a, b);</text>
+  <text x="800" y="774" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#86EFAC" text-anchor="end">// true</text>
+  <text x="578" y="802" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#E5E7EB">ReferenceEquals(c, d);</text>
+  <text x="800" y="802" font-family="Cascadia Code, Fira Code, monospace" font-size="14.5" fill="#94A3B8" text-anchor="end">// false</text>
+
+  <!-- Footer tagline -->
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-style="italic" fill="#6E6E76" text-anchor="middle">Same Text, Opposite Truths — One Shared Instance vs. Two Independent Allocations</text>
+</svg>

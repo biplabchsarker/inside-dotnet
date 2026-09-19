@@ -1,0 +1,87 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- MEMORY / EXECUTION DIAGRAM — chapters/009-strings-interning.
+       Light isometric style, matching chapters/008-boxing-unboxing/diagrams/svg/008-deepdive.svg.
+       Two heaps side by side, each shown before and after GC.Collect(): 200,000 discarded
+       strings return to near baseline; 200,000 interned strings stay fully resident because
+       the intern pool is itself a permanent GC root. Numbers are the exact measured figures
+       from article.md's Performance Notes table 4. -->
+  <defs>
+    <filter id="memShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <g id="denseGrid">
+      <rect x="0" y="0" width="14" height="14" rx="3"/>
+      <rect x="24" y="0" width="14" height="14" rx="3"/>
+      <rect x="48" y="0" width="14" height="14" rx="3"/>
+      <rect x="72" y="0" width="14" height="14" rx="3"/>
+      <rect x="96" y="0" width="14" height="14" rx="3"/>
+      <rect x="120" y="0" width="14" height="14" rx="3"/>
+      <rect x="144" y="0" width="14" height="14" rx="3"/>
+      <rect x="168" y="0" width="14" height="14" rx="3"/>
+      <rect x="0" y="24" width="14" height="14" rx="3"/>
+      <rect x="24" y="24" width="14" height="14" rx="3"/>
+      <rect x="48" y="24" width="14" height="14" rx="3"/>
+      <rect x="72" y="24" width="14" height="14" rx="3"/>
+      <rect x="96" y="24" width="14" height="14" rx="3"/>
+      <rect x="120" y="24" width="14" height="14" rx="3"/>
+      <rect x="144" y="24" width="14" height="14" rx="3"/>
+      <rect x="168" y="24" width="14" height="14" rx="3"/>
+      <rect x="0" y="48" width="14" height="14" rx="3"/>
+      <rect x="24" y="48" width="14" height="14" rx="3"/>
+      <rect x="48" y="48" width="14" height="14" rx="3"/>
+      <rect x="72" y="48" width="14" height="14" rx="3"/>
+      <rect x="96" y="48" width="14" height="14" rx="3"/>
+      <rect x="120" y="48" width="14" height="14" rx="3"/>
+      <rect x="144" y="48" width="14" height="14" rx="3"/>
+      <rect x="168" y="48" width="14" height="14" rx="3"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <text x="80" y="52" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#6E6E76" letter-spacing="3">MEMORY / EXECUTION · EPISODE 10</text>
+  <text x="80" y="88" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F">Discarded vs. interned — the same 200,000 strings, one GC.Collect()</text>
+
+  <!-- Column headers -->
+  <text x="100" y="138" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#475569" letter-spacing="1.5">DISCARDED — ORDINARY GARBAGE</text>
+  <text x="860" y="138" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#512BD4" letter-spacing="1.5">INTERNED — PERMANENTLY ROOTED</text>
+
+  <!-- Row 1: BEFORE -->
+  <rect x="100" y="160" width="640" height="230" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="124" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#6E6E76">BEFORE GC.Collect()</text>
+  <use href="#denseGrid" xlink:href="#denseGrid" transform="translate(124,210)" fill="#94A3B8"/>
+  <text x="124" y="360" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">200,000 unique strings built</text>
+
+  <rect x="860" y="160" width="640" height="230" rx="12" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="884" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#6E6E76">BEFORE GC.Collect()</text>
+  <use href="#denseGrid" xlink:href="#denseGrid" transform="translate(884,210)" fill="#8B5CF6"/>
+  <text x="884" y="360" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">200,000 unique strings interned</text>
+
+  <!-- Row 2: AFTER -->
+  <rect x="100" y="450" width="640" height="230" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="124" y="478" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#6E6E76">AFTER GC.Collect()</text>
+  <rect x="124" y="500" width="14" height="14" rx="3" fill="#CBD5E1" opacity="0.5"/>
+  <rect x="148" y="524" width="14" height="14" rx="3" fill="#CBD5E1" opacity="0.4"/>
+  <text x="124" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#0F5D0F">56,544 B</text>
+  <text x="124" y="672" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">back near baseline (57,120 B)</text>
+
+  <rect x="860" y="450" width="640" height="230" rx="12" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="1.5"/>
+  <text x="884" y="478" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#6E6E76">AFTER GC.Collect()</text>
+  <use href="#denseGrid" xlink:href="#denseGrid" transform="translate(884,500)" fill="#512BD4"/>
+  <text x="884" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#9A3412">16,157,680 B</text>
+  <text x="884" y="672" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">(~16.2 MB) — NOT reclaimed at all</text>
+
+  <!-- Root anchor under the interned column -->
+  <line x1="1096" y1="390" x2="1096" y2="450" stroke="#512BD4" stroke-width="2" stroke-dasharray="1 4"/>
+  <g filter="url(#memShadow)">
+    <circle cx="1096" cy="760" r="26" fill="#DDD6FE" stroke="#512BD4" stroke-width="1.5"/>
+  </g>
+  <path d="M 1096,748 L 1096,772 M 1096,772 L 1086,780 M 1096,772 L 1106,780" stroke="#512BD4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <line x1="1096" y1="680" x2="1096" y2="734" stroke="#512BD4" stroke-width="2"/>
+  <text x="1096" y="812" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#2E1065" text-anchor="middle">GC ROOT</text>
+  <text x="1096" y="830" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#6E6E76" text-anchor="middle">the intern pool itself</text>
+
+  <text x="80" y="878" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF" font-style="italic">Square density is illustrative, not a literal per-string count. Byte figures are exact, measured with GC.GetTotalMemory(true).</text>
+</svg>

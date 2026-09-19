@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant App as Application code
+    participant JIT as JIT-inserted write barrier
+    participant Card as Card table (one byte per ~card-sized region)
+    participant GC as Next Gen 0 collection
+
+    App->>App: gen2Object.Field = newGen0Object;
+    Note over App,JIT: A reference-type field store to an object<br/>that MIGHT be in an older generation
+    App->>JIT: Every such store passes through the barrier
+    JIT->>Card: Mark the byte for gen2Object's region "dirty"
+    Note over Card: Cheap — one conditional store,<br/>not a heap-wide scan
+
+    GC->>Card: Scan the (small) card table for dirty bytes
+    Card-->>GC: Only dirty regions reported
+    GC->>GC: Treat objects in dirty regions as extra roots
+    Note over GC: Gen 0 collection now sees gen2Object -> newGen0Object<br/>WITHOUT rescanning the rest of Gen 2 at all

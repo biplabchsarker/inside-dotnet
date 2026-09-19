@@ -18,7 +18,7 @@ All five are referenced inline in `article.md`: Hero Cover near the top (Learnin
 
 Two rounds of review feedback asked for progressively more polished illustrations. A hand-coded SVG technique (flat isometric cubes, gradient shading, blur-based soft shadows — prototyped in `chapters/008-boxing-unboxing/diagrams/svg/`) closed some of the gap, but the project owner's review of that prototype ("close, needs iteration") plus the decision to source images externally going forward means: **new chapters should not wait on further SVG iteration.** Use [`ILLUSTRATION_BRIEFS.md`](ILLUSTRATION_BRIEFS.md) as the spec handed to whichever external source produces the final PNGs — commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [BACKLOG.md](BACKLOG.md) for the full decision history.
 
-Existing hand-coded SVGs for Chapters 000-008 remain in place as interim placeholders until externally-sourced replacements land — they are not being iterated on further as SVG.
+Existing hand-coded SVGs for Chapters 000-012 remain in place as interim placeholders until externally-sourced replacements land — they are not being iterated on further as SVG.
 
 ## "Microsoft Learn quality" — what that means in practice
 
@@ -104,6 +104,10 @@ Dark-mode variants are optional per diagram but encouraged for anything publishe
 - [ ] All five referenced inline in `article.md` at the sections named in [The five signature illustrations](#the-five-signature-illustrations--every-chapter-v2-2026-08-08)
 - [ ] All five are 1600×900 PNG, delivered by the external source, no placeholder text left in
 
-## Interim SVG placeholders (Chapters 000-008)
+## Interim SVG placeholders (Chapters 000-012)
 
-Chapters 000-008 currently use hand-coded SVG for their signature illustrations (the four-illustration structure, dark-hero style for 000-007; a light-isometric prototype for 008). These stay in place as placeholders — not deleted, not further iterated as SVG — until externally-sourced v2 replacements land per [`ILLUSTRATION_BRIEFS.md`](ILLUSTRATION_BRIEFS.md). Treat any SVG-authoring instruction elsewhere in this doc as inapplicable to those placeholders going forward.
+Chapters 000-012 currently use hand-coded SVG for their signature illustrations (the four-illustration structure, dark-hero style for 000-007; the light-isometric technique for 008-012, five images each). These stay in place as placeholders — not deleted, not further iterated as SVG — until externally-sourced v2 replacements land per [`ILLUSTRATION_BRIEFS.md`](ILLUSTRATION_BRIEFS.md). Treat any SVG-authoring instruction elsewhere in this doc as inapplicable to those placeholders going forward.
+
+**2026-09-09 update:** the allowance was extended from "Chapters 000-008" to include 009 and 010 — those two chapters had shipped with only a navigational cover (no illustrations at all, unlike 000-008 which had *something* in every slot), and the project owner decided closing that specific gap with the same light-isometric technique was worth it rather than leaving two chapters fully bare while the external pipeline remains unbuilt.
+
+**2026-09-20 update:** the same reasoning was applied again as Chapters 011 and 012 were drafted — both shipped with the same light-isometric technique across all five signature illustrations rather than launching bare, and 012's navigational cover was completed to match (it had been left referencing a PNG that didn't exist on disk). This does not reopen SVG iteration as the long-term plan — see [BACKLOG.md](BACKLOG.md) for the decision history — it only means *future* chapters (013 onward) should default to waiting for external sourcing rather than assuming another SVG extension, unless the same "fully bare" condition recurs and gets a similar explicit decision.

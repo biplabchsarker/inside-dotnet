@@ -1,0 +1,131 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <!-- Header -->
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — MEMORY &amp; EXECUTION TRACE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">using Declarations vs Nested using Blocks</text>
+
+  <!-- Subtitle -->
+  <rect x="80" y="130" width="1440" height="60" rx="8" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="800" y="165" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F" text-anchor="middle">Both syntax choices compile to the exact same IL (try/finally). The modern using declaration is pure syntactic sugar.</text>
+
+  <!-- Columns -->
+  <!-- LEFT: C# 8 using declaration -->
+  <rect x="80" y="220" width="700" height="580" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="80" y="220" width="700" height="60" fill="#F3F4F6" rx="16" clip-path="polygon(0 0, 100% 0, 100% 100%, 0 100%)"/>
+  <text x="430" y="258" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">Modern C# (using Declarations)</text>
+  
+  <rect x="120" y="320" width="620" height="180" rx="6" fill="#F8FAFC" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="140" y="350" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">public void</text>
+  <text x="250" y="350" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">ProcessFile(string path)</text>
+  <text x="140" y="375" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">{</text>
+  <text x="160" y="400" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#D83B01" font-weight="700">using var stream = new FileStream(...);</text>
+  <text x="160" y="425" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#68217A" font-weight="700">using var reader = new StreamReader(...);</text>
+  <text x="160" y="450" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">string content = reader.ReadToEnd();</text>
+  <text x="140" y="475" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">}</text>
+  <text x="160" y="475" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#107C10"> // End of scope triggers implicit disposal</text>
+
+  <!-- IL Block Left -->
+  <text x="430" y="550" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#6E6E76" text-anchor="middle">COMPILED UNDER THE HOOD</text>
+  
+  <rect x="120" y="570" width="620" height="200" rx="6" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="140" y="600" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">FileStream stream = new FileStream(...);</text>
+  <text x="140" y="625" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#0078D4">try</text>
+  <text x="140" y="650" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">{</text>
+  <text x="160" y="675" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">StreamReader reader = new StreamReader(...);</text>
+  <text x="160" y="700" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#0078D4">try</text>
+  <text x="160" y="725" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">{ content = reader.ReadToEnd(); }</text>
+  <text x="160" y="750" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#0078D4">finally</text>
+  <text x="160" y="775" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">{</text>
+  <text x="180" y="800" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#68217A" font-weight="700">if (reader != null) ((IDisposable)reader).Dispose();</text>
+  <text x="160" y="825" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">}</text>
+  <text x="140" y="850" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">}</text>
+  <text x="140" y="875" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#0078D4">finally</text>
+  <text x="140" y="900" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">{</text>
+  <text x="160" y="925" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#D83B01" font-weight="700">if (stream != null) ((IDisposable)stream).Dispose();</text>
+  <text x="140" y="950" font-family="Cascadia Code, Fira Code, monospace" font-size="15" fill="#1B1B1F">}</text>
+
+  <!-- WAIT, SVG canvas is 900 high, text at 950 will be clipped. I need to shrink the font and adjust Y. -->
+  <!-- RE-ADJUSTING LEFT BLOCK -->
+  <rect x="120" y="570" width="620" height="200" rx="6" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="140" y="595" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">FileStream stream = new FileStream(...);</text>
+  <text x="140" y="615" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">try</text>
+  <text x="140" y="635" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="160" y="655" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">StreamReader reader = new StreamReader(...);</text>
+  <text x="160" y="675" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">try</text>
+  <text x="160" y="695" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{ string content = reader.ReadToEnd(); }</text>
+  <text x="160" y="715" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">finally</text>
+  <text x="160" y="735" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="180" y="755" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#68217A" font-weight="700">if (reader != null) ((IDisposable)reader).Dispose();</text>
+  <text x="160" y="775" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+  <text x="140" y="795" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+  <text x="140" y="815" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">finally</text>
+  <text x="140" y="835" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="160" y="855" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#D83B01" font-weight="700">if (stream != null) ((IDisposable)stream).Dispose();</text>
+  <text x="140" y="875" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+
+  <!-- ARROWS DOWN -->
+  <line x1="430" y1="510" x2="430" y2="530" stroke="#E5E7EB" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  
+  <!-- RIGHT: Traditional C# using blocks -->
+  <rect x="820" y="220" width="700" height="580" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="820" y="220" width="700" height="60" fill="#F3F4F6" rx="16" clip-path="polygon(0 0, 100% 0, 100% 100%, 0 100%)"/>
+  <text x="1170" y="258" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">Legacy C# (Nested using Blocks)</text>
+  
+  <rect x="860" y="320" width="620" height="180" rx="6" fill="#F8FAFC" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="880" y="350" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">public void</text>
+  <text x="990" y="350" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">ProcessFile(string path)</text>
+  <text x="880" y="375" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">{</text>
+  <text x="900" y="400" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">using</text>
+  <text x="948" y="400" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">(var stream = new FileStream(...))</text>
+  <text x="900" y="425" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">{</text>
+  <text x="920" y="450" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">using</text>
+  <text x="968" y="450" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">(var reader = new StreamReader(...))</text>
+  <text x="920" y="475" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">{ string content = reader.ReadToEnd(); }</text>
+  <text x="900" y="500" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">}</text>
+  <text x="880" y="525" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">}</text>
+
+  <!-- IL Block Right -->
+  <text x="1170" y="550" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#6E6E76" text-anchor="middle">COMPILED UNDER THE HOOD</text>
+
+  <!-- It's exactly the same block! -->
+  <rect x="860" y="570" width="620" height="200" rx="6" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="880" y="595" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">FileStream stream = new FileStream(...);</text>
+  <text x="880" y="615" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">try</text>
+  <text x="880" y="635" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="900" y="655" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">StreamReader reader = new StreamReader(...);</text>
+  <text x="900" y="675" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">try</text>
+  <text x="900" y="695" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{ string content = reader.ReadToEnd(); }</text>
+  <text x="900" y="715" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">finally</text>
+  <text x="900" y="735" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="920" y="755" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#68217A" font-weight="700">if (reader != null) ((IDisposable)reader).Dispose();</text>
+  <text x="900" y="775" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+  <text x="880" y="795" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+  <text x="880" y="815" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#0078D4">finally</text>
+  <text x="880" y="835" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">{</text>
+  <text x="900" y="855" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#D83B01" font-weight="700">if (stream != null) ((IDisposable)stream).Dispose();</text>
+  <text x="880" y="875" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#1B1B1F">}</text>
+
+  <!-- ARROWS DOWN -->
+  <line x1="1170" y1="535" x2="1170" y2="550" stroke="#E5E7EB" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#9CA3AF" />
+    </marker>
+  </defs>
+
+</svg>

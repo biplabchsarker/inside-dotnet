@@ -1,0 +1,9 @@
+flowchart TB
+    A["Full collection reaches\nthe Large Object Heap"] --> B{"GCSettings.LargeObjectHeapCompactionMode"}
+    B -->|"Default (the default)"| C["Sweep only:\nfreed blocks become\nfree-list entries,\nsurvivors do NOT move"]
+    C --> D["Repeated alloc/free of\ndifferently-sized large\nobjects can fragment\nthe free list over time"]
+    D --> E["A later large allocation\ncan fail with OutOfMemory\nEVEN WITH enough total\nfree bytes, if no single\nhole is big enough"]
+
+    B -->|"CompactOnce\n(explicitly set)"| F["THIS collection slides\nsurviving LOH objects\ntogether, closing gaps —\njust like Gen 2 compaction"]
+    F --> G["Mode resets itself to\nDefault immediately after —\nmust be set again for\nanother compaction"]
+    F --> H["Pause cost scales with\nhow much live LOH data\nhas to move — this is\nwhy it isn't the default"]

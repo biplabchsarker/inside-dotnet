@@ -2,7 +2,7 @@
 
 This is the spec to hand to whoever produces Inside .NET's five signature illustrations per chapter — a commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [IMAGE_GUIDE.md](IMAGE_GUIDE.md) for how these fit into the overall image system, and [BACKLOG.md](BACKLOG.md) for why this moved from hand-coded SVG to external sourcing (2026-08-08).
 
-Chapters 000-008 currently show hand-coded SVG placeholders in these slots. They stay in place, unedited, until a v2 image from this brief replaces them. Chapter 009 onward has no interim SVG placeholder at all — its content brief below is ready to hand off, but the five PNGs themselves are not yet sourced (no image-generation/commissioning tool was available when the chapter's text was written); `article.md` references the standard filenames so they can be dropped in without further edits once produced.
+Chapters 000-012 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-012) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-012 on 2026-09-20 as those two chapters were drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 013 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
 
 ## The style brief — applies to all five images, every chapter
 
@@ -153,6 +153,26 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Runtime/Internal View | Mark → Sweep → Compact as three side-by-side heap snapshots: marked (some blocks lit), swept (gaps where dim blocks were), compacted (blocks slid together, one clean free region at the end). |
 | Memory/Execution Diagram | A small object's promotion path — Gen 0 → Gen 1 → Gen 2 — as three nested regions, with a "survives a collection" arrow moving it one region deeper each time. |
 | Performance & Quick Reference | Measured bars: Gen 0 vs. Gen 1 vs. Gen 2 collection cost (5.84× for a full collection), Workstation vs. Server GC throughput (Server measured *slower* for a single-threaded workload — the counter-intuitive result worth calling out), and pre-sized vs. growing `List<T>` (~1.9× faster) — plus the "does `GC.Collect(0)` touch Gen 2?" interview question. |
+
+### 011 — GC Generations & the Large Object Heap
+
+| Image | Depict |
+|---|---|
+| Hero Cover | Three heap regions in one image, visually distinct in scale and treatment: a small, frequently-swept ephemeral region (Gen 0/Gen 1), a larger long-term Gen 2 region, and a separate Large Object Heap holding a few oversized blocks — the chapter's core point that "not all heap memory is managed the same way." |
+| Concept Overview | The segment-budget model end to end: Gen 0 fills its adaptive budget → triggers a Gen 0 collection → survivors promoted to Gen 1 → Gen 1's own adaptive budget → long-term survivors reach Gen 2 — shown as one linear promotion pipeline, with a parallel branch showing a large allocation (total object size ≥ 85,000 bytes) skipping straight to the LOH instead of entering Gen 0 at all. |
+| Runtime/Internal View | The card table / write barrier mechanism: a Gen 2 object's field gets updated to reference a newly-allocated Gen 0 object; the write barrier marks the corresponding card-table byte "dirty"; the next Gen 0 collection only rescans dirty cards instead of the entire Gen 2 heap. |
+| Memory/Execution Diagram | A size-threshold branch, concretely: allocating a small array (e.g. `new byte[84_975]`, reporting `GC.GetGeneration() == 0`) walks the normal Gen 0 bump-pointer path; allocating one byte more (`new byte[84_976]`, reporting `GC.GetGeneration() == 2`) crosses the 85,000-byte total-object-size threshold and lands directly on the LOH — same `new byte[N]` call, two different destinations, one byte apart, shown side by side. |
+| Performance & Quick Reference | Real measured bars, from `chapters/011-gc-generations-loh/article.md`'s Performance Notes: **LOH-fragmented full collection vs. one forced to compact** (`GCSettings.LargeObjectHeapCompactionMode = CompactOnce`) — 52.15 μs (sweep only) vs. 4,527.08 μs (compacting), **87.41×**; **the card-table proxy** — `GC.Collect(0)` cost against a Gen 2 graph with a *fixed* 2,000-object dirty set, growing 40× in total graph size (50,000 → 2,000,000 objects) for under 10× the cost (201.9 μs → 1,973.6 μs) — sub-linear, not perfectly flat, worth a small "noisy measurement" caveat rather than a clean single ratio; **LOH vs. small-object allocation** — close wall-clock times (3.258 ms vs. 3.589 ms) but a stark collection-count gap worth calling out instead (~8 Gen-0-only collections vs. ~31 full Gen 0+1+2 collections per 1,000 runs, for the same ~100 MB total). Likely interview question: "Does the LOH get compacted by default, and what changes that?" |
+
+### 012 — IDisposable & Finalizers
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A visualization of a pristine managed heap (blue cubes) alongside a chaotic "unmanaged" native memory space (dark, jagged blocks), connected by a bridge labeled "IDisposable". |
+| Concept Overview | A flowchart showing the dual-path cleanup pattern: an explicit `Dispose()` call skipping the finalization queue vs. a missed `Dispose()` falling into the finalization queue and causing a delayed, two-pass GC cleanup. |
+| Runtime/Internal View | A diagram of the Finalization Queue and F-Reachable Queue internal data structures during a GC cycle, showing how objects with finalizers get promoted to older generations if they aren't explicitly disposed. |
+| Memory/Execution Diagram | A side-by-side execution trace of C# 8 `using` declarations (implicit scope boundary) vs. traditional `using` blocks (explicit brackets) mapping down to the underlying `try/finally` IL generation. |
+| Performance & Quick Reference | Not yet briefable — wait for benchmark data to show GC cost of finalizers vs. non-finalizers, and the `SafeHandle` advantage. Likely interview question: "What is the difference between Dispose and a finalizer?" |
 
 ---
 

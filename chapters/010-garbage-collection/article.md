@@ -127,6 +127,8 @@ sequenceDiagram
 
 ![Deep-dive: roots, the mark/sweep/compact cycle, and the frame-lifetime root gotcha](diagrams/png/010-internal.png)
 
+![Memory: an object's promotion path — Gen 0 → Gen 1 → Gen 2 — moving one generation deeper each time it survives a collection](diagrams/png/010-memory.png)
+
 1. **Roots are a small, fixed, enumerable set — not "anything that looks reachable."** The CLR traces from exactly four kinds of roots: local variables and parameters currently live on any thread's stack, static fields, CPU registers holding a reference at the moment of collection, and `GCHandle`s (used for pinning and for interop). A collection walks outward from these, transitively, through every field and array element it finds — anything not reached this way is garbage, full stop, regardless of what a developer might assume is "still in use somewhere."
 2. **A genuinely surprising, verified nuance: nulling a local doesn't reliably free it within the same still-executing method.** This chapter's demo proves it directly: a method creates an object, assigns its local variable to `null`, and calls `GC.Collect()` — and a `WeakReference` to that object still reports `IsAlive == true`, in the *same* frame. Only after that method *returns*, with a fresh collection triggered from the caller, does the object actually become collectible. The CLR's real guarantee is "unreachable once the frame that held the last root has gone away" — not "unreachable the instant you reassign the variable." The JIT is not obligated to shrink a root's reported lifetime below the enclosing frame in every case; don't write code (or reason about memory) as if nulling a local mid-method is itself a signal the GC immediately acts on.
 3. **Sweep reclaims; compact is what keeps allocation fast.** Sweeping alone would leave the heap full of small holes exactly where dead objects used to be — and the bump-pointer allocator from [Episode 8](../007-object-allocation/article.md) has nothing to do with a hole; it only knows how to extend a single contiguous pointer forward. Compaction slides every surviving object together, closing every gap, and fixes up every reference that pointed at something that moved — which is also why arbitrary pointers into the middle of the managed heap aren't stable across a collection unless a `GCHandle` explicitly pins the object in place.
@@ -210,10 +212,10 @@ Same allocation total, same Gen 0 collection behavior — and Server GC was meas
 | Method | Mean | Ratio | Allocated |
 |---|---|---|---|
 | `CollectGen0` (baseline) | 94.50 µs | 1.00 | – |
-| `CollectGen1` | 98.15 µs | 1.05 | – |
+| `CollectGen1` | 98.15 µs | 1.05 | 8,536 B |
 | `CollectGen2` (full) | 544.38 µs | **5.84×** | – |
 
-Collecting Gen 0 and Gen 1 cost roughly the same — both are still shallow, bounded passes. A full collection is nearly **6× more expensive**, because it's the one case obligated to walk the entire live object graph rather than the newest slice of it. This is the measured payoff of the generational hypothesis from "Under the Hood" #4: most of the time, the GC never has to pay this price at all.
+Collecting Gen 0 and Gen 1 cost roughly the same — both are still shallow, bounded passes. A full collection is nearly **6× more expensive**, because it's the one case obligated to walk the entire live object graph rather than the newest slice of it. This is the measured payoff of the generational hypothesis from "Under the Hood" #4: most of the time, the GC never has to pay this price at all. (The `Allocated` column isn't part of that story — with `InvocationCount=1`, BenchmarkDotNet's allocation diagnoser is measuring a single call, and `CollectGen1`'s 8,536 B is diagnoser/JIT bookkeeping noise from that one-shot measurement, not a real cost difference between forcing Gen 0/1/2 collections; `Alloc Ratio` is `NA` for all three rows precisely because BenchmarkDotNet doesn't consider it a stable measurement here.)
 
 **3. Pre-sized vs. growing `List<int>`, 1,000,000 items added either way:**
 

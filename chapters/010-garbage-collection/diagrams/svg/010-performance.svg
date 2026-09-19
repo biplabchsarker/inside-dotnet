@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- PERFORMANCE & QUICK REFERENCE — chapters/010-garbage-collection.
+       Matches 008-cheatsheet.svg's language (gradient header, one-line rule,
+       measured bars, "if they ask one thing" box) widened to the 1600x900
+       standard, with three side-by-side measured comparisons instead of one
+       single list — every number sourced from this chapter's Performance Notes. -->
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Garbage Collection Fundamentals</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="130" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="158" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">The generational hypothesis pays for itself — a full collection costs 5.84× a Gen 0 pass, but most collections never pay that price.</text>
+
+  <text x="80" y="252" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0.8, 22-logical-processor machine</text>
+
+  <!-- Column separators -->
+  <line x1="550" y1="278" x2="550" y2="650" stroke="#E5E7EB" stroke-width="1.5"/>
+  <line x1="1050" y1="278" x2="1050" y2="650" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- COLUMN A: collection cost by generation -->
+  <text x="80" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">COLLECTION COST BY GENERATION</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="80" y="330" fill="#1B1B1F">Gen 0 — CollectGen0 (baseline)</text>
+    <rect x="80" y="338" width="51" height="20" rx="5" fill="#107C10"/>
+    <text x="141" y="353" fill="#6E6E76">94.50 µs · 1.00×</text>
+
+    <text x="80" y="392" fill="#1B1B1F">Gen 1 — CollectGen1</text>
+    <rect x="80" y="400" width="54" height="20" rx="5" fill="#107C10"/>
+    <text x="144" y="415" fill="#6E6E76">98.15 µs · 1.05×</text>
+
+    <text x="80" y="454" fill="#1B1B1F">Gen 2 — full (CollectGen2)</text>
+    <rect x="80" y="462" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="390" y="477" fill="#6E6E76" font-weight="700">544.38 µs · 5.84×</text>
+  </g>
+  <text x="80" y="522" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Against the same live 50,000-object graph. Gen 0/Gen 1 stay shallow; only a full collection walks everything.</text>
+
+  <!-- COLUMN B: Workstation vs Server GC -->
+  <text x="580" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">WORKSTATION VS SERVER GC</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="580" y="330" fill="#1B1B1F">Workstation GC (baseline)</text>
+    <rect x="580" y="338" width="274" height="20" rx="5" fill="#107C10"/>
+    <text x="864" y="353" fill="#6E6E76">9.998 ms · 1.00×</text>
+
+    <text x="580" y="392" fill="#1B1B1F">Server GC — one thread allocating</text>
+    <rect x="580" y="400" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="890" y="415" fill="#6E6E76" font-weight="700">10.934 ms · slower</text>
+  </g>
+  <text x="580" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">22 logical processors, one allocating thread — Server GC's per-core</text>
+  <text x="580" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">heaps have no concurrent allocation to parallelize. Counter-intuitive, but real.</text>
+
+  <!-- COLUMN C: List<int> pre-sized vs growing -->
+  <text x="1080" y="285" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" font-weight="700" fill="#6E6E76" letter-spacing="1">LIST&lt;INT&gt; — PRE-SIZED VS GROWING</text>
+
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="12.5">
+    <text x="1080" y="330" fill="#1B1B1F">GrowingList (baseline, no hint)</text>
+    <rect x="1080" y="338" width="300" height="20" rx="5" fill="#D83B01"/>
+    <text x="1390" y="353" fill="#6E6E76">3.062 ms · 8 MB</text>
+
+    <text x="1080" y="392" fill="#1B1B1F">PreSizedList (capacity given)</text>
+    <rect x="1080" y="400" width="159" height="20" rx="5" fill="#107C10"/>
+    <text x="1249" y="415" fill="#6E6E76" font-weight="700">1.596 ms · ~1.9× faster</text>
+  </g>
+  <text x="1080" y="452" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">1,000,000 items either way. Pre-sizing also allocates under</text>
+  <text x="1080" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">half the memory (3.82 MB vs. 8 MB) — less GC pressure to absorb.</text>
+
+  <text x="80" y="565" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" fill="#9CA3AF">Bar length = relative cost within each comparison, not across columns. Full tables in Performance Notes.</text>
+
+  <!-- Interview question -->
+  <rect x="80" y="600" width="1440" height="150" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="632" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="666" font-family="Segoe UI, Inter, sans-serif" font-size="19" font-weight="700" fill="#1B1B1F">"Does GC.Collect(0) ever touch Gen 2 objects?"</text>
+  <text x="104" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">No. It only increments the Gen 0 counter — the Gen 2 counter stays completely unchanged.</text>
+  <text x="104" y="724" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">Only a full, parameterless GC.Collect() (or an explicit GC.Collect(2)) touches every generation.</text>
+
+  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from Chapter10.Benchmarks — re-run it with `dotnet run -c Release`.</text>
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

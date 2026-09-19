@@ -1,0 +1,21 @@
+flowchart TB
+    subgraph EPH["Ephemeral segment"]
+        G0["Gen 0\nsmall, frequently\ncollected, adaptive budget"]
+        G1["Gen 1\nbuffer between\nGen 0 and Gen 2,\nown adaptive budget"]
+    end
+
+    subgraph G2SEG["Gen 2 segment(s)"]
+        G2["Gen 2\nlong-lived survivors,\ncollected + COMPACTED\nby a full collection"]
+    end
+
+    subgraph LOHSEG["Large Object Heap"]
+        LOH["Objects >= 85,000 bytes\ncollected WITH Gen 2,\nswept but NOT compacted\nby default"]
+    end
+
+    subgraph POHSEG["Pinned Object Heap (.NET 5+)"]
+        POH["Pinned allocations\n(GC.AllocateArray pinned:true)\nnever block compaction\nof the other segments"]
+    end
+
+    EPH -->|"survivors promote"| G2SEG
+    G2SEG -.->|"size threshold at\nALLOCATION time,\nnot after promotion"| LOHSEG
+    G2SEG -.->|"pinned at\nALLOCATION time"| POHSEG

@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — MEMORY &amp; EXECUTION TRACE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">The 85,000 Byte Threshold</text>
+
+  <!-- Left: Small Object Array -->
+  <rect x="80" y="160" width="700" height="660" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="80" y="160" width="700" height="60" fill="#F3F4F6" rx="16" clip-path="polygon(0 0, 100% 0, 100% 100%, 0 100%)"/>
+  <text x="430" y="198" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">Just Under the Limit (SOH)</text>
+  
+  <!-- Code Snippet -->
+  <rect x="120" y="260" width="620" height="120" rx="6" fill="#F8FAFC" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="140" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">byte</text>
+  <text x="180" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">[] arr1 = </text>
+  <text x="270" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">new</text>
+  <text x="305" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F"> </text>
+  <text x="315" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">byte</text>
+  <text x="355" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">[</text>
+  <text x="365" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#107C10">84_975</text>
+  <text x="425" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">];</text>
+
+  <text x="140" y="340" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">Console.WriteLine(GC.GetGeneration(arr1)); </text>
+  <text x="560" y="340" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#107C10" font-weight="700">// 0</text>
+
+  <!-- Arrow -->
+  <line x1="430" y1="400" x2="430" y2="440" stroke="#0078D4" stroke-width="3" marker-end="url(#arrowBlue)"/>
+
+  <!-- Heap Visual -->
+  <rect x="120" y="460" width="620" height="320" rx="8" fill="#E8F4FD" stroke="#0078D4" stroke-width="2"/>
+  <text x="430" y="500" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#0078D4" text-anchor="middle">Small Object Heap (Gen 0)</text>
+  
+  <rect x="150" y="530" width="560" height="80" rx="4" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="430" y="575" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Array Instance (84,975 bytes of data + 24 bytes header)</text>
+  <text x="430" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#107C10" font-weight="700" text-anchor="middle">Total: 84,999 Bytes</text>
+
+  <text x="430" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76" text-anchor="middle">Allocated extremely fast via a single pointer bump.</text>
+  <text x="430" y="675" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76" text-anchor="middle">Will be scanned and moved/compacted by the GC.</text>
+  
+  <!-- Right: Large Object Array -->
+  <rect x="820" y="160" width="700" height="660" rx="16" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="820" y="160" width="700" height="60" fill="#FDF3EE" rx="16" clip-path="polygon(0 0, 100% 0, 100% 100%, 0 100%)"/>
+  <text x="1170" y="198" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#D83B01" text-anchor="middle">Crossing the Limit (LOH)</text>
+  
+  <!-- Code Snippet -->
+  <rect x="860" y="260" width="620" height="120" rx="6" fill="#F8FAFC" stroke="#D1D5DB" stroke-width="1"/>
+  <text x="880" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">byte</text>
+  <text x="920" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">[] arr2 = </text>
+  <text x="1010" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">new</text>
+  <text x="1045" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F"> </text>
+  <text x="1055" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#0078D4">byte</text>
+  <text x="1095" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">[</text>
+  <text x="1105" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#D83B01" font-weight="700">84_976</text>
+  <text x="1165" y="300" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">];</text>
+
+  <text x="880" y="340" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#1B1B1F">Console.WriteLine(GC.GetGeneration(arr2)); </text>
+  <text x="1300" y="340" font-family="Cascadia Code, Fira Code, monospace" font-size="16" fill="#D83B01" font-weight="700">// 2</text>
+
+  <!-- Arrow -->
+  <line x1="1170" y1="400" x2="1170" y2="440" stroke="#D83B01" stroke-width="3" marker-end="url(#arrowRed)"/>
+
+  <!-- Heap Visual -->
+  <rect x="860" y="460" width="620" height="320" rx="8" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="1170" y="500" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#D83B01" text-anchor="middle">Large Object Heap (Gen 2)</text>
+  
+  <rect x="890" y="530" width="560" height="80" rx="4" fill="#FFFFFF" stroke="#D83B01" stroke-width="2" stroke-dasharray="8 4"/>
+  <text x="1170" y="575" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Array Instance (84,976 bytes of data + 24 bytes header)</text>
+  <text x="1170" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#D83B01" font-weight="700" text-anchor="middle">Total: 85,000 Bytes  (Exact Threshold!)</text>
+
+  <text x="1170" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76" text-anchor="middle">Requires scanning a free-list to find a hole.</text>
+  <text x="1170" y="675" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76" text-anchor="middle">Will NEVER be moved or compacted by default.</text>
+
+  <!-- Notice Arrow -->
+  <rect x="740" y="325" width="120" height="40" rx="20" fill="#68217A"/>
+  <text x="800" y="350" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">1 Byte Diff!</text>
+
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0078D4" />
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+  </defs>
+
+</svg>

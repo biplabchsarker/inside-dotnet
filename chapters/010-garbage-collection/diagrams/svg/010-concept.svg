@@ -1,0 +1,139 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- CONCEPT ILLUSTRATION — chapters/010-garbage-collection.
+       Light isometric style, matching 008-concept.svg's diagram-like composition.
+       Four root kinds on the left, each tracing a glowing line into the heap
+       region on the right. Reached objects are lit (purple); everything else
+       stays dim. This is the chapter's "Mark" phase, end to end, in one image. -->
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#FAFAFB"/>
+      <stop offset="100%" stop-color="#F5F3FF"/>
+    </linearGradient>
+    <filter id="softShadow2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feOffset dy="5" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="traceGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="4.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="traceStroke2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="100%" stop-color="#512BD4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+
+  <text x="80" y="76" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F">Mark — tracing reachability from the roots</text>
+  <text x="80" y="106" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76">Every collection starts here: walk outward from a fixed set of roots. What's reached is live; what isn't is garbage.</text>
+
+  <!-- Four root chips, stacked left -->
+  <g font-family="Segoe UI, Inter, sans-serif">
+    <g filter="url(#softShadow2)">
+      <rect x="80" y="170" width="230" height="82" rx="14" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+    </g>
+    <circle cx="112" cy="200" r="6" fill="#0078D4"/>
+    <text x="132" y="205" font-size="16" font-weight="700" fill="#0B3A66">Stack</text>
+    <text x="112" y="228" font-size="12.5" fill="#3D6B96">Local variables &amp; parameters</text>
+
+    <g filter="url(#softShadow2)">
+      <rect x="80" y="272" width="230" height="82" rx="14" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+    </g>
+    <circle cx="112" cy="302" r="6" fill="#0078D4"/>
+    <text x="132" y="307" font-size="16" font-weight="700" fill="#0B3A66">Statics</text>
+    <text x="112" y="330" font-size="12.5" fill="#3D6B96">Static fields</text>
+
+    <g filter="url(#softShadow2)">
+      <rect x="80" y="374" width="230" height="82" rx="14" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+    </g>
+    <circle cx="112" cy="404" r="6" fill="#0078D4"/>
+    <text x="132" y="409" font-size="16" font-weight="700" fill="#0B3A66">Registers</text>
+    <text x="112" y="432" font-size="12.5" fill="#3D6B96">CPU registers holding a reference</text>
+
+    <g filter="url(#softShadow2)">
+      <rect x="80" y="476" width="230" height="82" rx="14" fill="#EFF6FF" stroke="#0078D4" stroke-width="1.5"/>
+    </g>
+    <circle cx="112" cy="506" r="6" fill="#0078D4"/>
+    <text x="132" y="511" font-size="16" font-weight="700" fill="#0B3A66">GC Handles</text>
+    <text x="112" y="534" font-size="12.5" fill="#3D6B96">Pinned, normal &amp; weak handles</text>
+  </g>
+
+  <text x="195" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0078D4" text-anchor="middle" letter-spacing="2">ROOTS</text>
+
+  <!-- Heap region -->
+  <g filter="url(#softShadow2)">
+    <rect x="620" y="160" width="900" height="500" rx="24" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+  </g>
+  <text x="652" y="200" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#9CA3AF" letter-spacing="3">HEAP</text>
+  <rect x="1400" y="176" width="90" height="34" rx="17" fill="#F3F0FC" stroke="#512BD4" stroke-width="1.5"/>
+  <text x="1445" y="198" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" text-anchor="middle">MARK</text>
+
+  <!-- Trace lines: each root -> its reachable object(s) -->
+  <g fill="none" stroke="url(#traceStroke2)" stroke-width="2.6" stroke-linecap="round" filter="url(#traceGlow)" opacity="0.85">
+    <path d="M 310,211 C 500,220 620,260 720,300"/>
+    <path d="M 310,313 C 480,330 600,370 760,420"/>
+    <path d="M 310,415 C 500,430 640,470 860,500"/>
+    <path d="M 310,517 C 460,540 580,560 700,565"/>
+  </g>
+
+  <!-- Reachable objects: lit purple cubes, small -->
+  <g filter="url(#softShadow2)">
+    <polygon points="750,278 792,300 750,322 708,300" fill="#DDD6FE"/>
+    <polygon points="708,300 750,322 750,364 708,342" fill="#8B5CF6"/>
+    <polygon points="750,322 792,300 792,342 750,364" fill="#512BD4"/>
+  </g>
+  <g filter="url(#softShadow2)">
+    <polygon points="800,398 842,420 800,442 758,420" fill="#DDD6FE"/>
+    <polygon points="758,420 800,442 800,484 758,462" fill="#8B5CF6"/>
+    <polygon points="800,442 842,420 842,462 800,484" fill="#512BD4"/>
+  </g>
+  <g filter="url(#softShadow2)">
+    <polygon points="900,478 942,500 900,522 858,500" fill="#DDD6FE"/>
+    <polygon points="858,500 900,522 900,564 858,542" fill="#8B5CF6"/>
+    <polygon points="900,522 942,500 942,542 900,564" fill="#512BD4"/>
+  </g>
+  <g filter="url(#softShadow2)">
+    <polygon points="700,543 742,565 700,587 658,565" fill="#DDD6FE"/>
+    <polygon points="658,565 700,587 700,629 658,607" fill="#8B5CF6"/>
+    <polygon points="700,587 742,565 742,607 700,629" fill="#512BD4"/>
+  </g>
+
+  <!-- Unreachable objects: dim, no trace line reaches them -->
+  <g opacity="0.4">
+    <polygon points="1080,260 1116,279 1080,298 1044,279" fill="#EDEDEF"/>
+    <polygon points="1044,279 1080,298 1080,336 1044,317" fill="#C7C7CE"/>
+    <polygon points="1080,298 1116,279 1116,317 1080,336" fill="#9CA3AF"/>
+  </g>
+  <g opacity="0.4">
+    <polygon points="1220,340 1256,359 1220,378 1184,359" fill="#EDEDEF"/>
+    <polygon points="1184,359 1220,378 1220,416 1184,397" fill="#C7C7CE"/>
+    <polygon points="1220,378 1256,359 1256,397 1220,416" fill="#9CA3AF"/>
+  </g>
+  <g opacity="0.4">
+    <polygon points="1120,470 1156,489 1120,508 1084,489" fill="#EDEDEF"/>
+    <polygon points="1084,489 1120,508 1120,546 1084,527" fill="#C7C7CE"/>
+    <polygon points="1120,508 1156,489 1156,527 1120,546" fill="#9CA3AF"/>
+  </g>
+  <g opacity="0.4">
+    <polygon points="1300,540 1336,559 1300,578 1264,559" fill="#EDEDEF"/>
+    <polygon points="1264,559 1300,578 1300,616 1264,597" fill="#C7C7CE"/>
+    <polygon points="1300,578 1336,559 1336,597 1300,616" fill="#9CA3AF"/>
+  </g>
+
+  <!-- Legend -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="600">
+    <rect x="652" y="712" width="230" height="42" rx="21" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <circle cx="676" cy="733" r="5" fill="#512BD4"/>
+    <text x="692" y="738" fill="#1B1B1F">Reached — LIVE</text>
+
+    <rect x="900" y="712" width="290" height="42" rx="21" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1.5"/>
+    <circle cx="924" cy="733" r="5" fill="#9CA3AF"/>
+    <text x="940" y="738" fill="#1B1B1F">Not reached — GARBAGE</text>
+  </g>
+
+  <text x="800" y="840" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">A reference cycle with no path back to a root is still GARBAGE — reachability decides, not whether something still "looks" pointed-at.</text>
+</svg>

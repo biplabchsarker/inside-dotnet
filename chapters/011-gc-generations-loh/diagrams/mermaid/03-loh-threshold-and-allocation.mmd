@@ -1,0 +1,8 @@
+flowchart LR
+    A["new byte[N]"] --> B{"Total object size\n(data + ~24-byte\narray header)\n>= 85,000 bytes?"}
+    B -->|"no, e.g. N = 84,975"| C["Normal path:\nbump-pointer into\nGen 0's ephemeral segment"]
+    C --> D["GC.GetGeneration -> 0"]
+    B -->|"yes, e.g. N = 84,976"| E["Large Object Heap:\nallocated from a free-list,\nNOT a bump pointer"]
+    E --> F["GC.GetGeneration -> 2\n(LOH is collected\nwith Gen 2)"]
+
+    G["Same threshold check applies\nto ANY reference-type object,\nnot just arrays"] -.-> B
