@@ -19,4 +19,4 @@ Part II — Memory
 | [diagrams/svg/](diagrams/svg/) | Signature-illustration SVG sources (light-isometric interim placeholders; see [IMAGE_GUIDE.md](../../IMAGE_GUIDE.md)) |
 
 **Previous:** [Episode 13 — IDisposable & Finalizers](../012-idisposable-finalizers/README.md)
-**Next:** Episode 15 — OOP Fundamentals *(not yet written; opens Part III — C#)*
+**Next:** [Episode 15 — OOP Fundamentals](../014-oop-fundamentals/README.md) *(opens Part III — C#)*

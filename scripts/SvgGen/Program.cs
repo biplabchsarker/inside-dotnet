@@ -4,13 +4,13 @@ class Program
 {
     static void Main()
     {
-        string outDir = @"../../chapters/011-gc-generations-loh/diagrams/svg";
-        
-        File.WriteAllText(Path.Combine(outDir, "011-hero.svg"), GenerateHero());
-        File.WriteAllText(Path.Combine(outDir, "011-concept.svg"), GenerateConcept());
-        File.WriteAllText(Path.Combine(outDir, "011-internal.svg"), GenerateInternal());
-        File.WriteAllText(Path.Combine(outDir, "011-memory.svg"), GenerateMemory());
-        
+        string outDir = @"../../chapters/014-oop-fundamentals/diagrams/svg";
+
+        File.WriteAllText(Path.Combine(outDir, "014-hero.svg"), GenerateHero());
+        File.WriteAllText(Path.Combine(outDir, "014-concept.svg"), GenerateConcept());
+        File.WriteAllText(Path.Combine(outDir, "014-internal.svg"), GenerateInternal());
+        File.WriteAllText(Path.Combine(outDir, "014-memory.svg"), GenerateMemory());
+
         Console.WriteLine("SVGs generated.");
     }
 
@@ -37,107 +37,20 @@ class Program
     </marker>
   </defs>";
 
-    static string DrawCube(int cx, int cy, int w, int d, int h, string cTop, string cLeft, string cRight)
-    {
-        // Isometric projection: W is width in +x/-y direction, D is depth in -x/-y direction.
-        // For simplicity, standard dx=w, dy=w/2.
-        int topY = cy - (w/2 + d/2);
-        int leftX = cx - d;
-        int rightX = cx + w;
-        int bottomY = cy + h; // actually the vertical drop is h
-        
-        int p0x = cx, p0y = cy - (w/2 + d/2); // top
-        int p1x = cx + w, p1y = cy - d/2 + w/2 - (w/2); // right
-        int p2x = cx, p2y = cy; // center
-        int p3x = cx - d, p3y = cy - w/2 + d/2 - (d/2); // left
-
-        // actual simple projection:
-        int dx = 55; int dy = 27; // base unit
-        // scale by w and d (which are multipliers)
-        int px0 = cx;
-        int py0 = cy - (w * dy + d * dy);
-        int px1 = cx + w * dx;
-        int py1 = cy - d * dy;
-        int px2 = cx + (w - d) * dx;
-        int py2 = cy;
-        int px3 = cx - d * dx;
-        int py3 = cy - w * dy;
-        
-        // standard simple cube
-        p0x = cx; p0y = cy - dy * (w+d);
-        p1x = cx + dx * w; p1y = cy - dy * (w-d);
-        p2x = cx; p2y = cy + dy * (w+d); // wait, math is simpler if we just use explicit points
-        
-        // Let's use simple parameters: cx, cy is the BOTTOM center of the TOP face.
-        // w is size along bottom-right, d is size along bottom-left, h is height.
-        int tCx = cx;
-        int tCy = cy;
-        int rightX_ = cx + w;
-        int rightY_ = cy - w/2;
-        int topX_ = cx + w - d;
-        int topY_ = cy - (w/2 + d/2);
-        int leftX_ = cx - d;
-        int leftY_ = cy - d/2;
-        
-        // using 55 and 27 as units
-        int pTopX = cx;
-        int pTopY = cy - (w * 27) - (d * 27);
-        int pRightX = cx + w * 55;
-        int pRightY = cy - (w * 27) + (d * 27);
-        int pBottomX = cx + (w-d)*55;
-        int pBottomY = cy + (w+d)*27;
-        
-        // Just use exact relative points. w=width units, d=depth units, h=height units
-        int uX = 55;
-        int uY = 27;
-        
-        int top_x = cx;
-        int top_y = cy - (w * uY) - (d * uY);
-        int right_x = cx + w * uX;
-        int right_y = cy - (w * uY) + (d * uY);
-        int bottom_x = cx + (w * uX) - (d * uX);
-        int bottom_y = cy + (w * uY) + (d * uY); // Wait, this math is confusing. Let's just do it exactly like 010.
-
-        return $@"
-  <g filter=""url(#softShadow)"">
-    <polygon points=""{cx},{cy-27*w} {cx+55*w},{cy} {cx},{cy+27*w} {cx-55*w},{cy}"" fill=""{cTop}""/>
-    <polygon points=""{cx-55*w},{cy} {cx},{cy+27*w} {cx},{cy+27*w+60*h} {cx-55*w},{cy+60*h}"" fill=""{cLeft}""/>
-    <polygon points=""{cx},{cy+27*w} {cx+55*w},{cy} {cx+55*w},{cy+60*h} {cx},{cy+27*w+60*h}"" fill=""{cRight}""/>
-  </g>";
-    }
-
-    // A better DrawCube allowing independent width and depth
+    // cx,cy is the LEFT point of the box's top face. w/d/h are size multipliers.
     static string DrawBox(int cx, int cy, double w, double d, double h, string cTop, string cLeft, string cRight)
     {
         double ux = 55;
-        double uy = 27.5; // let's use 27.5 for exact 2:1 iso
-        
-        double pTopX = cx;
-        double pTopY = cy - (w * uy + d * uy);
-        double pRightX = cx + w * ux;
-        double pRightY = cy - (w * uy - d * uy);
-        double pBottomX = cx + (w - d) * ux;
-        double pBottomY = cy + (w + d) * uy;
-        double pLeftX = cx - d * ux;
-        double pLeftY = cy + (w * uy - d * uy);
+        double uy = 27.5;
 
-        // adjust cy so cx, cy is the top-center
-        // wait, let's just make cx, cy the left point of the top face.
-        double tLeftX = cx;
-        double tLeftY = cy;
-        double tBottomX = cx + w * ux;
-        double tBottomY = cy + w * uy;
-        double tRightX = cx + (w + d) * ux;
-        double tRightY = cy + (w - d) * uy;
-        double tTopX = cx + d * ux;
-        double tTopY = cy - d * uy;
+        double tLeftX = cx, tLeftY = cy;
+        double tBottomX = cx + w * ux, tBottomY = cy + w * uy;
+        double tRightX = cx + (w + d) * ux, tRightY = cy + (w - d) * uy;
+        double tTopX = cx + d * ux, tTopY = cy - d * uy;
 
-        double bLeftX = tLeftX;
-        double bLeftY = tLeftY + h * 60;
-        double bBottomX = tBottomX;
-        double bBottomY = tBottomY + h * 60;
-        double bRightX = tRightX;
-        double bRightY = tRightY + h * 60;
+        double bLeftX = tLeftX, bLeftY = tLeftY + h * 60;
+        double bBottomX = tBottomX, bBottomY = tBottomY + h * 60;
+        double bRightX = tRightX, bRightY = tRightY + h * 60;
 
         return $@"
   <g filter=""url(#softShadow)"">
@@ -152,22 +65,31 @@ class Program
         return $@"<svg viewBox=""0 0 1600 900"" xmlns=""http://www.w3.org/2000/svg"">
 {GetDefs()}
   <rect width=""1600"" height=""900"" fill=""url(#bgWash)""/>
-  <text x=""100"" y=""90"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""600"" fill=""#6E6E76"" letter-spacing=""3"">PART II — MEMORY · EPISODE 12</text>
-  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">GC Generations &amp; the Large Object Heap</text>
+  <text x=""100"" y=""90"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""600"" fill=""#6E6E76"" letter-spacing=""3"">PART III — C# · EPISODE 15</text>
+  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">OOP Fundamentals</text>
 
-  <!-- Gen 0/1 (Blue) -->
-  {DrawBox(300, 500, 1.5, 1.5, 1.5, ""#DBEAFE"", ""#60A5FA"", ""#2563EB"")}
-  <text x=""380"" y=""650"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Ephemeral (Gen 0/1)</text>
+  <!-- Encapsulation: a sealed box with a lock -->
+  {DrawBox(220, 480, 2, 2, 2, "#DBEAFE", "#60A5FA", "#2563EB")}
+  <g transform=""translate(320,470)"">
+    <rect x=""-18"" y=""-6"" width=""36"" height=""28"" rx=""6"" fill=""#FFFFFF"" stroke=""#2563EB"" stroke-width=""3""/>
+    <path d=""M -10,-6 L -10,-18 A 10,10 0 0 1 10,-18 L 10,-6"" fill=""none"" stroke=""#2563EB"" stroke-width=""4""/>
+  </g>
+  <text x=""340"" y=""650"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Encapsulation</text>
 
-  <!-- Gen 2 (Purple) -->
-  {DrawBox(700, 400, 3, 3, 2, ""#DDD6FE"", ""#8B5CF6"", ""#512BD4"")}
-  <text x=""865"" y=""650"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Gen 2 (Long-term)</text>
+  <!-- Inheritance: a parent box with a smaller child box stacked, connected by a line -->
+  {DrawBox(650, 380, 2.5, 2.5, 1.5, "#DDD6FE", "#8B5CF6", "#512BD4")}
+  {DrawBox(700, 560, 1.5, 1.5, 1.2, "#EDE9FE", "#A78BFA", "#7C3AED")}
+  <path d=""M 780 470 L 780 545"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <text x=""790"" y=""700"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Inheritance</text>
 
-  <!-- LOH (Grey/Green) -->
-  {DrawBox(1200, 450, 4, 1.5, 1, ""#F3F4F6"", ""#9CA3AF"", ""#4B5563"")}
-  <text x=""1310"" y=""650"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#4B5563"" text-anchor=""middle"">Large Object Heap</text>
+  <!-- Polymorphism: one box, three arrows fanning to three different behaviors -->
+  {DrawBox(1150, 420, 1.8, 1.8, 1.5, "#F3F4F6", "#9CA3AF", "#4B5563")}
+  <path d=""M 1260 430 L 1360 350"" stroke=""#0078D4"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 1260 460 L 1380 460"" stroke=""#0078D4"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 1260 490 L 1360 570"" stroke=""#0078D4"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <text x=""1240"" y=""700"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#4B5563"" text-anchor=""middle"">Polymorphism</text>
 
-  <text x=""800"" y=""800"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">Not all heap memory is managed the same way</text>
+  <text x=""800"" y=""800"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">One reference type, many actual behaviors</text>
 </svg>";
     }
 
@@ -177,28 +99,43 @@ class Program
 {GetDefs()}
   <rect width=""1600"" height=""900"" fill=""url(#bgWash)""/>
   <text x=""100"" y=""90"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""600"" fill=""#6E6E76"" letter-spacing=""3"">CONCEPT OVERVIEW</text>
-  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">The Segment-Budget Pipeline</text>
+  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">Same Declared Type, Different Actual Behavior</text>
 
-  {DrawBox(200, 400, 1.5, 1.5, 1, ""#DBEAFE"", ""#60A5FA"", ""#2563EB"")}
-  <text x=""280"" y=""500"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Gen 0</text>
-  
-  <path d=""M 380 430 L 460 430"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <!-- List<Animal> container -->
+  <rect x=""120"" y=""250"" width=""360"" height=""580"" rx=""16"" fill=""#F3F4F6"" stroke=""#9CA3AF"" stroke-width=""2""/>
+  <text x=""300"" y=""290"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""17"" font-weight=""700"" fill=""#374151"" text-anchor=""middle"">List&lt;Animal&gt;</text>
 
-  {DrawBox(500, 400, 2, 2, 1, ""#DBEAFE"", ""#60A5FA"", ""#2563EB"")}
-  <text x=""610"" y=""500"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Gen 1</text>
+  {DrawBox(200, 380, 1.1, 1.1, 0.8, "#DBEAFE", "#60A5FA", "#2563EB")}
+  <text x=""300"" y=""475"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Dog</text>
 
-  <path d=""M 730 430 L 810 430"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  {DrawBox(200, 550, 1.1, 1.1, 0.8, "#DDD6FE", "#8B5CF6", "#512BD4")}
+  <text x=""300"" y=""645"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Cat</text>
 
-  {DrawBox(850, 350, 3, 3, 1.5, ""#DDD6FE"", ""#8B5CF6"", ""#512BD4"")}
-  <text x=""1015"" y=""500"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Gen 2</text>
+  {DrawBox(200, 720, 1.1, 1.1, 0.8, "#F3F4F6", "#9CA3AF", "#4B5563")}
+  <text x=""300"" y=""815"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#4B5563"" text-anchor=""middle"">Animal</text>
 
-  <!-- LOH branch -->
-  <path d=""M 280 550 L 280 650 L 460 650"" stroke=""#9CA3AF"" stroke-width=""3"" stroke-dasharray=""5,5"" marker-end=""url(#arrow)""/>
-  <text x=""370"" y=""640"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" fill=""#6E6E76"" text-anchor=""middle"">>= 85,000 bytes</text>
+  <text x=""300"" y=""220"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""15"" fill=""#6E6E76"" text-anchor=""middle"">every element stored and accessed as 'Animal'</text>
 
-  {DrawBox(500, 600, 4, 1.5, 1, ""#F3F4F6"", ""#9CA3AF"", ""#4B5563"")}
-  <text x=""610"" y=""700"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#4B5563"" text-anchor=""middle"">Large Object Heap</text>
+  <!-- Loop calling Speak() -->
+  <path d=""M 500 430 L 640 430"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 500 600 L 640 600"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 500 770 L 640 770"" stroke=""#9CA3AF"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <text x=""570"" y=""410"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""14"" fill=""#6E6E76"" text-anchor=""middle"">.Speak()</text>
 
+  <!-- Results -->
+  <rect x=""660"" y=""390"" width=""420"" height=""80"" rx=""12"" fill=""#DBEAFE"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""870"" y=""438"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""17"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Dog.Speak() runs</text>
+
+  <rect x=""660"" y=""560"" width=""420"" height=""80"" rx=""12"" fill=""#DDD6FE"" stroke=""#512BD4"" stroke-width=""2""/>
+  <text x=""870"" y=""608"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""17"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Cat.Speak() runs</text>
+
+  <rect x=""660"" y=""730"" width=""420"" height=""80"" rx=""12"" fill=""#F3F4F6"" stroke=""#4B5563"" stroke-width=""2""/>
+  <text x=""870"" y=""778"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""17"" font-weight=""700"" fill=""#4B5563"" text-anchor=""middle"">Animal.Speak() runs</text>
+
+  <text x=""1250"" y=""540"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-weight=""700"" fill=""#1B1B1F"" text-anchor=""middle"">The reference type never</text>
+  <text x=""1250"" y=""574"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-weight=""700"" fill=""#1B1B1F"" text-anchor=""middle"">changes. The behavior does.</text>
+  <text x=""1250"" y=""620"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">That's polymorphism — decided by</text>
+  <text x=""1250"" y=""646"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">the OBJECT, not the variable.</text>
 </svg>";
     }
 
@@ -208,26 +145,46 @@ class Program
 {GetDefs()}
   <rect width=""1600"" height=""900"" fill=""url(#bgWash)""/>
   <text x=""100"" y=""90"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""600"" fill=""#6E6E76"" letter-spacing=""3"">RUNTIME / INTERNAL VIEW</text>
-  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">The Card Table &amp; Write Barrier</text>
+  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">The Method Table (vtable) Lookup</text>
 
-  <!-- Gen 2 Object -->
-  {DrawBox(300, 350, 2, 2, 2, ""#DDD6FE"", ""#8B5CF6"", ""#512BD4"")}
-  <text x=""410"" y=""530"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#2E1065"" text-anchor=""middle"">Gen 2 Object</text>
+  <!-- Dog instance on the heap -->
+  <rect x=""100"" y=""260"" width=""320"" height=""160"" rx=""14"" fill=""#DBEAFE"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""260"" y=""295"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Dog instance (on the heap)</text>
+  <rect x=""120"" y=""310"" width=""280"" height=""34"" rx=""6"" fill=""#2563EB""/>
+  <text x=""260"" y=""333"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13"" font-weight=""700"" fill=""#FFFFFF"" text-anchor=""middle"">Method Table pointer (offset 0)</text>
+  <text x=""260"" y=""385"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13"" fill=""#0B3A66"" text-anchor=""middle"">Name = &quot;Rex&quot;  (instance fields)</text>
 
-  <path d=""M 520 400 L 720 400"" stroke=""#0078D4"" stroke-width=""4"" marker-end=""url(#arrow)""/>
+  <path d=""M 260 344 L 260 460"" stroke=""#2563EB"" stroke-width=""3"" marker-end=""url(#arrow)""/>
 
-  <!-- Gen 0 Object -->
-  {DrawBox(750, 350, 1, 1, 1, ""#DBEAFE"", ""#60A5FA"", ""#2563EB"")}
-  <text x=""805"" y=""460"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">New Gen 0 Object</text>
+  <!-- Dog's Method Table / vtable -->
+  <rect x=""100"" y=""470"" width=""320"" height=""280"" rx=""14"" fill=""#FFFFFF"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""260"" y=""505"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Dog's Method Table</text>
+  <rect x=""120"" y=""520"" width=""280"" height=""36"" rx=""6"" fill=""#F3F4F6"" stroke=""#9CA3AF""/>
+  <text x=""260"" y=""543"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""12.5"" fill=""#374151"" text-anchor=""middle"">slot 0: ToString -> Object.ToString</text>
+  <rect x=""120"" y=""562"" width=""280"" height=""36"" rx=""6"" fill=""#FEF3C7"" stroke=""#D97706"" stroke-width=""2""/>
+  <text x=""260"" y=""585"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""12.5"" font-weight=""700"" fill=""#92400E"" text-anchor=""middle"">slot 1: Speak -&gt; Dog.Speak</text>
+  <rect x=""120"" y=""604"" width=""280"" height=""36"" rx=""6"" fill=""#F3F4F6"" stroke=""#9CA3AF""/>
+  <text x=""260"" y=""627"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""12.5"" fill=""#374151"" text-anchor=""middle"">slot 2: Equals -> Object.Equals</text>
+  <text x=""260"" y=""670"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""12.5"" fill=""#6E6E76"" text-anchor=""middle"">Dog's override replaced ONLY slot 1</text>
 
-  <!-- Card Table -->
-  <rect x=""300"" y=""650"" width=""400"" height=""60"" rx=""4"" fill=""#F3F4F6"" stroke=""#9CA3AF"" stroke-width=""2""/>
-  <rect x=""400"" y=""650"" width=""100"" height=""60"" fill=""#D83B01""/>
-  <text x=""450"" y=""685"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#FFFFFF"" text-anchor=""middle"">DIRTY</text>
-  <text x=""600"" y=""685"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" fill=""#9CA3AF"" text-anchor=""middle"">clean cards</text>
+  <!-- Call site -->
+  <rect x=""560"" y=""260"" width=""420"" height=""110"" rx=""14"" fill=""#F3F4F6"" stroke=""#4B5563"" stroke-width=""2""/>
+  <text x=""770"" y=""300"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""16"" font-weight=""700"" fill=""#1B1B1F"" text-anchor=""middle"">Animal animal = dogInstance;</text>
+  <text x=""770"" y=""335"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""16"" font-weight=""700"" fill=""#1B1B1F"" text-anchor=""middle"">animal.Speak();  // callvirt</text>
 
-  <path d=""M 410 550 L 450 630"" stroke=""#D83B01"" stroke-width=""2"" stroke-dasharray=""4,4"" marker-end=""url(#arrow)""/>
-  <text x=""500"" y=""800"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""18"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">Write barrier flags the card table — Gen 0 collection skips clean cards entirely</text>
+  <path d=""M 770 372 L 400 490"" stroke=""#D97706"" stroke-width=""3"" stroke-dasharray=""6,4"" marker-end=""url(#arrow)""/>
+  <text x=""620"" y=""420"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" fill=""#92400E"" text-anchor=""middle"">1. read Method Table ptr, index slot 1</text>
+
+  <path d=""M 780 580 L 990 580"" stroke=""#D97706"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <text x=""880"" y=""565"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" fill=""#92400E"" text-anchor=""middle"">2. jump here</text>
+
+  <!-- Dog.Speak code -->
+  <rect x=""1000"" y=""500"" width=""420"" height=""160"" rx=""14"" fill=""#FEF3C7"" stroke=""#D97706"" stroke-width=""2""/>
+  <text x=""1210"" y=""540"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""700"" fill=""#92400E"" text-anchor=""middle"">Dog.Speak()</text>
+  <text x=""1210"" y=""575"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13"" fill=""#78350F"" text-anchor=""middle"">Console.WriteLine(</text>
+  <text x=""1210"" y=""600"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13"" fill=""#78350F"" text-anchor=""middle"">  $&quot;{{Name}} says: Woof!&quot;);</text>
+
+  <text x=""800"" y=""800"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""17"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">A direct (non-virtual) call skips both dashed steps — the address is fixed at compile time</text>
 </svg>";
     }
 
@@ -237,22 +194,56 @@ class Program
 {GetDefs()}
   <rect width=""1600"" height=""900"" fill=""url(#bgWash)""/>
   <text x=""100"" y=""90"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""16"" font-weight=""600"" fill=""#6E6E76"" letter-spacing=""3"">MEMORY / EXECUTION DIAGRAM</text>
-  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">The LOH Size Threshold</text>
+  <text x=""100"" y=""130"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""34"" font-weight=""700"" fill=""#1B1B1F"">override vs. new (Method Hiding)</text>
 
-  <!-- Left: Gen 0 -->
-  <rect x=""250"" y=""300"" width=""450"" height=""120"" rx=""14"" fill=""#EFF6FF"" stroke=""#0078D4"" stroke-width=""2""/>
-  <text x=""475"" y=""350"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""18"" font-weight=""600"" fill=""#0B3A66"" text-anchor=""middle"">new byte[84_975]</text>
-  <text x=""475"" y=""380"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" fill=""#0B3A66"" text-anchor=""middle"">Total: 84,999 bytes. Gen 0.</text>
-  {DrawBox(420, 450, 1, 1, 1, ""#DBEAFE"", ""#60A5FA"", ""#2563EB"")}
+  <!-- Left: override -->
+  <rect x=""120"" y=""220"" width=""650"" height=""560"" rx=""16"" fill=""#EFF6FF"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""445"" y=""265"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">override — ONE vtable slot</text>
 
-  <!-- Right: LOH -->
-  <rect x=""900"" y=""300"" width=""450"" height=""120"" rx=""14"" fill=""#F3F4F6"" stroke=""#9CA3AF"" stroke-width=""2""/>
-  <text x=""1125"" y=""350"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""18"" font-weight=""600"" fill=""#4B5563"" text-anchor=""middle"">new byte[84_976]</text>
-  <text x=""1125"" y=""380"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" fill=""#4B5563"" text-anchor=""middle"">Total: 85,000 bytes. LOH.</text>
-  {DrawBox(1020, 450, 3, 1, 1, ""#F3F4F6"", ""#9CA3AF"", ""#4B5563"")}
+  <rect x=""170"" y=""300"" width=""250"" height=""70"" rx=""10"" fill=""#FFFFFF"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""295"" y=""340"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13.5"" fill=""#0B3A66"" text-anchor=""middle"">BaseType overridingAsBase</text>
 
-  <text x=""800"" y=""750"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""24"" font-weight=""700"" fill=""#1B1B1F"" text-anchor=""middle"">1 Byte Difference = Different Destination</text>
-  <text x=""800"" y=""790"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""18"" font-style=""italic"" fill=""#6E6E76"" text-anchor=""middle"">Array header overhead is included in the threshold check</text>
+  <rect x=""450"" y=""300"" width=""270"" height=""70"" rx=""10"" fill=""#FFFFFF"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""585"" y=""340"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13.5"" fill=""#0B3A66"" text-anchor=""middle"">DerivedOverride overriding</text>
+
+  <path d=""M 295 372 L 445 460"" stroke=""#2563EB"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 585 372 L 445 460"" stroke=""#2563EB"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+
+  <rect x=""320"" y=""470"" width=""250"" height=""70"" rx=""10"" fill=""#2563EB""/>
+  <text x=""445"" y=""510"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#FFFFFF"" text-anchor=""middle"">the SAME object</text>
+
+  <path d=""M 445 545 L 445 610"" stroke=""#2563EB"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <rect x=""270"" y=""620"" width=""350"" height=""80"" rx=""10"" fill=""#DBEAFE"" stroke=""#2563EB"" stroke-width=""2""/>
+  <text x=""445"" y=""655"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">Both calls resolve through</text>
+  <text x=""445"" y=""680"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""14"" font-weight=""700"" fill=""#0B3A66"" text-anchor=""middle"">the object's OWN vtable slot</text>
+
+  <text x=""445"" y=""740"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""15"" font-weight=""700"" fill=""#107C10"" text-anchor=""middle"">Always: &quot;DerivedOverride.Greet&quot;</text>
+
+  <!-- Right: hiding -->
+  <rect x=""830"" y=""220"" width=""650"" height=""560"" rx=""16"" fill=""#FEF2F2"" stroke=""#D83B01"" stroke-width=""2""/>
+  <text x=""1155"" y=""265"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""20"" font-weight=""700"" fill=""#7C2D12"" text-anchor=""middle"">new — TWO unrelated methods</text>
+
+  <rect x=""880"" y=""300"" width=""250"" height=""70"" rx=""10"" fill=""#FFFFFF"" stroke=""#D83B01"" stroke-width=""2""/>
+  <text x=""1005"" y=""340"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13.5"" fill=""#7C2D12"" text-anchor=""middle"">BaseType hidingAsBase</text>
+
+  <rect x=""1160"" y=""300"" width=""250"" height=""70"" rx=""10"" fill=""#FFFFFF"" stroke=""#D83B01"" stroke-width=""2""/>
+  <text x=""1285"" y=""340"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""13.5"" fill=""#7C2D12"" text-anchor=""middle"">DerivedHiding hiding</text>
+
+  <path d=""M 1005 372 L 1005 460"" stroke=""#D83B01"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+  <path d=""M 1285 372 L 1285 460"" stroke=""#D83B01"" stroke-width=""3"" marker-end=""url(#arrow)""/>
+
+  <rect x=""880"" y=""470"" width=""250"" height=""80"" rx=""10"" fill=""#F3F4F6"" stroke=""#9CA3AF"" stroke-width=""2""/>
+  <text x=""1005"" y=""500"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" font-weight=""700"" fill=""#374151"" text-anchor=""middle"">resolved at COMPILE TIME</text>
+  <text x=""1005"" y=""522"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" font-weight=""700"" fill=""#374151"" text-anchor=""middle"">from the BaseType reference</text>
+
+  <rect x=""1160"" y=""470"" width=""250"" height=""80"" rx=""10"" fill=""#FEE2E2"" stroke=""#D83B01"" stroke-width=""2""/>
+  <text x=""1285"" y=""500"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" font-weight=""700"" fill=""#7C2D12"" text-anchor=""middle"">resolved at COMPILE TIME</text>
+  <text x=""1285"" y=""522"" font-family=""Segoe UI, Inter, sans-serif"" font-size=""13"" font-weight=""700"" fill=""#7C2D12"" text-anchor=""middle"">from the DerivedHiding reference</text>
+
+  <text x=""1005"" y=""600"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""14"" font-weight=""700"" fill=""#374151"" text-anchor=""middle"">&quot;BaseType.Greet&quot;</text>
+  <text x=""1285"" y=""600"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""14"" font-weight=""700"" fill=""#7C2D12"" text-anchor=""middle"">&quot;DerivedHiding.Greet&quot;</text>
+
+  <text x=""1155"" y=""740"" font-family=""Cascadia Code, Fira Code, monospace"" font-size=""15"" font-weight=""700"" fill=""#D83B01"" text-anchor=""middle"">Same object — TWO different answers</text>
 </svg>";
     }
 }

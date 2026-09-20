@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant Caller as Calling code
+    participant JIT as callvirt (IL)
+    participant Obj as Dog instance on the heap
+    participant MT as Dog's Method Table (vtable)
+
+    Caller->>JIT: animal.Speak()  (animal declared as Animal)
+    JIT->>Obj: Null check, then read the hidden\nMethod Table pointer at offset 0
+    Obj-->>JIT: Pointer to Dog's Method Table
+    JIT->>MT: Index into the vtable slot for Speak
+    Note over MT: The SAME slot number as Animal.Speak —\nDog's override replaced the entry in that slot
+    MT-->>JIT: Address of Dog.Speak
+    JIT->>Obj: Indirect jump to Dog.Speak
+    Note over Caller,Obj: A direct (non-virtual) call skips the middle\nthree steps entirely — the address is baked in\nat compile time, nothing to look up at run time

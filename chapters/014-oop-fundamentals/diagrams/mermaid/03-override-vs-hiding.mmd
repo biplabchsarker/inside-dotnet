@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph Override["override — one object, one vtable slot"]
+        A1["DerivedOverride instance"] --> A2["BaseType reference\nto the same object"]
+        A1 --> A3["DerivedOverride reference\nto the same object"]
+        A2 --> A4["Both calls resolve through\nthe object's OWN vtable slot"]
+        A3 --> A4
+        A4 --> A5["Always prints:\nDerivedOverride.Greet"]
+    end
+
+    subgraph Hiding["new (hiding) — same object, two UNRELATED methods"]
+        B1["DerivedHiding instance"] --> B2["BaseType reference\nto the same object"]
+        B1 --> B3["DerivedHiding reference\nto the same object"]
+        B2 --> B4["Resolved at COMPILE TIME\nfrom the reference's declared\ntype — finds BaseType.Greet"]
+        B3 --> B5["Resolved at COMPILE TIME —\nfinds DerivedHiding.Greet"]
+        B4 --> B6["Prints: BaseType.Greet"]
+        B5 --> B7["Prints: DerivedHiding.Greet"]
+    end

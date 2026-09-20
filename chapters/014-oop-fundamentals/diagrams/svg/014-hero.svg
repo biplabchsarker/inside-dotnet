@@ -1,0 +1,70 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feOffset dy="8" in="blur" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.22"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,1 L9,5 L0,9 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+  <text x="100" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#6E6E76" letter-spacing="3">PART III — C# · EPISODE 15</text>
+  <text x="100" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="34" font-weight="700" fill="#1B1B1F">OOP Fundamentals</text>
+
+  <!-- Encapsulation: a sealed box with a lock -->
+  
+  <g filter="url(#softShadow)">
+    <polygon points="220,480 330,535 440,480 330,425" fill="#DBEAFE"/>
+    <polygon points="220,480 330,535 330,655 220,600" fill="#60A5FA"/>
+    <polygon points="330,535 440,480 440,600 330,655" fill="#2563EB"/>
+  </g>
+  <g transform="translate(320,470)">
+    <rect x="-18" y="-6" width="36" height="28" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="3"/>
+    <path d="M -10,-6 L -10,-18 A 10,10 0 0 1 10,-18 L 10,-6" fill="none" stroke="#2563EB" stroke-width="4"/>
+  </g>
+  <text x="340" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#0B3A66" text-anchor="middle">Encapsulation</text>
+
+  <!-- Inheritance: a parent box with a smaller child box stacked, connected by a line -->
+  
+  <g filter="url(#softShadow)">
+    <polygon points="650,380 787.5,448.75 925,380 787.5,311.25" fill="#DDD6FE"/>
+    <polygon points="650,380 787.5,448.75 787.5,538.75 650,470" fill="#8B5CF6"/>
+    <polygon points="787.5,448.75 925,380 925,470 787.5,538.75" fill="#512BD4"/>
+  </g>
+  
+  <g filter="url(#softShadow)">
+    <polygon points="700,560 782.5,601.25 865,560 782.5,518.75" fill="#EDE9FE"/>
+    <polygon points="700,560 782.5,601.25 782.5,673.25 700,632" fill="#A78BFA"/>
+    <polygon points="782.5,601.25 865,560 865,632 782.5,673.25" fill="#7C3AED"/>
+  </g>
+  <path d="M 780 470 L 780 545" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="790" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#2E1065" text-anchor="middle">Inheritance</text>
+
+  <!-- Polymorphism: one box, three arrows fanning to three different behaviors -->
+  
+  <g filter="url(#softShadow)">
+    <polygon points="1150,420 1249,469.5 1348,420 1249,370.5" fill="#F3F4F6"/>
+    <polygon points="1150,420 1249,469.5 1249,559.5 1150,510" fill="#9CA3AF"/>
+    <polygon points="1249,469.5 1348,420 1348,510 1249,559.5" fill="#4B5563"/>
+  </g>
+  <path d="M 1260 430 L 1360 350" stroke="#0078D4" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 1260 460 L 1380 460" stroke="#0078D4" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 1260 490 L 1360 570" stroke="#0078D4" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="1240" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#4B5563" text-anchor="middle">Polymorphism</text>
+
+  <text x="800" y="800" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-style="italic" fill="#6E6E76" text-anchor="middle">One reference type, many actual behaviors</text>
+</svg>

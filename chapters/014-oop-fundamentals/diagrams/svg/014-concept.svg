@@ -1,0 +1,78 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="55%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feOffset dy="8" in="blur" result="offsetBlur"/>
+      <feComponentTransfer in="offsetBlur" result="shadow">
+        <feFuncA type="linear" slope="0.22"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,1 L9,5 L0,9 Z" fill="#9CA3AF"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+  <text x="100" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#6E6E76" letter-spacing="3">CONCEPT OVERVIEW</text>
+  <text x="100" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="34" font-weight="700" fill="#1B1B1F">Same Declared Type, Different Actual Behavior</text>
+
+  <!-- List<Animal> container -->
+  <rect x="120" y="250" width="360" height="580" rx="16" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="2"/>
+  <text x="300" y="290" font-family="Cascadia Code, Fira Code, monospace" font-size="17" font-weight="700" fill="#374151" text-anchor="middle">List&lt;Animal&gt;</text>
+
+  
+  <g filter="url(#softShadow)">
+    <polygon points="200,380 260.5,410.25 321,380 260.5,349.75" fill="#DBEAFE"/>
+    <polygon points="200,380 260.5,410.25 260.5,458.25 200,428" fill="#60A5FA"/>
+    <polygon points="260.5,410.25 321,380 321,428 260.5,458.25" fill="#2563EB"/>
+  </g>
+  <text x="300" y="475" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0B3A66" text-anchor="middle">Dog</text>
+
+  
+  <g filter="url(#softShadow)">
+    <polygon points="200,550 260.5,580.25 321,550 260.5,519.75" fill="#DDD6FE"/>
+    <polygon points="200,550 260.5,580.25 260.5,628.25 200,598" fill="#8B5CF6"/>
+    <polygon points="260.5,580.25 321,550 321,598 260.5,628.25" fill="#512BD4"/>
+  </g>
+  <text x="300" y="645" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#2E1065" text-anchor="middle">Cat</text>
+
+  
+  <g filter="url(#softShadow)">
+    <polygon points="200,720 260.5,750.25 321,720 260.5,689.75" fill="#F3F4F6"/>
+    <polygon points="200,720 260.5,750.25 260.5,798.25 200,768" fill="#9CA3AF"/>
+    <polygon points="260.5,750.25 321,720 321,768 260.5,798.25" fill="#4B5563"/>
+  </g>
+  <text x="300" y="815" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#4B5563" text-anchor="middle">Animal</text>
+
+  <text x="300" y="220" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76" text-anchor="middle">every element stored and accessed as 'Animal'</text>
+
+  <!-- Loop calling Speak() -->
+  <path d="M 500 430 L 640 430" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 500 600 L 640 600" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 500 770 L 640 770" stroke="#9CA3AF" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="570" y="410" font-family="Cascadia Code, Fira Code, monospace" font-size="14" fill="#6E6E76" text-anchor="middle">.Speak()</text>
+
+  <!-- Results -->
+  <rect x="660" y="390" width="420" height="80" rx="12" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="870" y="438" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#0B3A66" text-anchor="middle">Dog.Speak() runs</text>
+
+  <rect x="660" y="560" width="420" height="80" rx="12" fill="#DDD6FE" stroke="#512BD4" stroke-width="2"/>
+  <text x="870" y="608" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#2E1065" text-anchor="middle">Cat.Speak() runs</text>
+
+  <rect x="660" y="730" width="420" height="80" rx="12" fill="#F3F4F6" stroke="#4B5563" stroke-width="2"/>
+  <text x="870" y="778" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#4B5563" text-anchor="middle">Animal.Speak() runs</text>
+
+  <text x="1250" y="540" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">The reference type never</text>
+  <text x="1250" y="574" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#1B1B1F" text-anchor="middle">changes. The behavior does.</text>
+  <text x="1250" y="620" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-style="italic" fill="#6E6E76" text-anchor="middle">That's polymorphism — decided by</text>
+  <text x="1250" y="646" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-style="italic" fill="#6E6E76" text-anchor="middle">the OBJECT, not the variable.</text>
+</svg>

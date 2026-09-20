@@ -1,0 +1,9 @@
+flowchart TB
+    A["List<Animal> holds a Dog,\na Cat, and an Animal —\nall accessed as 'Animal'"] --> B["Loop calls\nanimal.Speak()"]
+    B --> C{"CLR follows the OBJECT's\nown Method Table pointer\n(not the declared 'Animal' type)"}
+    C -->|"object is a Dog"| D["Jumps to Dog.Speak\nvia Dog's vtable slot"]
+    C -->|"object is a Cat"| E["Jumps to Cat.Speak\nvia Cat's vtable slot"]
+    C -->|"object is a plain Animal"| F["Jumps to Animal.Speak\n(no override exists)"]
+    D --> G["'Rex says: Woof!'"]
+    E --> H["'Whiskers says: Meow!'"]
+    F --> I["'Generic Animal makes\na generic animal sound.'"]

@@ -1,0 +1,51 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">OOP Fundamentals</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="130" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="158" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="188" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Virtual and interface dispatch cost real, measurable overhead — sealing a class lets the JIT devirtualize the call away entirely.</text>
+
+  <text x="80" y="252" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0.8, 50,000,000 calls per method</text>
+
+  <!-- Bars -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="13.5">
+    <text x="80" y="300" fill="#1B1B1F">DirectCall (non-virtual, baseline)</text>
+    <rect x="80" y="308" width="330" height="26" rx="6" fill="#107C10"/>
+    <text x="420" y="326" fill="#6E6E76">13.11 ms · 1.00×</text>
+
+    <text x="80" y="372" fill="#1B1B1F">SealedVirtualCall (devirtualized by JIT)</text>
+    <rect x="80" y="380" width="343" height="26" rx="6" fill="#0078D4"/>
+    <text x="433" y="398" fill="#6E6E76">13.66 ms · 1.04×</text>
+
+    <text x="80" y="444" fill="#1B1B1F">VirtualCall (unsealed, real vtable lookup)</text>
+    <rect x="80" y="452" width="516" height="26" rx="6" fill="#D83B01"/>
+    <text x="606" y="470" fill="#6E6E76" font-weight="700">20.55 ms · 1.57×</text>
+
+    <text x="80" y="516" fill="#1B1B1F">InterfaceCall (interface method table)</text>
+    <rect x="80" y="524" width="524" height="26" rx="6" fill="#D83B01"/>
+    <text x="614" y="542" fill="#6E6E76" font-weight="700">20.82 ms · 1.59×</text>
+  </g>
+  <text x="80" y="585" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">Sealing SealedDerived let the JIT prove no override could exist — devirtualizing it back to almost a direct call.</text>
+  <text x="80" y="605" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">Zero allocations in any of the four (Allocated column: all &quot;-&quot;) — this is pure dispatch overhead, not GC cost.</text>
+
+  <!-- Interview question -->
+  <rect x="80" y="640" width="1440" height="150" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="672" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="706" font-family="Segoe UI, Inter, sans-serif" font-size="19" font-weight="700" fill="#1B1B1F">"What is the difference between override and hiding a method with new?"</text>
+  <text x="104" y="740" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">override replaces the base method's OWN vtable slot — every caller reaches it, regardless of the reference's declared type.</text>
+  <text x="104" y="764" font-family="Segoe UI, Inter, sans-serif" font-size="14.5" fill="#1B1B1F">new declares an unrelated, non-virtual method resolved at compile time from the reference's declared type — it can "disappear" through a base reference.</text>
+
+  <text x="800" y="820" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from code/Performance — re-run it with `dotnet run -c Release`.</text>
+  <text x="800" y="862" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

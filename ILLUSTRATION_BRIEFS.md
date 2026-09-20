@@ -2,7 +2,7 @@
 
 This is the spec to hand to whoever produces Inside .NET's five signature illustrations per chapter — a commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [IMAGE_GUIDE.md](IMAGE_GUIDE.md) for how these fit into the overall image system, and [BACKLOG.md](BACKLOG.md) for why this moved from hand-coded SVG to external sourcing (2026-08-08).
 
-Chapters 000-013 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-013) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-013 on 2026-09-20 as those three chapters were drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 014 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
+Chapters 000-014 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-014) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-013 and then 000-014 on 2026-09-20 as each chapter was drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 015 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
 
 ## The style brief — applies to all five images, every chapter
 
@@ -183,6 +183,16 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Runtime/Internal View | The internal structure of a `MulticastDelegate` holding a `Method` and a `Target` reference, showing how `+=` pins the subscriber in memory by giving the publisher a strong reference to it. |
 | Memory/Execution Diagram | A GC tracing from a Static GC Root, through the MulticastDelegate, into the subscriber object, placing it in Generation 2 instead of letting it die in Generation 0. |
 | Performance & Quick Reference | Measured bars: Safe (Proper Unsubscribe) retaining 0.00 MB vs Leaky (Missing Unsubscribe) retaining 977.76 MB in memory. Likely interview question: "Can a managed application leak memory?" |
+
+### 014 — OOP Fundamentals
+
+| Image | Depict |
+|---|---|
+| Hero Cover | Three isometric motifs side by side: a locked box (Encapsulation), a parent box with a child box connected below it (Inheritance), and a box with several arrows fanning out to different behaviors (Polymorphism). |
+| Concept Overview | A `List<Animal>` holding a Dog, a Cat, and a plain Animal, each accessed through the identical `.Speak()` call site, with three separate arrows showing each one resolving to its own actual behavior — "same declared type, different actual behavior." |
+| Runtime/Internal View | An object's Method Table pointer (at the start of its memory layout) indexing into a vtable slot, with the derived class's override sitting in the same slot the base class originally defined. |
+| Memory/Execution Diagram | Side by side: `override` resolving through the object's own vtable slot regardless of which reference type calls it, vs. `new` (hiding) resolving differently depending on the calling reference's declared (compile-time) type — same object, two different outcomes. |
+| Performance & Quick Reference | Measured bars: DirectCall (13.11 ms, baseline) vs. SealedVirtualCall (13.66 ms, 1.04×, devirtualized) vs. VirtualCall (20.55 ms, 1.57×) vs. InterfaceCall (20.82 ms, 1.59×). Likely interview question: "What is the difference between override and hiding a method with new?" |
 
 ---
 ## Notes for whoever produces these
