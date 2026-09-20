@@ -1,0 +1,14 @@
+flowchart TD
+    CallSite["Method Invocation Call Site"] --> Decision{"How is the target bound?"}
+    
+    Decision -->|"Statically at Compile Time"| Direct["Direct Method Call\n• 0.35 ns latency\n• 0 bytes allocated\n• Eligible for JIT inlining"]
+    
+    Decision -->|"Via Delegate Instance"| DelType{"Delegate Structure"}
+    
+    DelType -->|"Single Target"| Single["Single-Cast Delegate\n• 1.15 - 1.42 ns latency\n• 0 bytes allocated\n• Indirect native jump"]
+    
+    DelType -->|"Chained (+=)"| Multi["Multicast Delegate\n• 7.81 ns latency\n• 0 bytes per invocation\n• Sequential loop over _invocationList"]
+
+    Decision -->|"Via Lambda with Captured Local"| Closure["Closure Allocation\n• 14.52 ns latency\n• 32-48 B allocated per call\n• Causes GC Gen 0 Churn"]
+
+    Closure -.->|"Fix with C# 9+ static keyword"| StaticLambda["static (x) => ...\n• 1.18 ns latency\n• 0 bytes allocated\n• Compiler cached singleton"]

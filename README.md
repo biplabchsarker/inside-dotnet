@@ -6,7 +6,7 @@
 
 **Repo:** https://github.com/biplabchsarker/inside-dotnet
 **Version:** v0.4 — C# (Phase 3 in progress)
-**Chapters completed:** 15 / 59 (000–014)
+**Chapters completed:** 18 / 59 (000–017)
 **License:** Dual — [MIT](LICENSE-CODE) for code, [CC BY 4.0](LICENSE-CONTENT) for written content ([details](LICENSE.md))
 
 | Phase | Status |
@@ -14,7 +14,7 @@
 | 0 — Project Foundation | ✅ Done |
 | 1 — Runtime Fundamentals | ✅ Done |
 | 2 — Memory | ✅ Done (9/9) |
-| 3 — C# | 🟡 In progress (1/5 done) |
+| 3 — C# | 🟡 In progress (4/5 done) |
 | 4 — Clean Code | ⬜ Not started |
 | 5 — Design Patterns | ⬜ Not started |
 | 6 — ASP.NET Core | ⬜ Not started |
@@ -128,7 +128,7 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 | 0 — Project Foundation | — | ✅ Done (v1.0) |
 | 1 — Runtime Fundamentals | [001](chapters/001-execution-flow)–[004](chapters/004-assemblies-metadata) | ✅ Done |
 | 2 — Memory | [005](chapters/005-stack-vs-heap)–[013](chapters/013-memory-leaks) done | ✅ Done |
-| 3 — C# | [014](chapters/014-oop-fundamentals) done, 015–018 planned | 🚧 In progress |
+| 3 — C# | [014](chapters/014-oop-fundamentals)–[017](chapters/017-reflection-expression-trees) done, 018 planned | 🚧 In progress |
 | 4 — Clean Code | 019–022 | ⏳ Planned |
 | 5 — Design Patterns | 023–026 | ⏳ Planned |
 | 6 — ASP.NET Core | 027–032 | ⏳ Planned |
@@ -139,6 +139,6 @@ See [ROADMAP.md](ROADMAP.md) for the full 12-phase plan and [`book.json`](book.j
 | 11 — Production | 052–056 | ⏳ Planned |
 | Capstone — Becoming an Architect | 057–058 | ⏳ Planned |
 
-**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types · [007](chapters/007-object-allocation) Object Allocation · [008](chapters/008-boxing-unboxing) Boxing & Unboxing · [009](chapters/009-strings-interning) Strings & Interning · [010](chapters/010-garbage-collection) Garbage Collection Fundamentals · [011](chapters/011-gc-generations-loh) GC Generations & the Large Object Heap · [012](chapters/012-idisposable-finalizers) IDisposable & Finalizers · [013](chapters/013-memory-leaks) Memory Leaks in a Managed World *(closes out Phase 2 — Memory)* · [014](chapters/014-oop-fundamentals) OOP Fundamentals *(opens Phase 3 — C#)* *(009–014 are all done — text, code, diagrams, and interim SVG illustrations complete; final externally-sourced illustrations still pending, see [BACKLOG.md](BACKLOG.md))*
+**Written so far:** [000](chapters/000-introduction) Welcome to Inside .NET · [001](chapters/001-execution-flow) Execution Flow · [002](chapters/002-clr) Understanding the CLR · [003](chapters/003-jit-compilation) JIT Compilation Explained · [004](chapters/004-assemblies-metadata) Assemblies, DLLs & Metadata · [005](chapters/005-stack-vs-heap) Stack vs Heap · [006](chapters/006-value-vs-reference-types) Value Types vs Reference Types · [007](chapters/007-object-allocation) Object Allocation · [008](chapters/008-boxing-unboxing) Boxing & Unboxing · [009](chapters/009-strings-interning) Strings & Interning · [010](chapters/010-garbage-collection) Garbage Collection Fundamentals · [011](chapters/011-gc-generations-loh) GC Generations & the Large Object Heap · [012](chapters/012-idisposable-finalizers) IDisposable & Finalizers · [013](chapters/013-memory-leaks) Memory Leaks in a Managed World *(closes out Phase 2 — Memory)* · [014](chapters/014-oop-fundamentals) OOP Fundamentals *(opens Phase 3 — C#)* · [015](chapters/015-delegates-events) Delegates & Events · [016](chapters/016-generics) Generics Under the Hood · [017](chapters/017-reflection-expression-trees) Reflection & Expression Trees *(009–017 are all done — text, code, diagrams, and interim SVG illustrations complete; final externally-sourced illustrations still pending, see [BACKLOG.md](BACKLOG.md))*
 
 More chapters land incrementally in continuous batches — each one fully written, diagrammed, coded, and verified before moving to the next. See [CONTRIBUTING.md](CONTRIBUTING.md) for the working agreement.

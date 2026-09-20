@@ -1,0 +1,11 @@
+flowchart TB
+    subgraph HighFrequencyHeap["High-Frequency Heap (AppDomain Statics)"]
+        direction TB
+        S1["GenericState&lt;int&gt; Static Block\n• Counter = 100\n• Independent Memory Address"]
+        S2["GenericState&lt;string&gt; Static Block\n• Counter = 500\n• Independent Memory Address"]
+        S3["GenericState&lt;bool&gt; Static Block\n• Counter = 999\n• Independent Memory Address"]
+    end
+
+    C1["Call: GenericState&lt;int&gt;.Counter"] --> S1
+    C2["Call: GenericState&lt;string&gt;.Counter"] --> S2
+    C3["Call: GenericState&lt;bool&gt;.Counter"] --> S3

@@ -2,7 +2,7 @@
 
 This is the spec to hand to whoever produces Inside .NET's five signature illustrations per chapter — a commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [IMAGE_GUIDE.md](IMAGE_GUIDE.md) for how these fit into the overall image system, and [BACKLOG.md](BACKLOG.md) for why this moved from hand-coded SVG to external sourcing (2026-08-08).
 
-Chapters 000-014 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-014) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-013 and then 000-014 on 2026-09-20 as each chapter was drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 015 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
+Chapters 000-017 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-017) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then progressively through 000-017 on 2026-09-20 as each chapter was drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 018 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
 
 ## The style brief — applies to all five images, every chapter
 
@@ -193,6 +193,67 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Runtime/Internal View | An object's Method Table pointer (at the start of its memory layout) indexing into a vtable slot, with the derived class's override sitting in the same slot the base class originally defined. |
 | Memory/Execution Diagram | Side by side: `override` resolving through the object's own vtable slot regardless of which reference type calls it, vs. `new` (hiding) resolving differently depending on the calling reference's declared (compile-time) type — same object, two different outcomes. |
 | Performance & Quick Reference | Measured bars: DirectCall (13.11 ms, baseline) vs. SealedVirtualCall (13.66 ms, 1.04×, devirtualized) vs. VirtualCall (20.55 ms, 1.57×) vs. InterfaceCall (20.82 ms, 1.59×). Likely interview question: "What is the difference between override and hiding a method with new?" |
+
+### 015 — Delegates & Events
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A luminous central transmission hub (the Event Dispatcher) floating in a clean studio space, with sleek fiber-optic conduits flowing out to multiple distinct geometric modules (subscribers) lighting up on reception. |
+| Concept Overview | Decoupled publisher-subscriber architecture: An OrderService publisher firing an event without knowing concrete listeners, routing through a MulticastDelegate chain to distinct Email, Warehouse, and Audit subscriber blocks. |
+| Runtime/Internal View | The exact 64-bit object layout of `System.MulticastDelegate`: SyncBlock + MethodTable*, `_target` pointing to the receiver on the heap, `_methodPtr` pointing directly to JIT native machine code, and `_invocationList` holding child delegates. |
+| Memory/Execution Diagram | Side by side: Hazard 1 (The Lapsed Listener leak from a singleton root holding a transient window alive via `_target`) vs Hazard 2 (A capturing lambda allocating a `<>c__DisplayClass` on every invocation vs a zero-allocation `static` lambda). |
+| Performance & Quick Reference | Measured bars: DirectCall (0.35 ns, baseline) vs StaticDelegateCall (1.15 ns, 3.28×) vs InstanceDelegateCall (1.42 ns, 4.05×) vs StaticLambda (1.18 ns, 3.37×) vs Multicast (7.81 ns, 22.31×) vs ClosureAllocation (14.52 ns, 41.48×, 32 B/op) — plus the "Why do events leak memory in managed runtimes?" interview question. |
+
+### 016 — Generics Under the Hood
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A central open generic template `List<T>` branching into two clean pathways: a specialized assembly path for value types (zero boxing, packed structs) and a shared canonical assembly path (`__Canon`) for reference types. |
+| Concept Overview | Reification vs. Type Erasure: Compile-time generic definitions preserved at runtime with full `TypeHandle` metadata, contrasted with erased types losing runtime specialization. |
+| Runtime/Internal View | MethodTable hierarchy and code generation: Value types generating dedicated MethodTables and JIT machine code per struct size vs. reference types sharing a single canonical MethodTable and machine code pointer. |
+| Memory/Execution Diagram | Static field partitioning across generic closed types: `GenericHolder<int>` and `GenericHolder<string>` allocating completely separate static memory slots on the High-Frequency Heap. |
+| Performance & Quick Reference | Measured bars: `List<int>` specialized baseline (2.84 μs, 40 KB) vs `ArrayList` boxing (12.45 μs, 4.38×, 320 KB), and constrained generic struct call (1.15 ns, 0 B) vs boxed interface call (5.82 ns, 5.06×, 24 B) — plus the "How does the CLR share code between value and reference types?" interview question. |
+
+### 017 — Reflection & Expression Trees
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A crystalline prism taking a compiled assembly and projecting its internal metadata tables, type descriptors, and executable expression trees into illuminated visual facets. |
+| Concept Overview | The Reflection spectrum: Metadata inspection (slow, safe) vs Dynamic dispatch (MethodInfo.Invoke) vs Compiled Expression Trees (fast, near-native speed). |
+| Runtime/Internal View | How the CLR evaluates `Type.GetType()` through the assembly manifest and metadata token tables to resolve a `RuntimeTypeHandle`. |
+| Memory/Execution Diagram | An Abstract Syntax Tree (AST) constructed via Expression Trees being compiled via RyuJIT into a dynamic method stub on the dynamic code heap. |
+| Performance & Quick Reference | Measured bars: Direct call vs Cached Delegate vs Compiled Expression Tree vs MethodInfo.Invoke (30-50× slowdown) — plus the "Why is reflection slow, and how do expression trees mitigate it?" interview question. |
+
+### 018 — Records & Pattern Matching
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A dual-faced precision prism: one side demonstrating immutable value-based equality (`record class`), the other demonstrating structural pattern decomposition through a switch expression. |
+| Concept Overview | Value semantics on reference types: Two distinct heap records with identical properties evaluating `Equals` as `true` vs normal classes evaluating as `false`. |
+| Runtime/Internal View | The compiler-generated mechanics of records: `EqualityContract`, `IEquatable<T>`, synthesized `operator ==`, and the `Clone` method backing non-destructive mutation (`with`). |
+| Memory/Execution Diagram | Non-destructive mutation (`record with { ... }`) showing the shallow clone on the heap and field reassignment without mutating the original instance. |
+| Performance & Quick Reference | Measured bars: Record equality vs Class reference equality vs Struct equality, and pattern matching switch dispatch jump tables vs nested `if/else` ladders. |
+
+### 019 — SOLID Principles Under the Hood
+
+| Image | Depict |
+|---|---|
+| Hero Cover | Five precision interlocking architectural modules (S, O, L, I, D) forming a robust, unyielding structure that withstands high-stress loads without fracturing. |
+| Concept Overview | The five architectural forces: Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion visualized as clean component interfaces. |
+| Runtime/Internal View | Interface dispatch tables and vtable slots under Liskov Substitution: How derived classes preserve base contracts without breaking caller assumptions. |
+| Memory/Execution Diagram | Dependency Inversion and object graph construction: How the container builds loosely-coupled dependency chains on the heap. |
+| Performance & Quick Reference | Architectural tradeoffs: Modularity and testability vs indirection and virtual dispatch overhead — plus the classic LSP violation interview scenario. |
+
+### 020 — DRY, KISS, YAGNI: Pragmatic Engineering
+
+| Image | Depict |
+|---|---|
+| Hero Cover | A sleek, streamlined aerodynamic engine block contrasted against an over-engineered contraption burdened with unnecessary gears and levers. |
+| Concept Overview | The sweet spot of software design: Balancing code reuse (DRY) with simplicity (KISS) and deferred design (YAGNI) to prevent premature abstraction. |
+| Runtime/Internal View | The cost of premature abstraction: Visualizing call stack depth and memory overhead of unnecessary layer indirection (DTO -> Domain -> Entity -> DAO). |
+| Memory/Execution Diagram | Direct pipeline execution vs deeply layered abstraction indirection: measuring object allocations and CPU cache misses. |
+| Performance & Quick Reference | Practical decision matrix: When to duplicate vs when to abstract (Rule of Three), plus the classic "Over-engineering anti-pattern" interview question. |
+
 
 ---
 ## Notes for whoever produces these

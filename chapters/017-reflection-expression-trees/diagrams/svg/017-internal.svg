@@ -1,0 +1,148 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- RUNTIME / INTERNAL VIEW — chapters/017-reflection-expression-trees.
+       Clean precision layout matching 008-deepdive.svg.
+       Panel 1: The Abstract Syntax Tree (AST) node hierarchy.
+       Panel 2: DynamicMethod CIL opcode generation and JIT native code. -->
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <filter id="ddShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="astArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#512BD4"/>
+    </marker>
+    <marker id="astBlueArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#0078D4"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+
+  <!-- Category & Title -->
+  <text x="80" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#6E6E76" letter-spacing="3">RUNTIME / INTERNAL VIEW</text>
+  <text x="80" y="115" font-family="Segoe UI, Inter, sans-serif" font-size="32" font-weight="700" fill="#1B1B1F">Expression.Compile() — AST to Native JIT Assembly</text>
+
+  <!-- ========================================== -->
+  <!-- PANEL 1: THE EXPRESSION TREE AST (LEFT) -->
+  <!-- ========================================== -->
+  <g transform="translate(80, 160)">
+    <rect width="680" height="640" rx="16" fill="#FFFFFF" stroke="#512BD4" stroke-width="2" filter="url(#ddShadow)"/>
+    <rect width="680" height="50" rx="16" fill="#512BD4"/>
+    <rect y="28" width="680" height="22" fill="#512BD4"/>
+    <text x="340" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">1. THE ABSTRACT SYNTAX TREE (DATA STRUCTURE)</text>
+
+    <!-- AST Root Node: LambdaExpression -->
+    <g transform="translate(190, 75)">
+      <rect width="300" height="65" rx="10" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+      <text x="150" y="28" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4" text-anchor="middle">LambdaExpression</text>
+      <text x="150" y="48" font-family="Cascadia Code, Consolas, monospace" font-size="12" fill="#6D28D9" text-anchor="middle">(p) =&gt; p.Price &gt; 40.00m</text>
+    </g>
+
+    <!-- Branch to BinaryExpression -->
+    <path d="M 340 140 L 340 192" stroke="#512BD4" stroke-width="2.5" marker-end="url(#astArrow)"/>
+
+    <!-- Binary Node: GreaterThan -->
+    <g transform="translate(170, 198)">
+      <rect width="340" height="65" rx="10" fill="#EFF6FF" stroke="#0078D4" stroke-width="2"/>
+      <text x="170" y="28" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0078D4" text-anchor="middle">BinaryExpression (NodeType: GreaterThan)</text>
+      <text x="170" y="48" font-family="Cascadia Code, Consolas, monospace" font-size="12" fill="#0284C7" text-anchor="middle">Left &gt; Right</text>
+    </g>
+
+    <!-- Left Child: MemberExpression -->
+    <path d="M 280 263 L 170 323" stroke="#0078D4" stroke-width="2.5" marker-end="url(#astBlueArrow)"/>
+    <g transform="translate(40, 328)">
+      <rect width="260" height="75" rx="10" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1.5"/>
+      <text x="130" y="28" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0369A1" text-anchor="middle">MemberExpression</text>
+      <text x="130" y="48" font-family="Cascadia Code, Consolas, monospace" font-size="12" fill="#0284C7" text-anchor="middle">Property: Product.Price</text>
+      <text x="130" y="65" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#64748B" text-anchor="middle">Target: Parameter (p)</text>
+    </g>
+
+    <!-- Right Child: ConstantExpression -->
+    <path d="M 400 263 L 510 323" stroke="#0078D4" stroke-width="2.5" marker-end="url(#astBlueArrow)"/>
+    <g transform="translate(380, 328)">
+      <rect width="260" height="75" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5"/>
+      <text x="130" y="28" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#047857" text-anchor="middle">ConstantExpression</text>
+      <text x="130" y="48" font-family="Cascadia Code, Consolas, monospace" font-size="12" fill="#059669" text-anchor="middle">Value: 40.00m (decimal)</text>
+      <text x="130" y="65" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#64748B" text-anchor="middle">Type: System.Decimal</text>
+    </g>
+
+    <!-- Bottom Note -->
+    <g transform="translate(30, 470)">
+      <rect width="620" height="130" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5"/>
+      <text x="24" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#1B1B1F">AST Properties</text>
+      <text x="24" y="60" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">• Code represented purely as immutable tree data in memory.</text>
+      <text x="24" y="85" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">• Can be inspected, traversed, or translated to SQL by LINQ providers.</text>
+      <text x="24" y="110" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="600" fill="#512BD4">• Calling .Compile() triggers the dynamic code generation engine.</text>
+    </g>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- PANEL 2: COMPILATION & NATIVE JIT (RIGHT) -->
+  <!-- ========================================== -->
+  <g transform="translate(840, 160)">
+    <rect width="680" height="640" rx="16" fill="#FFFFFF" stroke="#0078D4" stroke-width="2" filter="url(#ddShadow)"/>
+    <rect width="680" height="50" rx="16" fill="#0078D4"/>
+    <rect y="28" width="680" height="22" fill="#0078D4"/>
+    <text x="340" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">2. DynamicMethod CIL EMISSION &amp; JIT EXECUTION</text>
+
+    <!-- Stage 1: CIL Opcode Emission -->
+    <g transform="translate(30, 80)">
+      <rect width="620" height="180" rx="12" fill="#1E1E2E" stroke="#7C3AED" stroke-width="1.5"/>
+      <text x="24" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">System.Reflection.Emit.DynamicMethod (IL OpCodes)</text>
+      
+      <g transform="translate(24, 45)" font-family="Cascadia Code, Consolas, monospace" font-size="13">
+        <text x="0" y="20" fill="#38BDF8">ldarg.0</text>
+        <text x="250" y="20" fill="#94A3B8">// push Product 'p'</text>
+
+        <text x="0" y="42" fill="#38BDF8">callvirt Product::get_Price()</text>
+
+        <text x="0" y="64" fill="#38BDF8">ldc.i4.s 40</text>
+        <text x="250" y="64" fill="#94A3B8">// push constant 40</text>
+
+        <text x="0" y="86" fill="#38BDF8">call     Decimal::op_GreaterThan</text>
+
+        <text x="0" y="108" fill="#38BDF8">ret</text>
+        <text x="250" y="108" fill="#94A3B8">// return bool result</text>
+      </g>
+    </g>
+
+    <!-- Stage 2: JIT Compilation to Native Machine Code -->
+    <g transform="translate(30, 280)">
+      <rect width="620" height="160" rx="12" fill="#1E1E2E" stroke="#107C10" stroke-width="1.5"/>
+      <text x="24" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#34D399">RyuJIT Machine Instructions (Dynamic Code Heap)</text>
+      
+      <g transform="translate(24, 45)" font-family="Cascadia Code, Consolas, monospace" font-size="13">
+        <text x="0" y="20" fill="#34D399">0x7FFA50FF1A40:</text>
+        <text x="20" y="42" fill="#E2E8F0">mov   rcx, [rcx + 8]</text>
+        <text x="250" y="42" fill="#94A3B8">; direct offset access</text>
+
+        <text x="20" y="64" fill="#E2E8F0">comisd xmm0, xmm1</text>
+        <text x="250" y="64" fill="#94A3B8">; hardware floating point compare</text>
+
+        <text x="20" y="86" fill="#E2E8F0">seta  al; ret</text>
+        <text x="250" y="86" fill="#94A3B8">; return true/false in AL register</text>
+      </g>
+    </g>
+
+    <!-- Resulting Delegate -->
+    <g transform="translate(30, 470)">
+      <rect width="620" height="130" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+      <text x="24" y="32" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#166534">The Result: Zero-Overhead Execution</text>
+      <text x="24" y="60" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#14532D">• Produces a strongly typed Func&lt;Product, bool&gt; delegate.</text>
+      <text x="24" y="85" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#14532D">• Runs in 1.2 nanoseconds per call (identical to hardcoded C# code!).</text>
+      <text x="24" y="110" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="600" fill="#15803D">Eliminates 100% of reflection MethodInfo.Invoke overhead.</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="800" y="855" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">
+    Inside .NET — Understanding What Really Happens Under the Hood
+  </text>
+</svg>

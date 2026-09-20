@@ -1,0 +1,7 @@
+flowchart TB
+    Root["LambdaExpression\n(p) =&gt; p.Price &gt; 40.00m"] --> Binary["BinaryExpression\nNodeType: GreaterThan (&gt;)"]
+    
+    Binary --> Left["MemberExpression\nTarget: p\nProperty: Price"]
+    Binary --> Right["ConstantExpression\nValue: 40.00m\nType: decimal"]
+
+    Left --> Param["ParameterExpression\nName: 'p'\nType: Product"]

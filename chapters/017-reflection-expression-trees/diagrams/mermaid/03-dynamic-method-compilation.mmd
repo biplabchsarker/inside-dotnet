@@ -1,0 +1,16 @@
+sequenceDiagram
+    autonumber
+    participant App as Application Code
+    participant Expr as Expression Tree (AST)
+    participant Dyn as System.Reflection.Emit.DynamicMethod
+    participant JIT as RyuJIT Compiler
+    participant Del as Compiled Delegate (Func)
+
+    App->>Expr: expr.Compile()
+    Expr->>Dyn: Create DynamicMethod and ILGenerator
+    Note over Dyn: Emits CIL opcodes: ldarg.0, callvirt, ldc.i4, ret
+    Dyn->>JIT: Request compilation of dynamic method IL
+    JIT->>JIT: Compile IL to native CPU instructions in Dynamic Code Heap
+    JIT->>Del: Bind native code pointer to delegate instance
+    Del-->>App: Return Func<T, TResult>
+    App->>Del: Invoke delegate (Executes in ~1.2 ns, 0 B allocated)

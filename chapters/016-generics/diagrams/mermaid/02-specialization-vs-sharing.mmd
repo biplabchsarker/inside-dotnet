@@ -1,0 +1,12 @@
+flowchart TB
+    Open["Open Generic Type: List&lt;T&gt;"] --> Check{"Is T a Value Type or Reference Type?"}
+
+    Check -->|"T is Value Type (e.g. int, double)"| ValBranch["Value Type Specialization"]
+    ValBranch --> MT_Int["Dedicated MethodTable (List&lt;int&gt;)\nDedicated Native Code (0x7FFA...DE0)"]
+    ValBranch --> MT_Dbl["Dedicated MethodTable (List&lt;double&gt;)\nDedicated Native Code (0x7FFA...E10)"]
+
+    Check -->|"T is Reference Type (e.g. string, Customer)"| RefBranch["Reference Type Code Sharing"]
+    RefBranch --> Canon["Shared Canonical Code: List&lt;__Canon&gt;\nSingle JIT Assembly Address: 0x7FFA...E28"]
+    Canon -.->|"Shared by"| MT_Str["List&lt;string&gt; MethodTable"]
+    Canon -.->|"Shared by"| MT_Cust["List&lt;Customer&gt; MethodTable"]
+    Canon -.->|"Shared by"| MT_Ord["List&lt;Order&gt; MethodTable"]

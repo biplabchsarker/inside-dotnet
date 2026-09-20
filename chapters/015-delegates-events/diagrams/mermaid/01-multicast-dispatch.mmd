@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph Publisher["Publisher: OrderService"]
+        direction TB
+        E["event EventHandler&lt;OrderEventArgs&gt; OrderCompleted"]
+        R["Raise Event:\nOrderCompleted?.Invoke(this, args)"]
+        E --> R
+    end
+
+    subgraph DelegateChain["System.MulticastDelegate Invocation Chain"]
+        direction TB
+        D0["[0] Delegate Target: EmailNotifier\nMethod: SendReceipt()"]
+        D1["[1] Delegate Target: WarehouseService\nMethod: DeductInventory()"]
+        D2["[2] Delegate Target: AuditLogger\nMethod: RecordAuditEntry()"]
+        D0 --> D1 --> D2
+    end
+
+    subgraph Subscribers["Independent Subscribers"]
+        direction TB
+        S0["EmailNotifier Instance (Heap)"]
+        S1["WarehouseService Instance (Heap)"]
+        S2["AuditLogger Instance (Heap)"]
+    end
+
+    R -->|"callvirt Invoke()"| D0
+    D0 -.->|"_target ref"| S0
+    D1 -.->|"_target ref"| S1
+    D2 -.->|"_target ref"| S2

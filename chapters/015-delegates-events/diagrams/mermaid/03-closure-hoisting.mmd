@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph StackFrame["Method Call Stack Frame"]
+        direction TB
+        L1["int multiplier = 42;"]
+        L2["Action act = () => Write(multiplier);"]
+    end
+
+    subgraph HeapHoist["Roslyn Hoisting to Managed Heap"]
+        direction TB
+        DisplayClass["class &lt;&gt;c__DisplayClass0_0 {\n    public int multiplier;\n    public void &lt;Main&gt;b__0() => ...\n}"]
+        Inst["new &lt;&gt;c__DisplayClass0_0()"]
+        DisplayClass --> Inst
+    end
+
+    subgraph Delegate["Resulting Delegate Object"]
+        direction TB
+        DelObj["MulticastDelegate"]
+        Tgt["_target -> points to DisplayClass instance"]
+        Ptr["_methodPtr -> points to &lt;Main&gt;b__0"]
+        DelObj --> Tgt
+        DelObj --> Ptr
+    end
+
+    L2 -->|"Hoists local variable"| HeapHoist
+    Inst -->|"Bound as receiver"| Delegate

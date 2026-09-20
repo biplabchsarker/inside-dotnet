@@ -19,4 +19,4 @@ Part III — C#
 | [diagrams/svg/014-cover.svg](diagrams/svg/014-cover.svg) | Chapter cover source (edited from `assets/brand/chapter-cover-template.svg`) |
 
 **Previous:** [Episode 14 — Memory Leaks in a Managed World](../013-memory-leaks/README.md)
-**Next:** Episode 16 — Delegates & Events *(not yet written)*
+**Next:** [Episode 16 — Delegates & Events](../015-delegates-events/README.md)

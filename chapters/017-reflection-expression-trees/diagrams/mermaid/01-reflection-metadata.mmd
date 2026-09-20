@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph AssemblyPE["Compiled Assembly (PE/COFF)"]
+        Manifest["Assembly Manifest"]
+        Metadata["Metadata Tables\n• TypeDef\n• MethodDef\n• FieldDef"]
+        ILCode["CIL Bytecode Stream"]
+    end
+
+    subgraph RuntimeReflection["System.Reflection Engine"]
+        T["typeof(Order) / TypeHandle"]
+        M["MethodInfo / FieldInfo"]
+    end
+
+    subgraph LateBoundInvocation["Dynamic Invoke Overhead"]
+        Sec["Security & Permission Check"]
+        Arr["Allocate object[] parameters"]
+        Box["Box primitive arguments"]
+        Call["Invoke target method"]
+        Sec --> Arr --> Box --> Call
+    end
+
+    Metadata --> T --> M
+    M --> LateBoundInvocation

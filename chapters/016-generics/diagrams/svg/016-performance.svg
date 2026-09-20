@@ -1,0 +1,63 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Generics Under the Hood</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="125" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="152" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="182" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Reified generics grant value types dedicated zero-overhead machine code, while reference types share a single canonical implementation to save memory.</text>
+
+  <text x="80" y="240" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0 (x64 RyuJIT), 10,000 operations per benchmark (totals shown)</text>
+
+  <!-- Bars Group -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="13.5">
+    <!-- Row 1: Generic List -->
+    <text x="80" y="280" fill="#1B1B1F">GenericList_Specialized (List&lt;int&gt;, packed contiguous ints)</text>
+    <rect x="80" y="288" width="220" height="24" rx="6" fill="#107C10"/>
+    <text x="315" y="305" fill="#6E6E76">9.39 μs · 1.00× · 40,056 B (Baseline)</text>
+
+    <!-- Row 2: ArrayList Boxing -->
+    <text x="80" y="340" fill="#1B1B1F">NonGeneric_ArrayList_Boxing (ArrayList, boxes every int)</text>
+    <rect x="80" y="348" width="1102" height="24" rx="6" fill="#A80000"/>
+    <text x="1197" y="365" fill="#A80000" font-weight="700">46.53 μs · 5.01× · 320,056 B (8× Memory!)</text>
+
+    <!-- Row 3: Constrained Generic Call -->
+    <text x="80" y="410" fill="#1B1B1F">ConstrainedGenericStructCall (where T : struct, ISummable)</text>
+    <rect x="80" y="418" width="190" height="24" rx="6" fill="#107C10"/>
+    <text x="285" y="435" fill="#6E6E76">2.77 μs (0.28 ns/call) · 0 B (Devirtualized, Zero Boxing)</text>
+
+    <!-- Row 4: Interface Call on Struct -->
+    <text x="80" y="470" fill="#1B1B1F">InterfaceBoxingCall (ISummable boxed = structInstance)</text>
+    <rect x="80" y="478" width="209" height="24" rx="6" fill="#D83B01"/>
+    <text x="304" y="495" fill="#6E6E76" font-weight="700">3.04 μs (0.30 ns/call) · 0 B (~10% slower, dispatch only)</text>
+  </g>
+
+  <!-- Explanatory text -->
+  <text x="80" y="535" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    ArrayList allocates a 24-byte box for every integer added, multiplying heap allocation by 8× and crippling CPU cache locality.
+  </text>
+  <text x="80" y="555" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    Rows 3-4 measure dispatch cost on an already-boxed struct, not the one-time boxing cost itself — a smaller, honestly-reported gap.
+  </text>
+
+  <!-- Interview Question -->
+  <rect x="80" y="590" width="1440" height="190" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="622" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="656" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">"How does the .NET CLR handle generic code sharing between value types and reference types?"</text>
+  <text x="104" y="690" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#1B1B1F">Value types receive specialized machine code for each type argument because their byte sizes differ, preventing boxing and maximizing CPU cache locality.</text>
+  <text x="104" y="715" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#1B1B1F">Reference types share a single canonical machine code implementation (`__Canon`) because all references are identically sized pointers (8 bytes on x64), preventing code bloat.</text>
+  <text x="104" y="740" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="600" fill="#68217A">Each closed reference type gets its own MethodTable pointer, but calls jump to the same shared JIT machine instructions.</text>
+
+  <!-- Footer -->
+  <text x="800" y="825" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from code/Performance — re-run with `dotnet run -c Release`.</text>
+  <text x="800" y="855" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

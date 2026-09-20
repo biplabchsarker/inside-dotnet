@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- MEMORY / EXECUTION DIAGRAM — chapters/016-generics.
+       Static field partitioning across closed generic types.
+       Clean, measured layout showing High-Frequency Heap memory slots. -->
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <filter id="ddShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+
+  <!-- Category & Title -->
+  <text x="80" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#6E6E76" letter-spacing="3">MEMORY / EXECUTION DIAGRAM</text>
+  <text x="80" y="115" font-family="Segoe UI, Inter, sans-serif" font-size="32" font-weight="700" fill="#1B1B1F">Static Field Partitioning Across Closed Generic Types</text>
+  <text x="80" y="150" font-family="Segoe UI, Inter, sans-serif" font-size="15" fill="#6E6E76">Every closed type parameter instantiation receives its own dedicated static memory slot</text>
+
+  <!-- Code Definition Box -->
+  <g transform="translate(80, 190)" filter="url(#ddShadow)">
+    <rect width="1440" height="120" rx="12" fill="#FFFFFF" stroke="#512BD4" stroke-width="1.5"/>
+    <text x="30" y="35" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#512BD4">GENERIC CLASS DEFINITION</text>
+    <text x="30" y="65" font-family="Cascadia Code, Consolas, monospace" font-size="14" fill="#0F172A">public class Cache&lt;T&gt; {</text>
+    <text x="60" y="92" font-family="Cascadia Code, Consolas, monospace" font-size="14" fill="#512BD4">public static int Counter;  // How many copies of 'Counter' exist in memory?</text>
+    <text x="30" y="110" font-family="Cascadia Code, Consolas, monospace" font-size="14" fill="#0F172A">}</text>
+  </g>
+
+  <!-- The Three Partitions on the High-Frequency Heap -->
+  <g transform="translate(80, 360)">
+    <!-- Slot 1: Cache<int> -->
+    <g transform="translate(0, 0)" filter="url(#ddShadow)">
+      <rect width="450" height="280" rx="14" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+      <rect width="450" height="42" rx="14" fill="#0078D4"/>
+      <rect y="22" width="450" height="20" fill="#0078D4"/>
+      <text x="225" y="28" font-family="Cascadia Code, Consolas, monospace" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cache&lt;int&gt; Static Storage</text>
+
+      <g transform="translate(25, 70)">
+        <text x="0" y="20" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0F172A">High-Frequency Heap Offset: 0x1A00</text>
+        <rect x="0" y="35" width="400" height="60" rx="8" fill="#F0F9FF" stroke="#BAE6FD"/>
+        <text x="20" y="62" font-family="Cascadia Code, Consolas, monospace" font-size="14" font-weight="700" fill="#0078D4">Counter = 100</text>
+        <text x="20" y="82" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#64748B">Dedicated 4-byte static slot</text>
+
+        <text x="0" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#334155">Static Constructor ran once on first use.</text>
+        <text x="0" y="155" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#0078D4">Completely isolated from Cache&lt;string&gt;!</text>
+      </g>
+    </g>
+
+    <!-- Slot 2: Cache<string> -->
+    <g transform="translate(495, 0)" filter="url(#ddShadow)">
+      <rect width="450" height="280" rx="14" fill="#FFFFFF" stroke="#512BD4" stroke-width="2"/>
+      <rect width="450" height="42" rx="14" fill="#512BD4"/>
+      <rect y="22" width="450" height="20" fill="#512BD4"/>
+      <text x="225" y="28" font-family="Cascadia Code, Consolas, monospace" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cache&lt;string&gt; Static Storage</text>
+
+      <g transform="translate(25, 70)">
+        <text x="0" y="20" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0F172A">High-Frequency Heap Offset: 0x1B80</text>
+        <rect x="0" y="35" width="400" height="60" rx="8" fill="#FAF5FF" stroke="#DDD6FE"/>
+        <text x="20" y="62" font-family="Cascadia Code, Consolas, monospace" font-size="14" font-weight="700" fill="#512BD4">Counter = 500</text>
+        <text x="20" y="82" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#64748B">Dedicated 4-byte static slot</text>
+
+        <text x="0" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#334155">Static Constructor ran on first string call.</text>
+        <text x="0" y="155" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#512BD4">Own independent memory location!</text>
+      </g>
+    </g>
+
+    <!-- Slot 3: Cache<bool> -->
+    <g transform="translate(990, 0)" filter="url(#ddShadow)">
+      <rect width="450" height="280" rx="14" fill="#FFFFFF" stroke="#107C10" stroke-width="2"/>
+      <rect width="450" height="42" rx="14" fill="#107C10"/>
+      <rect y="22" width="450" height="20" fill="#107C10"/>
+      <text x="225" y="28" font-family="Cascadia Code, Consolas, monospace" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cache&lt;bool&gt; Static Storage</text>
+
+      <g transform="translate(25, 70)">
+        <text x="0" y="20" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#0F172A">High-Frequency Heap Offset: 0x1D00</text>
+        <rect x="0" y="35" width="400" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+        <text x="20" y="62" font-family="Cascadia Code, Consolas, monospace" font-size="14" font-weight="700" fill="#107C10">Counter = 999</text>
+        <text x="20" y="82" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#64748B">Dedicated 4-byte static slot</text>
+
+        <text x="0" y="130" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#334155">Static Constructor ran on first bool call.</text>
+        <text x="0" y="155" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#107C10">Never collides with other closed types!</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Architectural Advantage Card -->
+  <g transform="translate(80, 690)" filter="url(#ddShadow)">
+    <rect width="1440" height="110" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="30" y="35" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#1B1B1F">The Architect's Secret: Zero-Cost Generic Type Cache</text>
+    <text x="30" y="65" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Because the CLR creates dedicated static slots per type, developers can build TypeMetadata&lt;T&gt; caches that resolve in ~0.3 ns.</text>
+    <text x="30" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">Eliminates ConcurrentDictionary hashing, lock contention, and cache misses in high-throughput frameworks (e.g. serializers and ORMs).</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="800" y="855" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">
+    Inside .NET — Understanding What Really Happens Under the Hood
+  </text>
+</svg>

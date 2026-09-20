@@ -357,7 +357,7 @@ A: `virtual` provides a default implementation that a derived class *may* overri
 - **Sealing a class lets the JIT devirtualize the call — measured within 4% of a direct call** — a genuine, verifiable performance lever, not a superstition.
 - **Calling a virtual member from a constructor reaches a derived override before that derived instance's own constructor body has run** — a real, reproducible hazard, verified directly, and more precise than the usual folklore: field initializers have already run by then; constructor-body logic hasn't.
 
-**What's next:** Episode 16 — Delegates & Events is next (not yet drafted). It moves from *dispatching to one, statically-known implementation among several* to *dispatching to a dynamically-built list of them* — the `MulticastDelegate` machinery this chapter's Method Table model sits alongside, and the exact mechanism [Episode 14](../013-memory-leaks/article.md) already leaned on to explain the Lapsed Listener leak.
+**What's next:** [Episode 16 — Delegates & Events](../015-delegates-events/article.md) moves from *dispatching to one, statically-known implementation among several* to *dispatching to a dynamically-built list of them* — the `MulticastDelegate` machinery this chapter's Method Table model sits alongside, and the exact mechanism [Episode 14](../013-memory-leaks/article.md) already leaned on to explain the Lapsed Listener leak.
 
 ---
 

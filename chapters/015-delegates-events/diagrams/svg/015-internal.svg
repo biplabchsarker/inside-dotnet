@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgWash" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F3F0FC"/>
+    </linearGradient>
+    <filter id="ddShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feOffset dy="4" in="blur" result="off"/>
+      <feComponentTransfer in="off" result="shadow"><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgWash)"/>
+
+  <!-- Category & Title -->
+  <text x="80" y="70" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#6E6E76" letter-spacing="3">RUNTIME / INTERNAL VIEW</text>
+  <text x="80" y="115" font-family="Segoe UI, Inter, sans-serif" font-size="32" font-weight="700" fill="#1B1B1F">System.MulticastDelegate — Exact Memory Layout &amp; Dispatch</text>
+
+  <!-- ========================================== -->
+  <!-- SECTION 1: THE EXACT 64-BIT BYTE LAYOUT ON THE HEAP -->
+  <!-- ========================================== -->
+  <text x="80" y="185" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#6E6E76" letter-spacing="2">THE DELEGATE'S EXACT HEAP LAYOUT — MEASURED ON 64-BIT RUNTIME</text>
+
+  <!-- Contiguous Memory Strip -->
+  <g transform="translate(80, 210)" font-family="Cascadia Code, Consolas, monospace" font-size="14" filter="url(#ddShadow)">
+    <!-- SyncBlock -->
+    <rect x="0" y="0" width="280" height="75" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+    <text x="140" y="32" text-anchor="middle" font-weight="700" fill="#475569">SyncBlock Index</text>
+    <text x="140" y="55" text-anchor="middle" font-size="12" fill="#64748B">8 bytes (offset -8)</text>
+
+    <!-- MethodTable -->
+    <rect x="280" y="0" width="280" height="75" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+    <text x="420" y="32" text-anchor="middle" font-weight="700" fill="#475569">MethodTable*</text>
+    <text x="420" y="55" text-anchor="middle" font-size="12" fill="#512BD4">8 bytes (offset 0)</text>
+
+    <!-- _target -->
+    <rect x="560" y="0" width="300" height="75" fill="#EFF6FF" stroke="#0078D4" stroke-width="2"/>
+    <text x="710" y="32" text-anchor="middle" font-weight="700" fill="#0078D4">_target (object ref)</text>
+    <text x="710" y="55" text-anchor="middle" font-size="12" fill="#0284C7">8 bytes (offset +8)</text>
+
+    <!-- _methodPtr -->
+    <rect x="860" y="0" width="300" height="75" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="1010" y="32" text-anchor="middle" font-weight="700" fill="#6D28D9">_methodPtr (IntPtr)</text>
+    <text x="1010" y="55" text-anchor="middle" font-size="12" fill="#7C3AED">8 bytes (offset +16)</text>
+
+    <!-- _invocationList -->
+    <rect x="1160" y="0" width="280" height="75" fill="#ECFDF5" stroke="#107C10" stroke-width="1.5"/>
+    <text x="1300" y="32" text-anchor="middle" font-weight="700" fill="#065F46">_invocationList</text>
+    <text x="1300" y="55" text-anchor="middle" font-size="12" fill="#059669">8 bytes (offset +24)</text>
+  </g>
+
+  <text x="80" y="325" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76">
+    Total object size on heap: 48–64 bytes (including alignment padding and auxiliary stubs). Every C# delegate inherits from MulticastDelegate.
+  </text>
+
+  <!-- Divider Line -->
+  <line x1="80" y1="360" x2="1520" y2="360" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- ========================================== -->
+  <!-- SECTION 2: THE CPU REGISTER DISPATCH MECHANISM -->
+  <!-- ========================================== -->
+  <text x="80" y="415" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#6E6E76" letter-spacing="2">WHAT HAPPENS DURING callvirt Invoke() — ZERO RUNTIME REFLECTION</text>
+
+  <!-- Left: The Two Pointers in Action -->
+  <g transform="translate(80, 450)">
+    <!-- Receiver Object Panel -->
+    <rect x="0" y="0" width="420" height="150" rx="12" fill="#FFFFFF" stroke="#0078D4" stroke-width="1.5" filter="url(#ddShadow)"/>
+    <rect x="0" y="0" width="420" height="34" rx="12" fill="#0078D4"/>
+    <rect y="20" width="420" height="14" fill="#0078D4"/>
+    <text x="210" y="24" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">RECEIVER INSTANCE ON MANAGED HEAP</text>
+    <text x="24" y="65" font-family="Cascadia Code, Consolas, monospace" font-size="14" font-weight="700" fill="#0078D4">0x0000021F8A90B100</text>
+    <text x="24" y="92" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="600" fill="#334155">Type: OrderAuditService</text>
+    <text x="24" y="118" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#64748B">The object instance whose method will execute.</text>
+
+    <!-- Native Code Panel -->
+    <rect x="0" y="180" width="420" height="150" rx="12" fill="#1E1E2E" stroke="#7C3AED" stroke-width="1.5" filter="url(#ddShadow)"/>
+    <rect x="0" y="180" width="420" height="34" rx="12" fill="#7C3AED"/>
+    <rect y="200" width="420" height="14" fill="#7C3AED"/>
+    <text x="210" y="204" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">JIT-COMPILED MACHINE CODE IN CODE HEAP</text>
+    <text x="24" y="245" font-family="Cascadia Code, Consolas, monospace" font-size="14" font-weight="700" fill="#A5B4FC">0x7FFA50FF0D20</text>
+    <text x="24" y="272" font-family="Cascadia Code, Consolas, monospace" font-size="13" fill="#38BDF8">mov  rcx, [rcx + 8]   ; load 'this'</text>
+    <text x="24" y="298" font-family="Cascadia Code, Consolas, monospace" font-size="13" fill="#38BDF8">call OrderAuditService::ExecuteWrite</text>
+  </g>
+
+  <!-- Right: CPU Architecture Execution Steps -->
+  <g transform="translate(560, 450)">
+    <rect width="880" height="330" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ddShadow)"/>
+
+    <text x="40" y="45" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#0F172A">Execution Pipeline: 3 Hardware Steps</text>
+
+    <!-- Step 1 -->
+    <g transform="translate(40, 75)">
+      <circle cx="20" cy="20" r="16" fill="#EFF6FF" stroke="#0078D4" stroke-width="2"/>
+      <text x="20" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0078D4" text-anchor="middle">1</text>
+      <text x="55" y="18" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1E293B">Load Target Receiver into Register RCX ('this')</text>
+      <text x="55" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#64748B">The JIT reads _target from offset +8 and places it into RCX. (Null for static methods).</text>
+    </g>
+
+    <!-- Step 2 -->
+    <g transform="translate(40, 150)">
+      <circle cx="20" cy="20" r="16" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+      <text x="20" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#7C3AED" text-anchor="middle">2</text>
+      <text x="55" y="18" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1E293B">Fetch Native Code Address from Register RAX</text>
+      <text x="55" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#64748B">The JIT reads _methodPtr directly from offset +16 into RAX.</text>
+    </g>
+
+    <!-- Step 3 -->
+    <g transform="translate(40, 225)">
+      <circle cx="20" cy="20" r="16" fill="#ECFDF5" stroke="#107C10" stroke-width="2"/>
+      <text x="20" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#107C10" text-anchor="middle">3</text>
+      <text x="55" y="18" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1E293B">Execute Direct Hardware Jump: jmp [rax]</text>
+      <text x="55" y="40" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#64748B">Control transfers directly to the target compiled machine code. Pure pointer dereference (~1.4 ns).</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="800" y="855" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">
+    Inside .NET — Understanding What Really Happens Under the Hood
+  </text>
+</svg>

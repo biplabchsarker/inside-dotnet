@@ -1,0 +1,24 @@
+flowchart TB
+    subgraph Root["GC Root (Static / Singleton)"]
+        direction TB
+        Host["AppHost.GlobalEventBus"]
+        Del["System.MulticastDelegate"]
+        Host -->|"holds strong ref"| Del
+    end
+
+    subgraph DelegateInternals["Delegate Pointer State"]
+        direction TB
+        TargetPtr["_target pointer: 0x0000021F..."]
+        Del -->|"contains"| TargetPtr
+    end
+
+    subgraph LeakedObject["Leaked Transient Subscriber (Heap)"]
+        direction TB
+        Window["UserProfileDialog (Window was closed!)"]
+        Controls["25 MB Child Controls & Bitmaps"]
+        Window --> Controls
+    end
+
+    TargetPtr ==>|"STRONG REFERENCE PINS OBJECT IN GEN 2"| Window
+    
+    note["GC traces from Root -> Host -> Delegate -> Window.\nWindow CANNOT be collected!"]

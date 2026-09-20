@@ -1,0 +1,16 @@
+flowchart TD
+    subgraph Decision["Member Access Strategy Selection"]
+        Start(["Dynamic Member Access Required"]) --> Q1{"Is member signature known at compile time?"}
+        
+        Q1 -- Yes --> Direct["Direct Call / Delegate.CreateDelegate\n• ~0.35 - 1.18 ns\n• 0 B allocation\n• Full JIT inlining"]
+        
+        Q1 -- No --> Q2{"Is this on the application hot path\nor executed in a tight loop?"}
+        
+        Q2 -- Yes --> Expr["Compiled Expression Tree / Emit\n• One-time compile: ~0.3 ms\n• Cached delegate: ~1.25 ns\n• 0 B allocation"]
+        
+        Q2 -- No --> Q3{"Is cold-path startup / plugin discovery\nor one-off diagnostics?"}
+        
+        Q3 -- Yes --> Refl["System.Reflection (MethodInfo.Invoke)\n• ~40 - 55 ns\n• 24 - 56 B allocation per call\n• High flexibility, zero upfront compile"]
+        
+        Q3 -- Build-time viable --> Gen["C# Roslyn Source Generator\n• 0 ns runtime setup\n• Direct compile-time code gen\n• AOT & Trimming compliant"]
+    end

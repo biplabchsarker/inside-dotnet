@@ -1,0 +1,20 @@
+flowchart LR
+    subgraph CSharpSource["C# Source"]
+        CS["List&lt;int&gt; list = new();"]
+    end
+
+    subgraph Roslyn["Roslyn Compiler"]
+        IL["IL: newobj List`1&lt;int32&gt;::.ctor()\nMetadata: TypeSpec Token"]
+    end
+
+    subgraph CLR["CLR Class Loader"]
+        RT["Reified Runtime Type\ntypeof(T) == Int32\nNo Type Erasure!"]
+    end
+
+    subgraph JIT["RyuJIT Compiler"]
+        ASM["Specialized Native Assembly\nAllocates contiguous 4-byte slots\nZero boxing, full CPU cache locality"]
+    end
+
+    CS --> Roslyn
+    Roslyn --> CLR
+    CLR --> JIT

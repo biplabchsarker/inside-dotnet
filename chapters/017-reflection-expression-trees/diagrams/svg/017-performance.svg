@@ -1,0 +1,81 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Reflection &amp; Expression Trees</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="125" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="152" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="182" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Reflection is for cold-path metadata inspection; for hot-path invocation, compile an Expression Tree or use Source Generators to eliminate boxing and late-binding overhead.</text>
+
+  <text x="80" y="230" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0.8 (x64 RyuJIT) — two groups, each ratioed to its own direct-call baseline</text>
+
+  <!-- Bars Group -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="13">
+    <text x="80" y="262" fill="#512BD4" font-weight="700" font-size="12.5" letter-spacing="1">GROUP 1 — PROPERTY ACCESS (model.Value)</text>
+
+    <!-- Row 1: Direct Property Access -->
+    <text x="80" y="286" fill="#1B1B1F">DirectPropertyAccess (baseline)</text>
+    <rect x="80" y="293" width="12" height="20" rx="5" fill="#107C10"/>
+    <text x="102" y="308" fill="#6E6E76">0.06 ns · 1.00× · 0 B</text>
+
+    <!-- Row 2: Delegate.CreateDelegate -->
+    <text x="80" y="333" fill="#1B1B1F">DelegateCreateDelegateAccess (open delegate)</text>
+    <rect x="80" y="340" width="118" height="20" rx="5" fill="#0078D4"/>
+    <text x="208" y="355" fill="#6E6E76">1.57 ns · 26.2× · 0 B</text>
+
+    <!-- Row 3: Compiled Expression Property -->
+    <text x="80" y="380" fill="#1B1B1F">CompiledExpressionPropertyAccess (DynamicMethod)</text>
+    <rect x="80" y="387" width="136" height="20" rx="5" fill="#0078D4"/>
+    <text x="226" y="402" fill="#6E6E76">1.80 ns · 30.0× · 0 B</text>
+
+    <!-- Row 4: Reflection Property -->
+    <text x="80" y="427" fill="#1B1B1F">ReflectionPropertyGetValue (PropertyInfo.GetValue)</text>
+    <rect x="80" y="434" width="700" height="20" rx="5" fill="#A80000"/>
+    <text x="790" y="449" fill="#A80000" font-weight="700">9.29 ns · 154.5× · 32 B</text>
+
+    <text x="80" y="482" fill="#512BD4" font-weight="700" font-size="12.5" letter-spacing="1">GROUP 2 — METHOD CALL WITH AN ARGUMENT (model.ComputeTax(rate))</text>
+
+    <!-- Row 5: Direct Method Call -->
+    <text x="80" y="506" fill="#1B1B1F">DirectMethodCall (decimal multiplication, baseline)</text>
+    <rect x="80" y="513" width="149" height="20" rx="5" fill="#107C10"/>
+    <text x="239" y="528" fill="#6E6E76">4.10 ns · 1.00× · 0 B</text>
+
+    <!-- Row 6: Compiled Expression Method -->
+    <text x="80" y="553" fill="#1B1B1F">CompiledExpressionMethodCall (DynamicMethod)</text>
+    <rect x="80" y="560" width="386" height="20" rx="5" fill="#0078D4"/>
+    <text x="476" y="575" fill="#6E6E76">10.64 ns · 2.59× · 0 B</text>
+
+    <!-- Row 7: Reflection Method Invoke -->
+    <text x="80" y="600" fill="#1B1B1F">ReflectionMethodInvoke (MethodInfo.Invoke)</text>
+    <rect x="80" y="607" width="699" height="20" rx="5" fill="#A80000"/>
+    <text x="789" y="622" fill="#A80000" font-weight="700">19.26 ns · 4.70× · 32 B</text>
+  </g>
+
+  <!-- Explanatory text -->
+  <text x="80" y="656" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    A decimal multiplication (Group 2) already costs far more than a bare property read (Group 1) — that's why each group has its own baseline, not one shared number.
+  </text>
+  <text x="80" y="674" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    Compiling an Expression Tree emits raw CIL opcodes once, letting the JIT generate native instructions within a small multiple of a direct call — nowhere near reflection's cost.
+  </text>
+
+  <!-- Interview Question -->
+  <rect x="80" y="700" width="1440" height="135" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="728" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="758" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="700" fill="#1B1B1F">"Why is MethodInfo.Invoke slow, and how do Expression Trees eliminate that overhead?"</text>
+  <text x="104" y="784" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">MethodInfo.Invoke checks security and argument types, allocates an object[] array, and boxes value-type arguments — every call.</text>
+  <text x="104" y="805" font-family="Segoe UI, Inter, sans-serif" font-size="13.5" fill="#1B1B1F">A compiled Expression Tree emits CIL once via DynamicMethod, then runs as ordinary JIT-compiled native code with zero boxing.</text>
+
+  <!-- Footer -->
+  <text x="800" y="865" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from code/Performance — re-run with `dotnet run -c Release`.</text>
+  <text x="800" y="888" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

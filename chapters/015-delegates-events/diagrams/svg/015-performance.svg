@@ -1,0 +1,70 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="perfHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#FFFFFF"/>
+  <rect width="1600" height="100" fill="url(#perfHeader)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Delegates &amp; Events</text>
+
+  <!-- One-line rule -->
+  <rect x="80" y="125" width="1440" height="80" rx="14" fill="#512BD4" opacity="0.06" stroke="#512BD4" stroke-width="2"/>
+  <text x="104" y="152" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#512BD4" letter-spacing="2">THE ONE-LINE RULE</text>
+  <text x="104" y="182" font-family="Segoe UI, Inter, sans-serif" font-size="17" font-weight="600" fill="#1B1B1F">Delegates provide type-safe decoupling at the cost of indirect invocation — static lambdas avoid heap allocations, but unmanaged subscriptions quietly leak entire object graphs.</text>
+
+  <text x="80" y="240" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#1B1B1F" letter-spacing="1">MEASURED — BenchmarkDotNet, .NET 10.0 (x64 RyuJIT), two separate runs, single-call benchmarks</text>
+
+  <!-- Direct call floor note -->
+  <text x="80" y="268" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" font-style="italic" fill="#6E6E76">DirectCall / StaticMethodDirectCall measured ~0.00 ns both runs — below this harness's resolvable floor for a single, loop-free call. Bars below start from InstanceDelegateCall.</text>
+
+  <!-- Bars Group -->
+  <g font-family="Segoe UI, Inter, sans-serif" font-size="13.5">
+    <!-- Instance Delegate -->
+    <text x="80" y="300" fill="#1B1B1F">InstanceDelegateCall (passes _target as this in RCX)</text>
+    <rect x="80" y="308" width="20" height="24" rx="6" fill="#107C10"/>
+    <text x="115" y="325" fill="#6E6E76">0.04–0.07 ns · 0 B</text>
+
+    <!-- Static Lambda -->
+    <text x="80" y="360" fill="#1B1B1F">StaticLambdaNoAllocation (cached singleton delegate)</text>
+    <rect x="80" y="368" width="75" height="24" rx="6" fill="#512BD4"/>
+    <text x="170" y="385" fill="#6E6E76">0.20–0.30 ns · 0 B</text>
+
+    <!-- Static Delegate -->
+    <text x="80" y="420" fill="#1B1B1F">StaticDelegateCall (indirect call through _methodPtr)</text>
+    <rect x="80" y="428" width="330" height="24" rx="6" fill="#0078D4"/>
+    <text x="425" y="445" fill="#6E6E76">1.28–1.34 ns · 0 B</text>
+
+    <!-- Closure Allocation Call -->
+    <text x="80" y="480" fill="#1B1B1F">ClosureAllocationCall (capturing local variable in loop)</text>
+    <rect x="80" y="488" width="510" height="24" rx="6" fill="#A80000"/>
+    <text x="605" y="505" fill="#A80000" font-weight="700">2.08 ns · 24 B / op (GC Gen0 Churn!)</text>
+
+    <!-- Multicast Delegate -->
+    <text x="80" y="540" fill="#1B1B1F">MulticastDelegateCall (2 subscribers, sequential loop)</text>
+    <rect x="80" y="548" width="1150" height="24" rx="6" fill="#D83B01"/>
+    <text x="1245" y="565" fill="#6E6E76" font-weight="700">4.63–4.68 ns · 0 B</text>
+  </g>
+
+  <!-- Explanatory text -->
+  <text x="80" y="600" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    Every layer of indirection (delegate pointer, static-lambda cache, multicast loop, closure allocation) adds real, measurable cost on top of a direct call.
+  </text>
+  <text x="80" y="618" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" fill="#9CA3AF">
+    Capturing lambdas instantiate a hidden display class on every invocation, triggering frequent Gen 0 collections in tight loops.
+  </text>
+
+  <!-- Interview Question -->
+  <rect x="80" y="685" width="1440" height="130" rx="14" fill="#68217A" opacity="0.06" stroke="#68217A" stroke-width="2"/>
+  <text x="104" y="715" font-family="Segoe UI, Inter, sans-serif" font-size="13" font-weight="700" fill="#68217A" letter-spacing="2">IF THEY ASK ONE THING</text>
+  <text x="104" y="746" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F">"Why can subscribing to an event cause a memory leak in a managed language with a Garbage Collector?"</text>
+  <text x="104" y="776" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#1B1B1F">The publisher's MulticastDelegate holds a strong reference in its `_target` field to the subscriber instance.</text>
+  <text x="104" y="798" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#1B1B1F">If the publisher outlives the subscriber, the GC traces reachability from the publisher's root to the subscriber, preventing collection.</text>
+
+  <!-- Footer -->
+  <text x="800" y="845" font-family="Segoe UI, Inter, sans-serif" font-size="13" fill="#6E6E76" text-anchor="middle">Every number above is a measured BenchmarkDotNet result from code/Performance — re-run with `dotnet run -c Release`.</text>
+  <text x="800" y="875" font-family="Segoe UI, Inter, sans-serif" font-size="12" fill="#9CA3AF" text-anchor="middle">Inside .NET — Understanding What Really Happens Under the Hood — inside-dotnet</text>
+</svg>

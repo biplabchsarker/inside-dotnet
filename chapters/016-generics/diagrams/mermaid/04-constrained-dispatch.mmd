@@ -1,0 +1,6 @@
+flowchart TD
+    CallSite["Call: Process(T item)"] --> Constraint{"Is T a struct or class?"}
+
+    Constraint -->|"where T : struct, IProcessor"| DirectCall["Constrained Devirtualization\n• JIT inlines or emits direct call\n• ZERO boxing, ZERO allocation\n• 1.15 ns latency"]
+
+    Constraint -->|"IProcessor item (non-generic interface)"| BoxCall["Interface Dispatch Boxing\n• Boxes struct to heap object\n• Virtual table lookup overhead\n• 5.82 ns latency + 24 B alloc"]
