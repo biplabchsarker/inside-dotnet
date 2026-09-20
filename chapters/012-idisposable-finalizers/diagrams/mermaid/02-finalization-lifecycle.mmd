@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant GC as Garbage Collector
+    participant FQ as Finalization Queue
+    participant FR as F-Reachable Queue
+    participant FT as Finalizer Thread
+    participant Obj as Finalizable object
+
+    GC->>GC: Trace roots, find Obj unreachable
+    GC->>FQ: Check: is Obj registered?
+    FQ-->>GC: Yes — cannot reclaim yet
+    GC->>FR: Move Obj to F-Reachable Queue
+    Note over FR,Obj: Obj is "resurrected" — F-Reachable<br/>acts as a strong GC root
+    GC->>Obj: Obj survives this collection, promoted to Gen 1
+    FT->>FR: Wakes up, drains the queue
+    FT->>Obj: Calls ~ClassName()
+    Obj-->>FT: Finalizer completes — Obj now truly dead
+    Note over Obj: Memory reclaimed only on the<br/>NEXT collection of Gen 1/Gen 2

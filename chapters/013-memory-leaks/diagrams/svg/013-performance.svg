@@ -1,0 +1,54 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — PERFORMANCE &amp; QUICK REFERENCE</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">Memory Leak Benchmarks</text>
+
+  <text x="800" y="170" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#1B1B1F" text-anchor="middle">Memory Retained After GC (10,000 Event Subscriptions)</text>
+
+  <!-- The Chart Area -->
+  <rect x="200" y="220" width="1200" height="400" rx="12" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- Y-Axis labels -->
+  <text x="350" y="270" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#6E6E76" text-anchor="end">1,000 MB</text>
+  <line x1="380" y1="265" x2="1350" y2="265" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <text x="350" y="370" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#6E6E76" text-anchor="end">500 MB</text>
+  <line x1="380" y1="365" x2="1350" y2="365" stroke="#E5E7EB" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <text x="350" y="470" font-family="Segoe UI, Inter, sans-serif" font-size="16" fill="#6E6E76" text-anchor="end">0 MB</text>
+  <line x1="380" y1="465" x2="1350" y2="465" stroke="#D1D5DB" stroke-width="2"/>
+
+  <!-- Left Bar: Safe (Proper Unsubscribe) -->
+  <rect x="550" y="463" width="150" height="2" rx="0" fill="#107C10"/>
+  <text x="625" y="450" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#107C10" text-anchor="middle">0.00 MB</text>
+  <text x="625" y="500" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Safe Pattern</text>
+  <text x="625" y="525" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">(Explicit Unsubscribe)</text>
+  <text x="625" y="550" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Garbage Collected Perfectly</text>
+
+  <!-- Right Bar: Leaky -->
+  <!-- 1000MB is 200px height (265 to 465). 977MB is roughly 195px height -->
+  <rect x="1000" y="270" width="150" height="195" rx="4" fill="#D83B01"/>
+  <text x="1075" y="255" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#D83B01" text-anchor="middle">977.76 MB</text>
+  <text x="1075" y="500" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#1B1B1F" text-anchor="middle">Leaky Pattern</text>
+  <text x="1075" y="525" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">(Forgot Unsubscribe)</text>
+  <text x="1075" y="550" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#D83B01" text-anchor="middle">Permanent OutOfMemory Threat</text>
+
+  <!-- Note Box -->
+  <rect x="200" y="660" width="1200" height="150" rx="12" fill="#FDF3EE" stroke="#D83B01" stroke-width="2"/>
+  <text x="250" y="700" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="700" fill="#D83B01">The One-Line Rule:</text>
+  <text x="250" y="740" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#1B1B1F">The Garbage Collector collects <tspan font-weight="700" text-decoration="underline">unreachable</tspan> objects, not <tspan font-weight="700">unused</tspan> objects. </text>
+  <text x="250" y="770" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#1B1B1F">If a static field, long-lived singleton, or background thread can trace a path to your object,</text>
+  <text x="250" y="795" font-family="Segoe UI, Inter, sans-serif" font-size="18" font-weight="700" fill="#D83B01">it will never be collected.</text>
+</svg>

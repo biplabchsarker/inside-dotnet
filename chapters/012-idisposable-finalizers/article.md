@@ -43,6 +43,56 @@ Because the GC runs non-deterministically (only when memory pressure demands it)
 
 ![Concept: Explicit Dispose vs Finalization Queue](diagrams/png/012-concept.png)
 
+#### 1. The dual-path cleanup pattern
+
+```mermaid
+flowchart TB
+    A["Object with a finalizer\nallocated on the heap"] --> B{"Consumer calls\nDispose() explicitly?"}
+    B -->|"yes"| C["Dispose(disposing: true)\ncleans up now"]
+    C --> D["GC.SuppressFinalize(this)\nremoves it from the\nFinalization Queue"]
+    D --> E["Object dies in Gen 0\nlike any other object"]
+    B -->|"no — forgotten"| F["Finalization Queue already\nholds a pointer to it"]
+    F --> G["GC finds it unreachable,\nbut the queue entry blocks\nimmediate reclamation"]
+    G --> H["Moved to F-Reachable Queue —\nresurrected, promoted to Gen 1"]
+    H --> I["Finalizer Thread eventually\ncalls ~ClassName()"]
+    I --> J["Object is truly dead —\nreclaimed only on the NEXT\ncollection of Gen 1/Gen 2"]
+```
+
+#### 2. The finalization lifecycle, collection by collection
+
+```mermaid
+sequenceDiagram
+    participant GC as Garbage Collector
+    participant FQ as Finalization Queue
+    participant FR as F-Reachable Queue
+    participant FT as Finalizer Thread
+    participant Obj as Finalizable object
+
+    GC->>GC: Trace roots, find Obj unreachable
+    GC->>FQ: Check: is Obj registered?
+    FQ-->>GC: Yes — cannot reclaim yet
+    GC->>FR: Move Obj to F-Reachable Queue
+    Note over FR,Obj: Obj is "resurrected" — F-Reachable<br/>acts as a strong GC root
+    GC->>Obj: Obj survives this collection, promoted to Gen 1
+    FT->>FR: Wakes up, drains the queue
+    FT->>Obj: Calls ~ClassName()
+    Obj-->>FT: Finalizer completes — Obj now truly dead
+    Note over Obj: Memory reclaimed only on the<br/>NEXT collection of Gen 1/Gen 2
+```
+
+#### 3. What a `using` declaration actually compiles to
+
+```mermaid
+flowchart LR
+    A["using var stream =\nnew FileStream(...);"] --> B["Compiler emits a\ntry block starting here"]
+    B --> C["... rest of the\nmethod body ..."]
+    C --> D{"Enclosing block ends,\nor an exception is thrown"}
+    D --> E["finally block runs:\nstream?.Dispose()"]
+    E --> F["Resource released\ndeterministically —\nno GC involvement"]
+```
+
+*(Standalone Mermaid sources for all three diagrams live under [`diagrams/mermaid/`](diagrams/mermaid/), numbered to match the order above, per [IMAGE_GUIDE.md](../../IMAGE_GUIDE.md).)*
+
 ### Under the hood
 
 The mechanics of `IDisposable` are actually entirely separate from the GC. `IDisposable` is just an interface with a single method: `void Dispose()`. It is a developer-to-developer contract. The CLR does not care if you implement it, and the GC does not call it.
@@ -185,11 +235,14 @@ The overhead of implementing a finalizer is massive. When an object has a finali
 
 We benchmarked allocating 100,000 objects with and without an empty finalizer (`~ClassWithFinalizer() {}`).
 
-**The Results (from `BenchmarkDotNet`):**
-- **Without Finalizer:** 177.9 μs. (191 Gen 0 collections per 1,000 ops, **0** Gen 1 collections).
-- **With Finalizer:** 13,060.6 μs. (187 Gen 0 collections, **171** Gen 1 collections).
+**The results (from `BenchmarkDotNet`, two separate runs on the same machine):**
 
-Just the *existence* of an empty finalizer made the workload **73.5× slower**. Almost every single object was promoted to Generation 1 (171 Gen 1 collections vs 0), severely polluting the older generation heap.
+| Run | Without Finalizer | With Finalizer | Ratio |
+|---|---|---|---|
+| 1 | 177.9 μs (191 Gen0/1K, 0 Gen1/1K) | 13,060.6 μs (187 Gen0/1K, 171 Gen1/1K) | **73.53×** |
+| 2 | 196.8 μs (191 Gen0/1K, 0 Gen1/1K) | 9,339.2 μs (188 Gen0/1K, 172 Gen1/1K) | **47.65×** |
+
+Just the *existence* of an empty finalizer made the workload **tens of times slower** in both runs — the exact multiplier moved between 47.65× and 73.53× run to run (the Finalizer Thread's own scheduling adds real variance), but the *shape* never did: almost every single object was promoted to Generation 1 in both runs (171-172 Gen 1 collections vs. 0), severely polluting the older generation heap. Treat the tens-of-times slowdown and the near-total Gen 1 promotion as the reliable findings — not the precise decimal.
 
 Never implement a finalizer "just to be safe." If you must wrap an unmanaged resource, use `SafeHandle`.
 
@@ -200,7 +253,7 @@ Never implement a finalizer "just to be safe." If you must wrap an unmanaged res
 1. **Adding a Finalizer to a Class without Unmanaged Resources**
    A finalizer guarantees that your object will survive Gen 0, get promoted to Gen 1 (or Gen 2), and stall the Finalizer Thread. Only implement a finalizer if your class holds a raw `IntPtr` to unmanaged memory.
 2. **Forgetting `GC.SuppressFinalize(this)` in `Dispose()`**
-   If you write a finalizer and implement `Dispose()`, but forget to call `GC.SuppressFinalize(this)`, the object will still be placed in the Finalization Queue even though you already cleaned it up! It will needlessly incur the 73× performance penalty.
+   If you write a finalizer and implement `Dispose()`, but forget to call `GC.SuppressFinalize(this)`, the object will still be placed in the Finalization Queue even though you already cleaned it up! It will needlessly incur the tens-of-times performance penalty measured above.
 3. **Throwing Exceptions inside a Finalizer**
    If a finalizer throws an unhandled exception, it crashes the Finalizer Thread, which terminates the entire application process. Never throw exceptions from a finalizer.
 4. **Accessing other Managed Objects in a Finalizer**
@@ -224,6 +277,18 @@ The Finalizer Thread is a single, global background thread. If thousands of obje
 
 **Q1: What is the difference between `Dispose()` and a Finalizer?**
 A: `Dispose()` is called deterministically by the developer (usually via a `using` statement) to release unmanaged resources immediately. A Finalizer is called non-deterministically by the Garbage Collector's finalizer thread before the object's memory is reclaimed, acting as a fallback mechanism.
+
+**Q2: What happens internally when an object with a finalizer is collected?**
+A: When the GC finds the object unreachable, it checks the Finalization Queue. Seeing the object there, it moves it to the F-Reachable Queue — which acts as a strong GC root, "resurrecting" the object. Because it survived the collection, it's promoted to Gen 1. Later, the Finalizer Thread reads from the F-Reachable Queue and executes the finalizer; only the *next* GC cycle actually reclaims the memory.
+
+**Q3: What does `GC.SuppressFinalize(this)` do, and why does it matter?**
+A: It sets a bit in the object's header telling the CLR to remove the object from the Finalization Queue. If `Dispose()` already cleaned up the resource, skipping this call means the object is still sent through the F-Reachable Queue and promoted to Gen 1 for no reason — paying the finalization cost for a resource that's already been released.
+
+**Q4: Why is it dangerous to reference other managed objects inside a finalizer?**
+A: Finalization order is non-deterministic. If a finalizer references a managed `FileStream`, that `FileStream` might already have been finalized and closed by the time this finalizer runs. A finalizer should only touch its own unmanaged fields (like an `IntPtr`), never other managed objects.
+
+**Q5: How does `SafeHandle` improve on writing a raw finalizer?**
+A: `SafeHandle` inherits from `CriticalFinalizerObject`, which guarantees its finalizer runs even during a catastrophic failure (like an `OutOfMemoryException` mid-collection), and it protects against handle-recycling exploits. Wrapping an unmanaged handle in a `SafeHandle` means the containing class no longer needs a finalizer at all — it only implements `IDisposable` and disposes the `SafeHandle`.
 
 ### Quiz
 

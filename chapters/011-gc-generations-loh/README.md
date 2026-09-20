@@ -19,4 +19,4 @@ Part II — Memory
 | [diagrams/svg/011-cover.svg](diagrams/svg/011-cover.svg) | Chapter cover source (edited from `assets/brand/chapter-cover-template.svg`) |
 
 **Previous:** [Episode 11 — Garbage Collection Fundamentals](../010-garbage-collection/README.md)
-**Next:** [Episode 13 — IDisposable & Finalizers](../012-idisposable-finalizers/README.md) *(not yet written)*
+**Next:** [Episode 13 — IDisposable & Finalizers](../012-idisposable-finalizers/README.md)

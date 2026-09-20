@@ -1,0 +1,10 @@
+flowchart TB
+    A["Object with a finalizer\nallocated on the heap"] --> B{"Consumer calls\nDispose() explicitly?"}
+    B -->|"yes"| C["Dispose(disposing: true)\ncleans up now"]
+    C --> D["GC.SuppressFinalize(this)\nremoves it from the\nFinalization Queue"]
+    D --> E["Object dies in Gen 0\nlike any other object"]
+    B -->|"no — forgotten"| F["Finalization Queue already\nholds a pointer to it"]
+    F --> G["GC finds it unreachable,\nbut the queue entry blocks\nimmediate reclamation"]
+    G --> H["Moved to F-Reachable Queue —\nresurrected, promoted to Gen 1"]
+    H --> I["Finalizer Thread eventually\ncalls ~ClassName()"]
+    I --> J["Object is truly dead —\nreclaimed only on the NEXT\ncollection of Gen 1/Gen 2"]

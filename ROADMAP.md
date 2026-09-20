@@ -98,7 +98,7 @@ Chapters 057–058. Topics: Becoming an Architect (scalability, HA, system desig
 | v1.0 | Foundation (this phase) |
 | v1.1 | Branding v2 (if/when real illustration work is commissioned) |
 | v2.0 | Runtime chapters (Phase 1) — **done** |
-| v3.0 | Memory chapters (Phase 2) — **in progress** |
+| v3.0 | Memory chapters (Phase 2) — **done** |
 | v4.0 | C#, Clean Code, Design Patterns, DI, ASP.NET Core (Phases 3–7) |
 | v5.0 | EF Core, Concurrency, Architecture, Production (Phases 8–11) |
 | v6.0 | Website + compiled book (PDF/eBook) + automation (`scripts/build.ps1`) |

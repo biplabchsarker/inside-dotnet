@@ -2,7 +2,7 @@
 
 This is the spec to hand to whoever produces Inside .NET's five signature illustrations per chapter — a commissioned illustrator, Canva, Figma, or an AI image-generation tool. See [IMAGE_GUIDE.md](IMAGE_GUIDE.md) for how these fit into the overall image system, and [BACKLOG.md](BACKLOG.md) for why this moved from hand-coded SVG to external sourcing (2026-08-08).
 
-Chapters 000-012 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-012) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-012 on 2026-09-20 as those two chapters were drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 013 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
+Chapters 000-013 currently show hand-coded SVG placeholders in these slots (see [IMAGE_GUIDE.md](IMAGE_GUIDE.md#interim-svg-placeholders-chapters-000-013) — the allowance was extended from 000-008 to 000-010 on 2026-09-09, then to 000-013 on 2026-09-20 as those three chapters were drafted). They stay in place, unedited, until a v2 image from this brief replaces them; `article.md` in each of those chapters already references the standard filenames, so a v2 PNG can be dropped straight in without further edits once produced. Chapter 014 onward has no interim placeholder — for a chapter that hasn't been drafted yet, only the Hero/Concept/Internal/Memory images can be reasonably briefed ahead of time (from the chapter's planned topic); the Performance & Quick Reference image cannot be, since it requires real measured numbers that don't exist until the chapter is written and benchmarked — see each such brief below for exactly what's still open.
 
 ## The style brief — applies to all five images, every chapter
 
@@ -174,8 +174,17 @@ Each row below is the one-sentence concept to depict — not a full script. The 
 | Memory/Execution Diagram | A side-by-side execution trace of C# 8 `using` declarations (implicit scope boundary) vs. traditional `using` blocks (explicit brackets) mapping down to the underlying `try/finally` IL generation. |
 | Performance & Quick Reference | Not yet briefable — wait for benchmark data to show GC cost of finalizers vs. non-finalizers, and the `SafeHandle` advantage. Likely interview question: "What is the difference between Dispose and a finalizer?" |
 
----
+### 013 — Memory Leaks
 
+| Image | Depict |
+|---|---|
+| Hero Cover | A hospital central desk overflowing with active patient charts for patients that have already been discharged, illustrating an un-cancelled subscription causing a massive pile-up. |
+| Concept Overview | An unintended strong reference chain: A static publisher pointing to a short-lived UI object via an event handler subscription that was never removed. |
+| Runtime/Internal View | The internal structure of a `MulticastDelegate` holding a `Method` and a `Target` reference, showing how `+=` pins the subscriber in memory by giving the publisher a strong reference to it. |
+| Memory/Execution Diagram | A GC tracing from a Static GC Root, through the MulticastDelegate, into the subscriber object, placing it in Generation 2 instead of letting it die in Generation 0. |
+| Performance & Quick Reference | Measured bars: Safe (Proper Unsubscribe) retaining 0.00 MB vs Leaky (Missing Unsubscribe) retaining 977.76 MB in memory. Likely interview question: "Can a managed application leak memory?" |
+
+---
 ## Notes for whoever produces these
 
 - **Don't fabricate data.** Every number that appears in a Performance & Quick Reference image must trace back to a real measurement already written in that chapter's `article.md` Performance Notes section. If a chapter hasn't been benchmarked yet, ask rather than inventing a plausible-looking number.

@@ -1,4 +1,4 @@
-# Chapter 012 — IDisposable & Finalizers
+# Chapter 013 — Memory Leaks in a Managed World
 
 Part II — Memory
 
@@ -14,9 +14,9 @@ Part II — Memory
 | [linkedin.md](linkedin.md) | LinkedIn-optimized version |
 | [medium.md](medium.md) | Medium-optimized version |
 | [devto.md](devto.md) | Dev.to-optimized version |
-| [code/](code/) | Four .NET 10 projects: `Example` (the C# 8 `using` declaration), `Advanced` (the standard `Dispose(bool)` pattern with a finalizer fallback), `Production` (wrapping a `SafeFileHandle` instead of writing a finalizer), and `Performance` (real measured cost of an empty finalizer vs. none) |
+| [code/](code/) | Four .NET 10 projects: `Example` (the Lapsed Listener leak), `Advanced` (fixing it with `IDisposable` and explicit `-=`), `Production` (a `WeakEventManager` built on `WeakReference<T>`), and `Performance` (real measured memory retained by a safe vs. leaky subscriber after a forced GC) |
 | [diagrams/mermaid/](diagrams/mermaid/) | Standalone Mermaid source for all 3 diagrams (also embedded inline in article.md) |
-| [diagrams/svg/012-cover.svg](diagrams/svg/012-cover.svg) | Chapter cover source (edited from `assets/brand/chapter-cover-template.svg`) |
+| [diagrams/svg/](diagrams/svg/) | Signature-illustration SVG sources (light-isometric interim placeholders; see [IMAGE_GUIDE.md](../../IMAGE_GUIDE.md)) |
 
-**Previous:** [Episode 12 — GC Generations & the Large Object Heap](../011-gc-generations-loh/README.md)
-**Next:** [Episode 14 — Memory Leaks in a Managed World](../013-memory-leaks/README.md)
+**Previous:** [Episode 13 — IDisposable & Finalizers](../012-idisposable-finalizers/README.md)
+**Next:** Episode 15 — OOP Fundamentals *(not yet written; opens Part III — C#)*

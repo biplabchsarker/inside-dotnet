@@ -1,0 +1,57 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#512BD4"/>
+      <stop offset="100%" stop-color="#0078D4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  
+  <rect width="1600" height="100" fill="url(#headerGrad)"/>
+  <text x="80" y="42" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" opacity="0.85" letter-spacing="2">INSIDE .NET — CONCEPT OVERVIEW</text>
+  <text x="80" y="78" font-family="Segoe UI, Inter, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">The "Lapsed Listener" Memory Leak</text>
+
+  <!-- Left: The Publisher -->
+  <rect x="200" y="250" width="300" height="200" rx="12" fill="#E8F4FD" stroke="#0078D4" stroke-width="2" filter="url(#shadow)"/>
+  <text x="350" y="290" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#0078D4" text-anchor="middle">Long-Lived Publisher</text>
+  <text x="350" y="320" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">Static Field or Singleton Service</text>
+
+  <rect x="230" y="350" width="240" height="60" rx="6" fill="#FFFFFF" stroke="#0078D4" stroke-width="2"/>
+  <text x="350" y="385" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#1B1B1F" text-anchor="middle">event NotificationReceived</text>
+  
+  <text x="350" y="490" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Lifetime: Infinite (App Domain)</text>
+
+  <!-- Connection: The Leak -->
+  <path d="M 470 380 L 1050 380" fill="none" stroke="#D83B01" stroke-width="6" stroke-dasharray="10 6" marker-end="url(#arrowRed)"/>
+  
+  <rect x="680" y="330" width="160" height="40" rx="20" fill="#D83B01" filter="url(#shadow)"/>
+  <text x="760" y="356" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#FFFFFF" text-anchor="middle">Strong Reference</text>
+  <text x="760" y="415" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700" fill="#D83B01" text-anchor="middle">THE LEAK</text>
+
+  <!-- Right: The Subscriber -->
+  <rect x="1100" y="250" width="300" height="200" rx="12" fill="#FDF3EE" stroke="#D83B01" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1250" y="290" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#D83B01" text-anchor="middle">Short-Lived Subscriber</text>
+  <text x="1250" y="320" font-family="Segoe UI, Inter, sans-serif" font-size="14" fill="#6E6E76" text-anchor="middle">UI Dashboard / Dialog Box</text>
+
+  <rect x="1130" y="350" width="240" height="60" rx="6" fill="#FFFFFF" stroke="#D83B01" stroke-width="2"/>
+  <text x="1250" y="385" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#1B1B1F" text-anchor="middle">OnNotification(msg)</text>
+  
+  <text x="1250" y="490" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#1B1B1F" text-anchor="middle">Intended Lifetime: 5 minutes</text>
+  <text x="1250" y="520" font-family="Segoe UI, Inter, sans-serif" font-size="16" font-weight="700" fill="#D83B01" text-anchor="middle">Actual Lifetime: Forever</text>
+
+  <!-- Explanation Text -->
+  <text x="800" y="650" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#6E6E76" text-anchor="middle">Because the Publisher lives forever, and holds a strong reference to the Subscriber,</text>
+  <text x="800" y="680" font-family="Segoe UI, Inter, sans-serif" font-size="18" fill="#6E6E76" text-anchor="middle">the Garbage Collector believes the Subscriber is still actively in use.</text>
+  <text x="800" y="730" font-family="Segoe UI, Inter, sans-serif" font-size="22" font-weight="700" fill="#1B1B1F" text-anchor="middle">Unless you explicitly use "-=" to unsubscribe, it will never be collected.</text>
+
+  <defs>
+    <marker id="arrowRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D83B01" />
+    </marker>
+  </defs>
+
+</svg>

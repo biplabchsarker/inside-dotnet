@@ -1,0 +1,6 @@
+flowchart LR
+    A["using var stream =\nnew FileStream(...);"] --> B["Compiler emits a\ntry block starting here"]
+    B --> C["... rest of the\nmethod body ..."]
+    C --> D{"Enclosing block ends,\nor an exception is thrown"}
+    D --> E["finally block runs:\nstream?.Dispose()"]
+    E --> F["Resource released\ndeterministically —\nno GC involvement"]
